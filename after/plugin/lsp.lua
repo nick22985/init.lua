@@ -4,7 +4,11 @@ local lsp = require("lsp-zero").preset({})
 lsp.ensure_installed({
   'tsserver',
   'rust_analyzer',
-  'lua_ls'
+  'lua_ls',
+  'html',
+  'marksman',
+  'volar',
+  'angularls'
 })
 
 
@@ -26,7 +30,7 @@ lsp.setup_nvim_cmp({
 })
 
 lsp.set_preferences({
-    suggest_lsp_servers = false,
+    suggest_lsp_servers = true,
     sign_icons = {
         error = 'E',
         warn = 'W',
@@ -59,3 +63,49 @@ lsp.setup()
 vim.diagnostic.config({
     virtual_text = true
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

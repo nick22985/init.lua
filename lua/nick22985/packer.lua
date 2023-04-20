@@ -20,7 +20,11 @@ return require('packer').startup(function(use)
     end
 })
 
+use "olimorris/onedarkpro.nvim"
+
+
 use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
+use('nvim-treesitter/nvim-treesitter-context')
 
 use('nvim-treesitter/playground')
 
@@ -49,6 +53,5 @@ use {
 }
 
 use('wakatime/vim-wakatime')
-use('nvim-treesitter/nvim-treesitter-context')
 
 end)
