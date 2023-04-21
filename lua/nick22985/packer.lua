@@ -44,17 +44,7 @@ return packer.startup(function(use)
     use "olimorris/onedarkpro.nvim"
 
 
-    use({
-        "folke/trouble.nvim",
-        config = function()
-            require("trouble").setup {
-                --icons = false,
-                -- your configuration comes here
-                -- or leave it empty to use the default settings
-                -- refer to the configuration section below
-            }
-        end
-    })
+    use("folke/trouble.nvim")
 
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -67,12 +57,7 @@ return packer.startup(function(use)
     use('nvim-treesitter/nvim-treesitter-context')
 
 
-    use {
-        'numToStr/Comment.nvim',
-        config = function()
-            require('Comment').setup()
-        end
-    }
+    use('numToStr/Comment.nvim')
 
     use('nvim-treesitter/playground')
     use('theprimeagen/harpoon')
@@ -85,7 +70,7 @@ return packer.startup(function(use)
             -- LSP Support
             { 'neovim/nvim-lspconfig' }, -- Required
             {
-                -- Optional
+                                   -- Optional
                 'williamboman/mason.nvim',
                 run = function()
                     pcall(vim.cmd, 'MasonUpdate')
@@ -94,9 +79,9 @@ return packer.startup(function(use)
             { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
             -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },     -- Required
+            { 'hrsh7th/nvim-cmp' }, -- Required
             { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' },     -- Required
+            { 'L3MON4D3/LuaSnip' }, -- Required
         }
     }
 
@@ -108,16 +93,14 @@ return packer.startup(function(use)
 
     use({
         "NTBBloodbath/galaxyline.nvim",
-        -- your statusline
-        config = function()
-            require("galaxyline.themes.eviline")
-        end,
         -- some optional icons
         requires = { "kyazdani42/nvim-web-devicons", opt = true }
     })
 
+
     use 'nvim-tree/nvim-web-devicons'
     if Packer_Bootstrap then
         packer.sync()
+        pcall(vim.cmd, 'PackerSync')
     end
 end)
