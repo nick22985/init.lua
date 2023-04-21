@@ -1,6 +1,5 @@
 local status, cloak = pcall(require, "cloak")
 if not status then
-    print('Cloak is not installed, run :LspInstall cloak')
   return
 end
 

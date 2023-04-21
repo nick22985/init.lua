@@ -3,6 +3,7 @@ if not status then
   return
 end
 
+lsp.preset({})
 
 lsp.ensure_installed({
   'tsserver',
@@ -63,7 +64,7 @@ end)
 require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
 lsp.setup()
-
+print("LSP loaded")
 vim.diagnostic.config({
     virtual_text = true
 })
