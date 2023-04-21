@@ -1,11 +1,42 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
+end
+
+local packer_bootstrap = ensure_packer()
+
+-- This file can be loaded by calling `lua require('packer')` from your init.vim
+local status, packer = pcall(require, "packer")
+if not status then
+	print("Packer is not installed")
+	return
+end
+-- Reloads Neovim after whenever you save plugins.lua
+vim.cmd([[
+    augroup packer_user_config
+      autocmd!
+     autocmd BufWritePost packer.lua source <afile> | PackerSync
+  augroup END
+]])
+
+
 
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
-return require('packer').startup(function(use)
+return packer.startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
+
+    if packer_bootstrap then
+        require('packer').sync()
+    end
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
@@ -17,6 +48,7 @@ return require('packer').startup(function(use)
     as = 'rose-pine',
     config = function()
         vim.cmd('colorscheme rose-pine')
+        --vim.cmd('lua ColorMyPencils()')
     end
 })
 
@@ -35,8 +67,23 @@ use({
     end
 })
 
-use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
-use('nvim-treesitter/nvim-treesitter-context')
+use {
+    'nvim-treesitter/nvim-treesitter',
+    requires = {
+        'JoosepAlviste/nvim-ts-context-commentstring'
+    },
+    run = ':TSUpdate'
+}
+
+    use('nvim-treesitter/nvim-treesitter-context')
+
+
+use {
+    'numToStr/Comment.nvim',
+    config = function()
+        require('Comment').setup()
+    end
+}
 
 use('nvim-treesitter/playground')
 use('theprimeagen/harpoon')
