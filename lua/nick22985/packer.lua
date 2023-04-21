@@ -114,6 +114,9 @@ return packer.startup(function(use)
     use 'nvim-tree/nvim-web-devicons'
     use 'ryanoasis/vim-devicons'
 
+    -- git Stuff
+    use 'lewis6991/gitsigns.nvim'
+
     if packer_bootstrap then
         packer.sync()
     end

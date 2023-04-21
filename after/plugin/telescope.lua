@@ -1,37 +1,35 @@
 local status, telescope = pcall(require, "telescope")
 if not status then
-    print("test")
-  return
+    return
 end
 
-print("telescope")
-telescope.setup({
-  defaults = {
-    -- file_ignore_patterns = { "node_modules", ".git" },
-  },
-  extensions = {
-    file_browser = {
-        theme = 'ivy',
-        hjack_netrw = true,
-        mappings = {
-            ["i"] = {
-            },
-            ["n"] = {
-            },
-        }
-    }
-  }
-})
+telescope.setup {
+    defaults = {
+    },
+    extensions = {
+        file_browser = {
+            --theme = "ivy",
+            -- disables netrw and use telescope-file-browser in its place
+            hijack_netrw = false,
+            -- mappings = {
+            --   ["i"] = {
+            --     -- your custom insert mode mappings
+            --   },
+            --   ["n"] = {
+            --     -- your custom normal mode mappings
+            --   },
+            -- },
+        },
+    },
+}
 
 telescope.load_extension("file_browser")
 
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
 vim.keymap.set('n', '<C-p>', builtin.git_files, {})
-vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
-
-vim.keymap.set("n", "<leader>fr", "<CMD>Telescope oldfiles<CR>")
-vim.keymap.set("n", "<leader>ff", "<CMD>Telescope find_files<CR>")
+vim.keymap.set("n", "<leader>fr", builtin.oldfiles, {})
+vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fb", "<CMD>Telescope file_browser<CR>")
 vim.keymap.set("n", "<leader>fw", "<CMD>Telescope live_grep<CR>")
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
