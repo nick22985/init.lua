@@ -1,4 +1,4 @@
-local status, lsp = pcall(require, 'lspconfig')
+local status, lsp = pcall(require, 'lsp-zero')
 if not status then
   return
 end
