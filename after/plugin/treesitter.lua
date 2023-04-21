@@ -1,4 +1,9 @@
-require'nvim-treesitter.configs'.setup {
+local status, treesitter = pcall(require, "nvim-treesitter.configs")
+if not status then
+  return
+end
+
+treesitter.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {"javascript", "typescript", "rust", "c", "vim", "lua", "vimdoc", "html", "css", "vue" },
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -28,8 +33,15 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+-- Path: treesitter-context.lua
+-- Treesitter context
 
-require'treesitter-context'.setup{
+local present, treesitter_context = pcall(require, "treesitter-context")
+if not present then
+  return
+end
+
+treesitter_context.setup{
   nable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
   max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
   min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.

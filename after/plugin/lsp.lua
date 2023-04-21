@@ -1,4 +1,7 @@
-local lsp = require("lsp-zero").preset({})
+local status, lsp = pcall(require, 'lspconfig')
+if not status then
+  return
+end
 
 
 lsp.ensure_installed({
