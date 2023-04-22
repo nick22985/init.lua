@@ -48,10 +48,6 @@ return packer.startup(function(use)
     use({
         'rose-pine/neovim',
         as = 'rose-pine',
-        config = function()
-            vim.cmd('colorscheme rose-pine')
-            --vim.cmd('lua ColorMyPencils()')
-        end
     })
 
     use "olimorris/onedarkpro.nvim"
@@ -75,7 +71,6 @@ return packer.startup(function(use)
     use('nvim-treesitter/playground')
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
-    use('tpope/vim-fugitive')
     use {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v2.x',
@@ -110,12 +105,15 @@ return packer.startup(function(use)
         requires = { "kyazdani42/nvim-web-devicons", opt = true }
     })
 
-
     use 'nvim-tree/nvim-web-devicons'
     use 'ryanoasis/vim-devicons'
 
+
     -- git Stuff
+    use('tpope/vim-fugitive')
     use 'lewis6991/gitsigns.nvim'
+    ---------------------------------------------------------------
+   use('eandrju/cellular-automaton.nvim')
 
     if packer_bootstrap then
         packer.sync()
