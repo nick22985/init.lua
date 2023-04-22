@@ -30,6 +30,8 @@ vim.keymap.set('n', '<C-p>', builtin.git_files, {})
 vim.keymap.set("n", "<leader>fr", builtin.oldfiles, {})
 vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fb", "<CMD>Telescope file_browser<CR>")
+-- Needs ripgrep https://github.com/BurntSushi/ripgrep#installation
 vim.keymap.set("n", "<leader>fw", "<CMD>Telescope live_grep<CR>")
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-
+vim.keymap.set("n", "<leader>fv", builtin.buffers, {})
+vim.keymap.set("n", "<leader>fc", builtin.keymaps, {})
