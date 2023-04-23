@@ -1,5 +1,6 @@
 vim.filetype.add({
     pattern = {
-        [".*%.doop"] = 'vue'
+        [".*%.doop"] = 'vue',
+		[".*%.ng"] = 'html',
     }
 })

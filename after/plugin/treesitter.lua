@@ -21,7 +21,7 @@ treesitter.setup {
   highlight = {
     enable = true,
     -- Disable vue until there is custom block support or all projects move to vue3
-    disable = {"vue"},
+    -- disable = {"vue"},
     -- disable = function(lang, buf)
     --     local max_filesize = 100 * 1024 -- 100 KB
     --     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
@@ -35,6 +35,9 @@ treesitter.setup {
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
+	custom_captures = {
+		["attr.value"] = "TSKeyword"
+	}
   },
   -- Plugins
   context_commentstring = {
