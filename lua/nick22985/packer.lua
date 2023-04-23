@@ -64,7 +64,6 @@ return packer.startup(function(use)
 
     use('nvim-treesitter/nvim-treesitter-context')
     use('windwp/nvim-ts-autotag')
-
     use('numToStr/Comment.nvim')
 
     use('nvim-treesitter/playground')
@@ -113,10 +112,9 @@ return packer.startup(function(use)
     use 'lewis6991/gitsigns.nvim'
     use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
     -- DAP
-    use 'mfussenegger/nvim-dap'
-    use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
-
-    use 'rcarriga/nvim-dap-ui'
+    -- use 'mfussenegger/nvim-dap'
+    -- use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
+    -- use 'rcarriga/nvim-dap-ui'
     -- use 'ldelocsa/nvim-dap-projects'
 
     ---------------------------------------------------------------
