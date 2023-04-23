@@ -1,12 +1,12 @@
 local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+    local fn = vim.fn
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
 end
 
 local packer_bootstrap = ensure_packer()
@@ -60,11 +60,10 @@ return packer.startup(function(use)
         requires = {
             'JoosepAlviste/nvim-ts-context-commentstring'
         },
-        run = ':TSUpdate'
     }
 
     use('nvim-treesitter/nvim-treesitter-context')
-
+    use('windwp/nvim-ts-autotag')
 
     use('numToStr/Comment.nvim')
 
@@ -78,7 +77,7 @@ return packer.startup(function(use)
             -- LSP Support
             { 'neovim/nvim-lspconfig' }, -- Required
             {
-                                   -- Optional
+                -- Optional
                 'williamboman/mason.nvim',
                 run = function()
                     pcall(vim.cmd, 'MasonUpdate')
@@ -87,9 +86,9 @@ return packer.startup(function(use)
             { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
             -- Autocompletion
-            { 'hrsh7th/nvim-cmp' }, -- Required
+            { 'hrsh7th/nvim-cmp' },     -- Required
             { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' }, -- Required
+            { 'L3MON4D3/LuaSnip' },     -- Required
         }
     }
 
@@ -108,12 +107,20 @@ return packer.startup(function(use)
     use 'nvim-tree/nvim-web-devicons'
     use 'ryanoasis/vim-devicons'
 
-
+    use 'windwp/nvim-autopairs'
     -- git Stuff
     use('tpope/vim-fugitive')
     use 'lewis6991/gitsigns.nvim'
+    use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
+    -- DAP
+    use 'mfussenegger/nvim-dap'
+    use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
+
+    use 'rcarriga/nvim-dap-ui'
+    -- use 'ldelocsa/nvim-dap-projects'
+
     ---------------------------------------------------------------
-   use('eandrju/cellular-automaton.nvim')
+    -- use('eandrju/cellular-automaton.nvim')
 
     if packer_bootstrap then
         packer.sync()

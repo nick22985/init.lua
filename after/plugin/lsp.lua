@@ -3,7 +3,7 @@ if not status then
   return
 end
 
-lsp.preset({})
+lsp.preset("recommended")
 
 lsp.ensure_installed({
   'tsserver',
@@ -12,11 +12,11 @@ lsp.ensure_installed({
   'html',
   'marksman',
   'volar',
-  'angularls'
+  'angularls',
+  -- 'tailwindcss'
 })
 
-
-
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -32,6 +32,11 @@ cmp_mappings['<S-Tab>'] = nil
 lsp.setup_nvim_cmp({
   mapping = cmp_mappings
 })
+
+cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+)
 
 lsp.set_preferences({
     suggest_lsp_servers = true,
@@ -61,17 +66,38 @@ lsp.on_attach(function(client, bufnr)
 end)
 --
 -- (Optional) Configure lua language server for neovim
-require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+local lspConfig = require('lspconfig')
+
+lspConfig.lua_ls.setup(lsp.nvim_lua_ls())
+
+lsp.extend_lspconfig()
+
+lspConfig.tsserver.setup({
+        capabilities = {
+            typescript = {
+                experimental = {
+                    enableProjectDiagnostics = true
+                }
+            }
+        },
+})
+
+-- lsp.configure('tsserver', {
+--         capabilities = {
+--             typescript = {
+--                 experimental = {
+--                     enableProjectDiagnostics = true
+--                 }
+--             }
+--         },
+-- })
+
 
 lsp.setup()
 
 vim.diagnostic.config({
     virtual_text = true
 })
-
-
-
-
 
 
 
