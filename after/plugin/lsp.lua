@@ -108,7 +108,7 @@ lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
 ---@param bufnr number
 local web_dev_attach = function(client, bufnr)
     local root_files = vim.fn.readdir(vim.fn.getcwd())
-    local volar = false
+    local volar =true 
 	-- Add check here that sees if vue is 2 or 3 if it is vue 3 then enable volar
     if vim.tbl_contains(root_files, "pnpm-lock.yaml") then volar = true end
 

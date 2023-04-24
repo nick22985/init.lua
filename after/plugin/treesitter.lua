@@ -3,6 +3,16 @@ if not status then
   return
 end
 
+local lists = require("nvim-treesitter.parsers").get_parser_configs()
+
+lists.vue = {
+	install_info= {
+		url ="",
+		files = {"src/parser.c", "src/scanner.cc"},
+		branch = "master"
+	}
+}
+
 treesitter.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {"javascript", "typescript", "rust", "c", "vim", "lua", "vimdoc", "html", "css", "vue" },
@@ -44,7 +54,26 @@ treesitter.setup {
     enable = true,
   },
   autotag = {
-    enable = true,
+	  enable = true,
+  },
+  playground = {
+	  enable = true,
+	  updatetime = 25,
+	  persist_queries = true,
+	  keybindings = {
+		  toggle_query_editor = "o",
+		  toggle_hl_groups = "i",
+		  toggle_injected_languages = "t",
+
+		  -- This shows stuff like literal strings, commas, etc.
+		  toggle_anonymous_nodes = "a",
+		  toggle_language_display = "I",
+		  focus_language = "f",
+		  unfocus_language = "F",
+		  update = "R",
+		  goto_node = "<cr>",
+		  show_help = "?",
+	  },
   },
 }
 -- Path: treesitter-context.lua
