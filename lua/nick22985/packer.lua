@@ -120,6 +120,8 @@ return packer.startup(function(use)
 		requires = { "kyazdani42/nvim-web-devicons", opt = true }
 	})
 
+
+
 	use 'nvim-tree/nvim-web-devicons'
 	use 'ryanoasis/vim-devicons'
 
