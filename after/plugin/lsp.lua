@@ -29,6 +29,31 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
 
+local null_ls = require('null-ls')
+
+-- Setup nulls_ls
+null_opts = lsp.build_options('null-ls', {
+	on_attach = function(client, bufnr)
+		---
+		-- this function is optional
+		---
+	end
+})
+
+null_ls.setup({
+	on_attach = null_opts.on_attach,
+	sources = {
+		---
+		-- do what you have to do...
+		---
+		null_ls.builtins.formatting.stylua,
+		-- null_ls.builtins.diagnostics.eslint,
+		null_ls.builtins.completion.spell,
+		null_ls.builtins.formatting.prettier
+	}
+})
+
+
 lsp.setup_nvim_cmp({
 	mapping = cmp_mappings
 })
@@ -70,7 +95,7 @@ local lspconfig = require('lspconfig')
 
 lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
 
--- Doesnt Work 
+-- Doesnt Work
 -- lspConfig.vuels.setup({
 -- 	settings = {
 -- 		vetur = {
@@ -107,77 +132,77 @@ lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
 ---@param client any
 ---@param bufnr number
 local web_dev_attach = function(client, bufnr)
-    local root_files = vim.fn.readdir(vim.fn.getcwd())
-    local volar =true 
+	local root_files = vim.fn.readdir(vim.fn.getcwd())
+	local volar = true
 	-- Add check here that sees if vue is 2 or 3 if it is vue 3 then enable volar
-    if vim.tbl_contains(root_files, "pnpm-lock.yaml") then volar = true end
+	if vim.tbl_contains(root_files, "pnpm-lock.yaml") then volar = true end
 
-    -- disable vuels and tsserver if we're using volar
-    if volar and (client.name == "tsserver" or client.name == "vuels") then
-        client.stop()
-        return false
-    end
+	-- disable vuels and tsserver if we're using volar
+	if volar and (client.name == "tsserver" or client.name == "vuels") then
+		client.stop()
+		return false
+	end
 
-    -- disable volar if we don't have pnpm
-    if not volar and client.name == "volar" then
-        client.stop()
-        return false
-    end
+	-- disable volar if we don't have pnpm
+	if not volar and client.name == "volar" then
+		client.stop()
+		return false
+	end
 
-    return true
+	return true
 end
 
 -- typescript
 lspconfig.tsserver.setup({
-    on_attach = function(client, bufnr)
-        if not web_dev_attach(client, bufnr) then return end
-    end,
+	on_attach = function(client, bufnr)
+		if not web_dev_attach(client, bufnr) then return end
+	end,
 })
 
 -- vue 2
 lspconfig.vuels.setup({
-    on_attach = web_dev_attach,
-    settings = {
-        vetur = {
-            completion = {
-                autoImport = true,
-                tagCasing = "kebab",
-                useScaffoldSnippets = true,
-            },
-            useWorkspaceDependencies = true,
-            experimental = {
-                templateInterpolationService = false,
-            },
-        },
-        format = {
-            enable = true,
-            options = {
-                useTabs = true,
-                tabSize = 2,
-            },
-            defaultFormatter = {
-                ts = "prettier",
-            },
-            scriptInitialIndent = false,
-            styleInitialIndent = false,
-        },
-        validation = {
-            template = true,
-            script = true,
-            style = true,
-            templateProps = true,
-            interpolation = true,
-        },
-    },
+	on_attach = web_dev_attach,
+	settings = {
+		vetur = {
+			completion = {
+				autoImport = true,
+				tagCasing = "kebab",
+				useScaffoldSnippets = true,
+			},
+			useWorkspaceDependencies = true,
+			experimental = {
+				templateInterpolationService = false,
+			},
+		},
+		format = {
+			enable = true,
+			options = {
+				useTabs = true,
+				tabSize = 2,
+			},
+			defaultFormatter = {
+				ts = "prettier",
+			},
+			scriptInitialIndent = false,
+			styleInitialIndent = false,
+		},
+		validation = {
+			template = true,
+			script = true,
+			style = true,
+			templateProps = true,
+			interpolation = true,
+		},
+	},
 })
 
 -- vue 3
 lspconfig.volar.setup({
-    on_attach = function(client, bufnr)
-        if not web_dev_attach(client, bufnr) then return end
-    end,
-    -- enable "take over mode" for typescript files as well: https://github.com/johnsoncodehk/volar/discussions/471
-    -- filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	on_attach = function(client, bufnr)
+		if not web_dev_attach(client, bufnr) then return end
+	end,
+	-- enable "take over mode" for typescript files as well: https://github.com/johnsoncodehk/volar/discussions/471
+	-- filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 })
 
 

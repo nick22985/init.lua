@@ -141,6 +141,8 @@ return packer.startup(function(use)
 	-- use({'neoclide/coc.nvim', branch = 'release'})
 	use "nvim-lua/plenary.nvim"
 
+	use "jose-elias-alvarez/null-ls.nvim"
+
 	if packer_bootstrap then
 		packer.sync()
 	end
