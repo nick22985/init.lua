@@ -5,6 +5,7 @@ end
 
 telescope.setup {
     defaults = {
+		path_display={"smart"},
     },
     extensions = {
         file_browser = {

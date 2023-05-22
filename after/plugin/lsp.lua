@@ -155,8 +155,11 @@ end
 -- typescript
 lspconfig.tsserver.setup({
 	on_attach = function(client, bufnr)
-		if not web_dev_attach(client, bufnr) then return end
+		-- Need this for vue files only. Need to detect if it is vue and only run if it is vue. 
+		-- if not web_dev_attach(client, bufnr) then return end
 	end,
+	fileTypes = { "typescript", "typescriptreact", "typescript.tsx"  },
+	cmd = { "typescript-language-server", "--stdio" },
 })
 
 -- vue 2

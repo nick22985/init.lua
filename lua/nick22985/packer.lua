@@ -68,6 +68,9 @@ return packer.startup(function(use)
 
 	use {
 		'nvim-treesitter/nvim-treesitter',
+		build = function()
+			pcall(require('nvim-treesitter.install').cupdate {with_sync = true})
+		end,
 		requires = {
 			'JoosepAlviste/nvim-ts-context-commentstring'
 		},
