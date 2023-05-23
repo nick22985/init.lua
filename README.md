@@ -6,4 +6,4 @@ WINDOWS
 4. Need ripgrep https://github.com/BurntSushi/ripgrep
 5. winget install fzf
 6. https://gnuwin32.sourceforge.net/packages/make.htm:w
-
+7. Create syslink mklink /J C:\Users\nicho\projects C:\Users\nicho\OneDrive\Documents\Projects

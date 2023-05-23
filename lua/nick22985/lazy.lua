@@ -1,13 +1,13 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -15,12 +15,12 @@ local plugins = {
 	{
 		'nvim-telescope/telescope.nvim',
 		dependencies = {
-			'nvim-telescope/telescope-file-browser.nvim',
+			 'nvim-telescope/telescope-file-browser.nvim',
 			'nvim-telescope/telescope-hop.nvim', -- NEEDS SETUP
 			'nvim-telescope/telescope-ui-select.nvim',
-			'nvim-telescope/telescope-project.nvim',
 			'nvim-lua/plenary.nvim',
-			{'nvim-telescope/telescope-fzf-native.nvim', 
+			{
+				'nvim-telescope/telescope-fzf-native.nvim',
 				build = 'make',
 			}
 		}
@@ -35,22 +35,16 @@ local plugins = {
 	"folke/trouble.nvim",
 	{
 		'nvim-treesitter/nvim-treesitter',
-		build = function()
-			pcall(require('nvim-treesitter.install').cupdate {with_sync = true})
-		end,
+		build = ":TSUpdate",
 		dependencies = {
-			'JoosepAlviste/nvim-ts-context-commentstring'
+			'JoosepAlviste/nvim-ts-context-commentstring',
+			'nvim-treesitter/nvim-treesitter-context',
+			'nvim-treesitter/nvim-treesitter-textobjects',
+			'nvim-treesitter/playground',
+			'windwp/nvim-ts-autotag',
 		},
 	},
-	'nvim-treesitter/nvim-treesitter-context',
-	{
-		"nvim-treesitter/nvim-treesitter-textobjects",
-		dependencies = {"nvim-treesitter", "nvim-treesitter/nvim-treesitter"},
-	},
-	'windwp/nvim-ts-autotag',
 	'numToStr/Comment.nvim',
-
-	'nvim-treesitter/playground',
 	'theprimeagen/harpoon',
 	'mbbill/undotree',
 	{
@@ -99,6 +93,15 @@ local plugins = {
 	"jose-elias-alvarez/null-ls.nvim",
 }
 
-local opts = {}
+local opts = {
+	-- checker = {
+	-- 	notify = true,
+	-- 	frequency = 60, -- 3600 1 hour
+	-- },
+	-- change_detection = {
+	-- 	enable = true,
+	-- 	notify = true,
+	-- }
+}
 
 require("lazy").setup(plugins, opts)
