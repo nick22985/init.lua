@@ -1,3 +1,4 @@
+vim.loader.enable()
 vim.opt.nu = true
 vim.opt.relativenumber = true
 

@@ -5,17 +5,17 @@ end
 
 local lists = require("nvim-treesitter.parsers").get_parser_configs()
 
-lists.vue = {
-	install_info= {
-		url ="",
-		files = {"src/parser.c", "src/scanner.cc"},
-		branch = "master"
-	}
-}
+--[[ lists.vue = { ]]
+--[[ 	install_info= { ]]
+--[[ 		url ="", ]]
+--[[ 		files = {"src/parser.c", "src/scanner.cc"}, ]]
+--[[ 		branch = "master" ]]
+--[[ 	} ]]
+--[[ } ]]
 
 treesitter.setup {
 	-- A list of parser names, or "all" (the five listed parsers should always be installed)
-	ensure_installed = {"javascript", "typescript", "rust", "c", "vim", "lua", "vimdoc", "html", "css", "vue", "tsx", "scss", "json", "regex" },
+	ensure_installed = {"javascript", "typescript", "rust", "c", "vim", "lua", "vimdoc", "html", "css", "tsx", "scss", "json", "regex", "vue" },
 	-- Install parsers synchronously (only applied to `ensure_installed`)
 	sync_install = false,
 

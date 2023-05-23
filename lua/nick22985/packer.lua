@@ -1,3 +1,4 @@
+-- mov to lazy.nvim https://github.com/folke/lazy.nvim
 local ensure_packer = function()
 	local fn = vim.fn
 	local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
@@ -36,23 +37,16 @@ return packer.startup(function(use)
 
 	----------------------------Packer--------------------------------
 	use {
-		'nvim-telescope/telescope.nvim', tag = '0.1.1',
-		-- or                            , branch = '0.1.x',
-		requires = { { 'nvim-lua/plenary.nvim' } }
+		'nvim-telescope/telescope.nvim',
+		requires = {
+			'nvim-lua/plenary.nvim',
+			'nvim-telescope/telescope-file-browser.nvim',
+			'nvim-telescope/telescope-hop.nvim', -- NEEDS SETUP
+			'nvim-telescope/telescope-ui-select.nvim',
+			'nvim-telescope/telescope-project.nvim',
+		}
 	}
-
-	use {
-		"nvim-telescope/telescope-file-browser.nvim",
-		requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
-	}
-	-- {{{ needs setup
-	use {
-		"nvim-telescope/telescope-hop.nvim",
-		requires = { "nvim-telescope/telescope.nvim" }
-	}
-
-	use { 'nvim-telescope/telescope-ui-select.nvim' }
-	use { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make'  }
 	use "ThePrimeagen/git-worktree.nvim"
 	use "AckslD/nvim-neoclip.lua"
 	-- }}}
@@ -146,7 +140,7 @@ return packer.startup(function(use)
 
 	use "jose-elias-alvarez/null-ls.nvim"
 
-	if packer_bootstrap then
-		packer.sync()
-	end
+	--[[ if packer_bootstrap then ]]
+	--[[ 	packer.sync() ]]
+	--[[ end ]]
 end)

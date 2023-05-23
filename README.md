@@ -4,6 +4,6 @@ WINDOWS
 2. set env variable for nvim config for windows HOME C:\Users\nicho\
 3. Need to install gcc for tree sitter (https://www.digitalocean.com/community/tutorials/c-compiler-windows-gcc)
 4. Need ripgrep https://github.com/BurntSushi/ripgrep
-
-
+5. winget install fzf
+6. https://gnuwin32.sourceforge.net/packages/make.htm:w
 
