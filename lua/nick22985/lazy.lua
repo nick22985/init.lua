@@ -91,6 +91,7 @@ local plugins = {
 	'eandrju/cellular-automaton.nvim',
 	"nvim-lua/plenary.nvim",
 	"jose-elias-alvarez/null-ls.nvim",
+	"ActivityWatch/aw-watcher-vim"
 }
 
 local opts = {
