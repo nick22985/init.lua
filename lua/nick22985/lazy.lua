@@ -86,7 +86,13 @@ local plugins = {
 	-- use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
 	-- use 'rcarriga/nvim-dap-ui'
 	-- use 'ldelocsa/nvim-dap-projects'
-
+	'anuvyklack/pretty-fold.nvim',
+	{
+		'anuvyklack/keymap-amend.nvim',
+		dependencies = {
+			'anuvyklack/keymap-amend.nvim',
+		}
+	},
 	---------------------------------------------------------------
 	'eandrju/cellular-automaton.nvim',
 	"nvim-lua/plenary.nvim",

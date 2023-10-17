@@ -9,6 +9,12 @@ telescope.setup {
 	defaults = {
 		path_display = { "smart" },
 	},
+	pickers = {
+		find_files = {
+			-- Search for files using rg (searches for sys link files etc)
+			find_command = {"rg", "--ignore", "-L", "--files", "--hidden"},
+		}
+	},
 	extensions = {
 		file_browser = {
 			--theme = "ivy",

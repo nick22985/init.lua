@@ -22,13 +22,48 @@ vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
 vim.opt.updatetime = 50
+vim.opt.timeoutlen = 500
 
 vim.g.mapleader = " "
+
 
 -- netrw
 vim.g.netrw_banner = 0
 
+
+-- clipboard support ssh windows
+
+-- vim.g.clipboard = {
+-- 	name = "win32yank-wsl",
+-- 	copy = {
+-- 		["+"] = "win32yank.exe -i --crlf",
+-- 		["*"] = "win32yank.exe -i --crlf"
+-- 	},
+-- 	paste = {
+-- 		["+"] = "win32yank.exe -o --lf",
+-- 		["*"] = "win32yank.exe -o --lf"
+-- 	},
+-- 	cache_enabled = 0
+-- }
+
+-- vim.g.clipboard = {
+-- 	name = "WslClipboard",
+-- 	copy = {
+-- 		["+"] = "clip.exe",
+-- 		["*"] = "clip.exe"
+-- 	},
+-- 	paste = {
+-- 		["+"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace('`r', ''))",
+-- 		["*"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace('`r', ''))"
+-- 	},
+-- 	cache_enabled = 0
+--
+-- }
