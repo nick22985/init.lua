@@ -74,8 +74,8 @@ local plugins = {
 		"NTBBloodbath/galaxyline.nvim",
 	},
 	'nvim-tree/nvim-web-devicons',
-	'ryanoasis/vim-devicons',
-
+	-- 'ryanoasis/vim-devicons',
+	'prichrd/netrw.nvim',
 	'windwp/nvim-autopairs',
 	-- git Stuff
 	'tpope/vim-fugitive',

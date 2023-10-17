@@ -29,4 +29,6 @@ vim.opt.updatetime = 50
 
 vim.g.mapleader = " "
 
+-- netrw
+vim.g.netrw_banner = 0
 
