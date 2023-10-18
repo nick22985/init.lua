@@ -93,7 +93,8 @@ local plugins = {
 			'anuvyklack/keymap-amend.nvim',
 		}
 	},
-	---------------------------------------------------------------
+	'ahmedkhalf/project.nvim',
+	---------------------------------------------------------------------
 	'eandrju/cellular-automaton.nvim',
 	"nvim-lua/plenary.nvim",
 	"jose-elias-alvarez/null-ls.nvim",
