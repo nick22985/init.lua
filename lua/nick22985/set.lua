@@ -38,6 +38,7 @@ vim.g.mapleader = " "
 -- netrw
 vim.g.netrw_banner = 0
 
+vim.opt.guifont = { "DroidSansMono Nerd Font", "MesloLGS Nerd Font", "Monaco", "Noto Color Emoji", "Consolas", "monospace" }
 
 -- clipboard support ssh windows
 
