@@ -26,7 +26,7 @@ local plugins = {
 		}
 	},
 	"ThePrimeagen/git-worktree.nvim",
-	"AckslD/nvim-neoclip.lua",
+	-- "AckslD/nvim-neoclip.lua",
 	{
 		'rose-pine/neovim',
 		name = 'rose-pine',
@@ -74,7 +74,7 @@ local plugins = {
 		"NTBBloodbath/galaxyline.nvim",
 	},
 	'nvim-tree/nvim-web-devicons',
-	-- 'ryanoasis/vim-devicons',
+	'ryanoasis/vim-devicons',
 	'prichrd/netrw.nvim',
 	'windwp/nvim-autopairs',
 	-- git Stuff
@@ -97,8 +97,10 @@ local plugins = {
 	---------------------------------------------------------------------
 	'eandrju/cellular-automaton.nvim',
 	"nvim-lua/plenary.nvim",
-	"jose-elias-alvarez/null-ls.nvim",
-	"ActivityWatch/aw-watcher-vim"
+	"nvimtools/none-ls.nvim",
+	"ActivityWatch/aw-watcher-vim",
+	"folke/todo-comments.nvim",
+	"norcalli/nvim-colorizer.lua"
 }
 
 local opts = {
