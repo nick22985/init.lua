@@ -21,8 +21,8 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 
-vim.opt.scrolloff = 8
-vim.opt.sidescrolloff = 8
+vim.opt.scrolloff = 5
+vim.opt.sidescrolloff = 5
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
@@ -45,6 +45,7 @@ vim.opt.guifont = { "DroidSansMono Nerd Font", "MesloLGS Nerd Font", "Monaco", "
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
+-- tabs
 
 -- clipboard support ssh windows
 
@@ -83,4 +84,4 @@ vim.opt.spell = true
 -- PERF: perf
 -- NOTE: note
 -- TEST: test
---
+-- XXX: BROKE

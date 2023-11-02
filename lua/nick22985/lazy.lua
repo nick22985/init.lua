@@ -15,7 +15,7 @@ local plugins = {
 	{
 		'nvim-telescope/telescope.nvim',
 		dependencies = {
-			 'nvim-telescope/telescope-file-browser.nvim',
+			'nvim-telescope/telescope-file-browser.nvim',
 			'nvim-telescope/telescope-hop.nvim', -- NEEDS SETUP
 			'nvim-telescope/telescope-ui-select.nvim',
 			'nvim-lua/plenary.nvim',
@@ -49,7 +49,7 @@ local plugins = {
 	'mbbill/undotree',
 	{
 		'VonHeikemen/lsp-zero.nvim',
-		branch = 'v2.x',
+		branch = 'v3.x',
 		dependencies = {
 			-- LSP Support
 			{ 'neovim/nvim-lspconfig' }, -- Required
@@ -71,16 +71,28 @@ local plugins = {
 	"github/copilot.vim",
 	"laytan/cloak.nvim",
 	{
-		"NTBBloodbath/galaxyline.nvim",
+		"nvim-lualine/lualine.nvim",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		}
 	},
 	'nvim-tree/nvim-web-devicons',
-	'ryanoasis/vim-devicons',
 	'prichrd/netrw.nvim',
 	'windwp/nvim-autopairs',
 	-- git Stuff
-	'tpope/vim-fugitive',
+	-- 'tpope/vim-fugitive',
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- required
+			"nvim-telescope/telescope.nvim", -- optional
+			"sindrets/diffview.nvim", -- optional
+			"ibhagwan/fzf-lua",      -- optional
+		},
+		config = true
+	},
+	"sindrets/diffview.nvim",
 	'lewis6991/gitsigns.nvim',
-	-- use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
 	-- DAP
 	-- use 'mfussenegger/nvim-dap'
 	-- use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
@@ -94,13 +106,21 @@ local plugins = {
 		}
 	},
 	'ahmedkhalf/project.nvim',
-	---------------------------------------------------------------------
 	'eandrju/cellular-automaton.nvim',
 	"nvim-lua/plenary.nvim",
 	"nvimtools/none-ls.nvim",
 	"ActivityWatch/aw-watcher-vim",
 	"folke/todo-comments.nvim",
-	"norcalli/nvim-colorizer.lua"
+	"norcalli/nvim-colorizer.lua",
+	{
+		'stevearc/resession.nvim',
+		opts = {},
+	},
+	{
+		'nvimdev/dashboard-nvim',
+		dependencies = { { 'nvim-tree/nvim-web-devicons' } }
+	},
+	'ThePrimeagen/vim-be-good',
 }
 
 local opts = {

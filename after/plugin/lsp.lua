@@ -1,45 +1,78 @@
-local status, lsp = pcall(require, 'lsp-zero')
+local status, lsp_zero = pcall(require, 'lsp-zero')
 if not status then
 	return
 end
 
-lsp.preset({
-	name = "recommended"
+
+require('mason').setup({})
+require('mason-lspconfig').setup({
+	ensure_installed = {
+		'tsserver',
+		'rust_analyzer',
+		'lua_ls',
+		'html',
+		'marksman',
+		'angularls',
+		'vuels',
+		-- 'tailwindcss'
+	},
+	handlers = {
+		lsp_zero.default_setup,
+		lua_ls = function()
+			local lua_opts = lsp_zero.nvim_lua_ls()
+			require('lspconfig').lua_ls.setup(lua_opts)
+		end,
+	}
 })
 
-lsp.ensure_installed({
-	'tsserver',
-	'rust_analyzer',
-	'lua_ls',
-	'html',
-	'marksman',
-	'angularls',
-	'vuels'
-	-- 'tailwindcss'
+lsp_zero.preset({
+	name = "recommended"
 })
 
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
+local cmp_mappings = lsp_zero.defaults.cmp_mappings({
 	['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
 	['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
 	['<C-y>'] = cmp.mapping.confirm({ select = true }),
 	["<C-Space>"] = cmp.mapping.complete(),
 })
 
-
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
+cmp.setup({
+	maping = cmp_mappings,
+})
+
+cmp.event:on(
+	'confirm_done',
+	cmp_autopairs.on_confirm_done({
+
+	})
+)
 
 local null_ls = require('null-ls')
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 -- Setup nulls_ls
-null_opts = lsp.build_options('null-ls', {
+local null_opts = lsp_zero.build_options('null-ls', {
 	on_attach = function(client, bufnr)
 		---
 		-- this function is optional
 		---
+		if client.supports_method("textDocument/formatting") then
+			vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				group = augroup,
+				buffer = bufnr,
+				callback = function()
+					-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+					-- on later neovim version, you should use vim.lsp.buf.format({ async = false }) instead
+					vim.lsp.buf.format({ async = false })
+				end,
+			})
+		end
 	end
 })
 
@@ -52,29 +85,27 @@ null_ls.setup({
 		--[[ null_ls.builtins.formatting.stylua, ]]
 		-- null_ls.builtins.diagnostics.eslint,
 		null_ls.builtins.completion.spell,
-		null_ls.builtins.formatting.prettier
+		null_ls.builtins.formatting.prettierd.with({
+			extra_args = function(params)
+				return params.options
+					and params.options.tabSize
+					and { "--tab-width", 1 }
+			end,
+		})
 	}
 })
 
 
-lsp.setup_nvim_cmp({
-	mapping = cmp_mappings
-})
 
-cmp.event:on(
-	'confirm_done',
-	cmp_autopairs.on_confirm_done()
-)
-
-lsp.set_sign_icons({
-    error = '',
-    warn = '',
-    hint = '',
+lsp_zero.set_sign_icons({
+	error = '',
+	warn = '',
+	hint = '',
 	info = ''
 })
 
-lsp.on_attach(function(client, bufnr)
-	lsp.default_keymaps({ buffer = bufnr })
+lsp_zero.on_attach(function(client, bufnr)
+	lsp_zero.default_keymaps({ buffer = bufnr })
 	local opts = { buffer = bufnr, remap = false }
 
 	vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -92,58 +123,26 @@ end)
 -- (Optional) Configure lua language server for neovim
 local lspconfig = require('lspconfig')
 
-lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
-
--- Doesnt Work
--- lspConfig.vuels.setup({
--- 	settings = {
--- 		vetur = {
--- 			enable = true,
--- 			grammar = {
--- 				customBlocks = {
--- 					component = "js",
--- 					directive = "js",
--- 					endpoint = "js",
--- 					filter = "js",
--- 					macgyver = "js",
--- 					schema = "js",
--- 					server = "js",
--- 					service = "js"
--- 				}
--- 			}
--- 		}
--- 	}
--- })
-
--- lsp.configure('tsserver', {
---         capabilities = {
---             typescript = {
---                 experimental = {
---                     enableProjectDiagnostics = true
---                 }
---             }
---         },
--- })
---
-
-
+lspconfig.lua_ls.setup(lsp_zero.nvim_lua_ls())
 
 ---@param client any
 ---@param bufnr number
 local web_dev_attach = function(client, bufnr)
 	local root_files = vim.fn.readdir(vim.fn.getcwd())
-	local volar =true
+	local volar = true
 	-- Add check here that sees if vue is 2 or 3 if it is vue 3 then enable volar
 	if vim.tbl_contains(root_files, "pnpm-lock.yaml") then volar = true end
 
 	-- disable vuels and tsserver if we're using volar
 	if volar and (client.name == "tsserver" or client.name == "vuels") then
+		print("disable vuels")
 		client.stop()
 		return false
 	end
 
 	-- disable volar if we don't have pnpm
 	if not volar and client.name == "volar" then
+		print("disable volar")
 		client.stop()
 		return false
 	end
@@ -154,16 +153,18 @@ end
 -- typescript
 lspconfig.tsserver.setup({
 	on_attach = function(client, bufnr)
-		-- Need this for vue files only. Need to detect if it is vue and only run if it is vue. 
+		-- Need this for vue files only. Need to detect if it is vue and only run if it is vue.
 		-- if not web_dev_attach(client, bufnr) then return end
 	end,
-	fileTypes = { "typescript", "typescriptreact", "typescript.tsx"  },
+	fileTypes = { "typescript", "typescriptreact", "typescript.tsx" },
 	cmd = { "typescript-language-server", "--stdio" },
 })
 
 -- vue 2
 lspconfig.vuels.setup({
-	on_attach = web_dev_attach,
+	on_attach = function(client, bufnr)
+		if not web_dev_attach(client, bufnr) then return end
+	end,
 	settings = {
 		vetur = {
 			completion = {
@@ -208,8 +209,9 @@ lspconfig.volar.setup({
 })
 
 
-lsp.setup()
+lsp_zero.setup()
 
 vim.diagnostic.config({
 	virtual_text = true
 })
+
