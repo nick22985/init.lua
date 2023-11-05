@@ -54,20 +54,20 @@ cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
 cmp.setup({
     maping = cmp_mappings,
-    sources = {
-        {
-            name = 'buffer',
-            option = {
-                keyword_pattern = [[\%(-\?\d\+\%(\.\d\+\)\?\|\h\w*\%([\-.]\w*\)*\)]],
-                get_bufnrs = function()
-                    return vim.api.nvim_list_bufs() -- All buffers
-                end
-            }
-        },
-        {
-            name = 'nvim_lua'
-        }
-    }
+    -- sources = {
+    --     {
+    --         name = 'buffer',
+    --         option = {
+    --             keyword_pattern = [[\%(-\?\d\+\%(\.\d\+\)\?\|\h\w*\%([\-.]\w*\)*\)]],
+    --             get_bufnrs = function()
+    --                 return vim.api.nvim_list_bufs() -- All buffers
+    --             end
+    --         }
+    --     },
+    --     {
+    --         name = 'nvim_lua'
+    --     }
+    -- }
 })
 
 cmp.event:on(
