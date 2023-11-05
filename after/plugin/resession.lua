@@ -38,6 +38,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 
 vim.api.nvim_create_autocmd("DirChangedPre", {
 	callback = function()
+		print('dir change pre')
 		local cwd = vim.fn.getcwd()
 		local session_name = resession.get_current()
 		if session_name ~= nil then

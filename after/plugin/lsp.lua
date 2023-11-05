@@ -162,9 +162,7 @@ lspconfig.tsserver.setup({
 
 -- vue 2
 lspconfig.vuels.setup({
-	on_attach = function(client, bufnr)
-		if not web_dev_attach(client, bufnr) then return end
-	end,
+	on_attach = web_dev_attach,
 	settings = {
 		vetur = {
 			completion = {
