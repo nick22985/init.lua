@@ -56,13 +56,9 @@ vim.api.nvim_create_autocmd("DirChanged", {
 		local cwd = vim.fn.getcwd()
 		local scope = vim.v.event.scope
 		local target = tostring(vim.v.event.changed_window)
-		print("DirChanged: " .. cwd .. " " .. scope .. "" .. target)
 		local exists = doesSessionExists()
-		print('exists', exists)
 		if exists ~= false then
-			print('load session')
 			resession.load(cwd)
-			print('loaded')
 		end
 	end,
 	pattern = "global"

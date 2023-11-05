@@ -188,41 +188,39 @@ lspconfig.tsserver.setup({
 
 -- vue 2
 lspconfig.vuels.setup({
-    on_attach = function(client, bufnr)
-        if not web_dev_attach(client, bufnr) then return end
-    end,
-    settings = {
-        vetur = {
-            completion = {
-                autoImport = true,
-                tagCasing = "kebab",
-                useScaffoldSnippets = true,
-            },
-            useWorkspaceDependencies = true,
-            experimental = {
-                templateInterpolationService = false,
-            },
-        },
-        format = {
-            enable = true,
-            options = {
-                useTabs = true,
-                tabSize = 2,
-            },
-            defaultFormatter = {
-                ts = "prettier",
-            },
-            scriptInitialIndent = false,
-            styleInitialIndent = false,
-        },
-        validation = {
-            template = true,
-            script = true,
-            style = true,
-            templateProps = true,
-            interpolation = true,
-        },
-    },
+	on_attach = web_dev_attach,
+	settings = {
+		vetur = {
+			completion = {
+				autoImport = true,
+				tagCasing = "kebab",
+				useScaffoldSnippets = true,
+			},
+			useWorkspaceDependencies = true,
+			experimental = {
+				templateInterpolationService = false,
+			},
+		},
+		format = {
+			enable = true,
+			options = {
+				useTabs = true,
+				tabSize = 2,
+			},
+			defaultFormatter = {
+				ts = "prettier",
+			},
+			scriptInitialIndent = false,
+			styleInitialIndent = false,
+		},
+		validation = {
+			template = true,
+			script = true,
+			style = true,
+			templateProps = true,
+			interpolation = true,
+		},
+	},
 })
 
 -- vue 3
