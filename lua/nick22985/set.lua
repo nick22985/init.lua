@@ -34,7 +34,7 @@ vim.opt.timeoutlen = 500
 
 vim.g.mapleader = " "
 
-
+vim.g.aw_hostname = vim.uv.os_gethostname();
 -- netrw
 vim.g.netrw_banner = 0
 

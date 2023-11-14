@@ -131,6 +131,7 @@ local plugins = {
 		dependencies = { { 'nvim-tree/nvim-web-devicons' } }
 	},
 	'ThePrimeagen/vim-be-good',
+	'andweeb/presence.nvim'
 }
 
 local opts = {

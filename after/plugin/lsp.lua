@@ -30,13 +30,13 @@ lsp_zero.preset({
 })
 
 lsp_zero.configure('lua_ls', {
-	settings = {
-		Lua = {
-			diagnostics = {
-				globals = { 'vim' }
-			}
-		}
-	}
+	-- settings = {
+	-- 		diagnostics = {
+	-- 			Lua = {
+	-- 			globals = { 'vim' }
+	-- 		}
+	-- 	}
+	-- }
 })
 
 local cmp = require('cmp')
