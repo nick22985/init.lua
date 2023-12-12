@@ -78,7 +78,7 @@ local plugins = {
 		}
 	},
 	'wakatime/vim-wakatime',
-	"github/copilot.vim",
+	'zbirenbaum/copilot.lua',
 	"laytan/cloak.nvim",
 	{
 		"nvim-lualine/lualine.nvim",

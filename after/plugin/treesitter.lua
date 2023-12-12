@@ -51,10 +51,6 @@ treesitter.setup {
 		}
 	},
 	-- Plugins
-	context_commentstring = {
-		enable = true,
-		enable_autocnd = false
-	},
 	autotag = {
 		enable = true,
 		enable_rename = true,
@@ -203,3 +199,11 @@ treesitter_context.setup {
 	separator = nil,
 	zindex = 20, -- The Z-index of the context window
 }
+
+
+require('ts_context_commentstring').setup({
+	context_commentstring = {
+		enable = true,
+		enable_autocnd =true
+	},
+})

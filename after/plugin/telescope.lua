@@ -11,6 +11,7 @@ telescope.setup {
 	},
 	pickers = {
 		find_files = {
+		hidden = true,
 			-- Search for files using rg (searches for sys link files etc)
 			find_command = { "rg", "--ignore", "-L", "--files", "--hidden" },
 		}
