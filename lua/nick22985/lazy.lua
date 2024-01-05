@@ -59,22 +59,22 @@ local plugins = {
 				build = ":MasonUpdate"
 
 			},
-            {'williamboman/mason-lspconfig.nvim'},
+			{ 'williamboman/mason-lspconfig.nvim' },
 
-		  -- Autocompletion
-		  {'hrsh7th/nvim-cmp'},
-		  {'hrsh7th/cmp-buffer'},
-		  {'hrsh7th/cmp-path'},
-			{'hrsh7th/cmp-cmdline'},
-		  {'hrsh7th/cmp-nvim-lsp'},
-		  {'hrsh7th/cmp-nvim-lua'},
+			-- Autocompletion
+			{ 'hrsh7th/nvim-cmp' },
+			{ 'hrsh7th/cmp-buffer' },
+			{ 'hrsh7th/cmp-path' },
+			{ 'hrsh7th/cmp-cmdline' },
+			{ 'hrsh7th/cmp-nvim-lsp' },
+			{ 'hrsh7th/cmp-nvim-lua' },
 
-		  -- Snippets
-		  {'L3MON4D3/LuaSnip'},
-		  {'rafamadriz/friendly-snippets'},
-		  {'saadparwaiz1/cmp_luasnip'},
-			{'hrsh7th/cmp-vsnip'},
-			{'hrsh7th/vim-vsnip'}
+			-- Snippets
+			{ 'L3MON4D3/LuaSnip' },
+			{ 'rafamadriz/friendly-snippets' },
+			{ 'saadparwaiz1/cmp_luasnip' },
+			{ 'hrsh7th/cmp-vsnip' },
+			{ 'hrsh7th/vim-vsnip' }
 		}
 	},
 	'wakatime/vim-wakatime',
@@ -94,10 +94,10 @@ local plugins = {
 	{
 		"NeogitOrg/neogit",
 		dependencies = {
-			"nvim-lua/plenary.nvim", -- required
+			"nvim-lua/plenary.nvim",      -- required
 			"nvim-telescope/telescope.nvim", -- optional
-			"sindrets/diffview.nvim", -- optional
-			"ibhagwan/fzf-lua",      -- optional
+			"sindrets/diffview.nvim",     -- optional
+			"ibhagwan/fzf-lua",           -- optional
 		},
 		config = true
 	},
@@ -115,17 +115,12 @@ local plugins = {
 			'anuvyklack/keymap-amend.nvim',
 		}
 	},
-	'ahmedkhalf/project.nvim',
 	'eandrju/cellular-automaton.nvim',
 	"nvim-lua/plenary.nvim",
 	"nvimtools/none-ls.nvim",
-	"ActivityWatch/aw-watcher-vim",
+	-- "ActivityWatch/aw-watcher-vim",
 	"folke/todo-comments.nvim",
 	"norcalli/nvim-colorizer.lua",
-	{
-		'stevearc/resession.nvim',
-		opts = {},
-	},
 	{
 		'nvimdev/dashboard-nvim',
 		dependencies = { { 'nvim-tree/nvim-web-devicons' } }

@@ -41,14 +41,12 @@ telescope.setup {
 telescope.load_extension('fzf')
 telescope.load_extension("file_browser")
 telescope.load_extension("harpoon")
-telescope.load_extension('projects')
 telescope.load_extension('harpoon')
 
 -- telescope.extensions.project.project{ display_type = 'full' }
 
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>fw', builtin.git_files, {}) -- laggy use ff
-vim.keymap.set('n', '<C-p>', "<cmd>Telescope projects<cr>")
+vim.keymap.set('n', '<leader>fw', builtin.git_files, {})
 vim.keymap.set("n", "<leader>fr", builtin.oldfiles, {})
 vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fe", "<cmd>Telescope file_browser<cr>")
