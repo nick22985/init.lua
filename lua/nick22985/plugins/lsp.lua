@@ -71,7 +71,7 @@ return {
 			})
 
 			local cmp = require('cmp')
-			local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+			-- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 			local cmp_nvim_lsp = require('cmp_nvim_lsp')
 			local cmp_select = { behavior = cmp.SelectBehavior.Select }
 			local cmp_mappings = lsp_zero.defaults.cmp_mappings({
@@ -123,12 +123,12 @@ return {
 				)
 			})
 
-			cmp.event:on(
-				'confirm_done',
-				cmp_autopairs.on_confirm_done({
-
-				})
-			)
+			-- cmp.event:on(
+			-- 	'confirm_done',
+			-- 	cmp_autopairs.on_confirm_done({
+			--
+			-- 	})
+			-- )
 
 			local null_ls = require('null-ls')
 			local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
