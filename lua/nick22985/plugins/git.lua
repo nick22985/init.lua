@@ -321,7 +321,8 @@ return {
 					end
 					if matched_pattern then
 						local basename = extract_basename_from_pattern(matched_pattern)
-						local command = string.format(":silent !tmux-%s tmux %s", basename, current_path)
+
+						local command = string.format(":silent !tmux-run tmux %s %s", basename, current_path)
 						vim.cmd(command)
 					end
 				end
