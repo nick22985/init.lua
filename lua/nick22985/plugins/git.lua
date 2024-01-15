@@ -260,14 +260,75 @@ return {
 	{
 		"ThePrimeagen/git-worktree.nvim",
 		config = function()
-			require("git-worktree").setup({
+			local Worktree = require("git-worktree")
+			Worktree.setup({
 				change_directory_command = "cd", -- default: "cd",
-				update_on_change = true,         -- default: true,
+				update_on_change = true,      -- default: true,
 				update_on_change_command = "e .", -- default: "e .",
-				clearjumps_on_change = true,     -- default: true,
-				autopush = false,                -- default: false,
+				clearjumps_on_change = true,  -- default: true,
+				autopush = false,             -- default: false,
 			})
-		end
+
+			local HOME = os.getenv("HOME")
+
+			local function resolve_home_directory(path)
+				if HOME and path:sub(1, 1) == "~" then
+					return HOME .. path:sub(2)
+				else
+					return path
+				end
+			end
+
+			local function read_project_paths(file)
+				file = resolve_home_directory(file)
+				local f, err = io.open(file, "r")
+				if not f then
+					print("Error opening file:", err)
+					return {}
+				end
+
+				local patterns = {}
+				for line in f:lines() do
+					table.insert(patterns, line)
+				end
+				f:close()
+				return patterns
+			end
+
+			local function path_matches_any_pattern(path, patterns)
+				for _, pattern in ipairs(patterns) do
+					if path:find(pattern, 1, true) then
+						return pattern
+					end
+				end
+				return nil
+			end
+
+			local function extract_basename_from_pattern(pattern)
+				return pattern:match("^.+/(.+)/?$")
+			end
+
+			local function on_tree_change(op, path, upstream)
+				if op == "switch" then
+					local project_paths = read_project_paths("~/install/configs/private/.tmux-commands.txt")
+					local current_path = path.path
+					local prev_path = path.prev_path
+
+					local matched_pattern = path_matches_any_pattern(current_path, project_paths) or
+					path_matches_any_pattern(prev_path, project_paths)
+					if not current_path:find("/") then
+						current_path = matched_pattern .. "/" .. current_path
+					end
+					if matched_pattern then
+						local basename = extract_basename_from_pattern(matched_pattern)
+						local command = string.format(":silent !tmux-%s tmux %s", basename, current_path)
+						vim.cmd(command)
+					end
+				end
+			end
+
+			Worktree.on_tree_change(on_tree_change)
+		end,
 	},
 	"sindrets/diffview.nvim",
 	{
