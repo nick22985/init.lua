@@ -1,6 +1,7 @@
 vim.loader.enable()
 vim.opt.nu = true
 vim.opt.relativenumber = true
+vim.g.have_nerd_font = true
 
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
@@ -15,8 +16,16 @@ vim.opt.swapfile = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.backup = false
 vim.opt.undofile = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.breakindent = true
+-- vim.opt.list = true
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.inccommand = 'split'
 
-vim.opt.hlsearch = false
+
+vim.opt.hlsearch = true
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
@@ -30,7 +39,7 @@ vim.opt.isfname:append("@-@")
 -- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 vim.opt.updatetime = 50
-vim.opt.timeoutlen = 500
+vim.opt.timeoutlen = 300
 
 vim.g.mapleader = " "
 

@@ -55,7 +55,7 @@ return {
 					information = "",
 					other = "",
 				},
-				use_diagnoutic_signs = false -- enabling this will use the signs defined in your lsp client
+				use_diagnoutic_signs = true -- enabling this will use the signs defined in your lsp client
 			})
 
 			vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>", { silent = true, noremap = true })

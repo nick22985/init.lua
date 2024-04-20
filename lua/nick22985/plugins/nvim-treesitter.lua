@@ -14,21 +14,12 @@ return {
 			return
 		end
 
-		local lists = require("nvim-treesitter.parsers").get_parser_configs()
-
-		--[[ lists.vue = { ]]
-		--[[ 	install_info= { ]]
-		--[[ 		url ="", ]]
-		--[[ 		files = {"src/parser.c", "src/scanner.cc"}, ]]
-		--[[ 		branch = "master" ]]
-		--[[ 	} ]]
-		--[[ } ]]
-
 		treesitter.setup {
 			-- A list of parser names, or "all" (the five listed parsers should always be installed)
 			ensure_installed = { "javascript", "typescript", "rust", "c", "vim", "lua", "vimdoc", "html", "css", "scss", "tsx",
 				"scss", "json", "regex", "vue" },
 			-- Install parsers synchronously (only applied to `ensure_installed`)
+			ingore_install = {},
 			sync_install = false,
 
 			-- Automatically install missing parsers when entering buffer
@@ -56,7 +47,7 @@ return {
 				-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
 				-- Using this option may slow down your editor, and you may see some duplicate highlights.
 				-- Instead of true it can also be a list of languages
-				additional_vim_regex_highlighting = false,
+				additional_vim_regex_highlighting = true,
 				custom_captures = {
 					["attr.value"] = "TSKeyword"
 				}
@@ -128,15 +119,15 @@ return {
 					-- and should return true of false
 					include_surrounding_whitespace = true,
 				},
-				swap = {
-					enable = true,
-					swap_next = {
-						["<leader>a"] = "@parameter.inner",
-					},
-					swap_previous = {
-						["<leader>A"] = "@parameter.inner",
-					},
-				},
+				-- swap = {
+				-- 	enable = true,
+				-- 	swap_next = {
+				-- 		["<leader>a"] = "@parameter.inner",
+				-- 	},
+				-- 	swap_previous = {
+				-- 		["<leader>A"] = "@parameter.inner",
+				-- 	},
+				-- },
 				move = {
 					enable = true,
 					set_jumps = true, -- whether to set jumps in the jumplist
