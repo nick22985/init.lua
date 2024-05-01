@@ -1,12 +1,12 @@
 return {
 	{
-		'nvim-tree/nvim-web-devicons',
+		"nvim-tree/nvim-web-devicons",
 		config = function()
 			local status, nvim_web_devicons = pcall(require, "nvim-web-devicons")
 			if not status then
 				return
 			end
-			nvim_web_devicons.setup {
+			nvim_web_devicons.setup({
 				-- your personnal icons can go here (to override)
 				-- you can specify color or cterm_color instead of specifying both of them
 				-- DevIcon will be appended to `name`
@@ -15,7 +15,7 @@ return {
 						icon = "",
 						color = "#428850",
 						cterm_color = "65",
-						name = "Zsh"
+						name = "Zsh",
 					},
 				},
 				-- globally enable different highlight colors per icon (default to true)
@@ -35,12 +35,12 @@ return {
 					[".gitignore"] = {
 						icon = "",
 						color = "#f1502f",
-						name = "Gitignore"
+						name = "Gitignore",
 					},
 					["vite.config.js"] = {
 						icon = "󰹭",
 						color = "#b043ff",
-						name = "Vite"
+						name = "Vite",
 					},
 				},
 				-- same as `override` but specifically for overrides by extension
@@ -49,26 +49,25 @@ return {
 					["log"] = {
 						icon = "",
 						color = "#81e043",
-						name = "Log"
+						name = "Log",
 					},
 					[".env"] = {
 						icon = "",
 						color = "#f1502f",
-						name = "Env"
+						name = "Env",
 					},
 					[".env.development"] = {
 						icon = "",
 						color = "#f1502f",
-						name = "Env"
+						name = "Env",
 					},
 					[".env.production"] = {
 						icon = "",
 						color = "#f1502f",
-						name = "Env"
+						name = "Env",
 					},
 				},
-			}
-		end
-
-	}
+			})
+		end,
+	},
 }

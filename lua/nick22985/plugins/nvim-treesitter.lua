@@ -1,12 +1,13 @@
 return {
-	'nvim-treesitter/nvim-treesitter',
+	"nvim-treesitter/nvim-treesitter",
 	build = ":TSUpdate",
+	event = "VeryLazy",
 	dependencies = {
-		'JoosepAlviste/nvim-ts-context-commentstring',
-		'nvim-treesitter/nvim-treesitter-context',
-		'nvim-treesitter/nvim-treesitter-textobjects',
-		'nvim-treesitter/playground',
-		'windwp/nvim-ts-autotag',
+		"JoosepAlviste/nvim-ts-context-commentstring",
+		"nvim-treesitter/nvim-treesitter-context",
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		"nvim-treesitter/playground",
+		"windwp/nvim-ts-autotag",
 	},
 	config = function()
 		local status, treesitter = pcall(require, "nvim-treesitter.configs")
@@ -14,10 +15,25 @@ return {
 			return
 		end
 
-		treesitter.setup {
+		treesitter.setup({
 			-- A list of parser names, or "all" (the five listed parsers should always be installed)
-			ensure_installed = { "javascript", "typescript", "rust", "c", "vim", "lua", "vimdoc", "html", "css", "scss", "tsx",
-				"scss", "json", "regex", "vue" },
+			ensure_installed = {
+				"javascript",
+				"typescript",
+				"rust",
+				"c",
+				"vim",
+				"lua",
+				"vimdoc",
+				"html",
+				"css",
+				"scss",
+				"tsx",
+				"scss",
+				"json",
+				"regex",
+				"vue",
+			},
 			-- Install parsers synchronously (only applied to `ensure_installed`)
 			ingore_install = {},
 			sync_install = false,
@@ -49,8 +65,8 @@ return {
 				-- Instead of true it can also be a list of languages
 				additional_vim_regex_highlighting = true,
 				custom_captures = {
-					["attr.value"] = "TSKeyword"
-				}
+					["attr.value"] = "TSKeyword",
+				},
 			},
 			-- Plugins
 			autotag = {
@@ -104,9 +120,9 @@ return {
 					-- and should return the mode ('v', 'V', or '<c-v>') or a table
 					-- mapping query_strings to modes.
 					selection_modes = {
-						['@parameter.outer'] = 'v', -- charwise
-						['@function.outer'] = 'V', -- linewise
-						['@class.outer'] = '<c-v>', -- blockwise
+						["@parameter.outer"] = "v", -- charwise
+						["@function.outer"] = "V", -- linewise
+						["@class.outer"] = "<c-v>", -- blockwise
 					},
 					-- If you set this to `true` (default is `false`) then any textobject is
 					-- extended to include preceding or succeeding whitespace. Succeeding
@@ -164,11 +180,11 @@ return {
 					},
 					goto_previous = {
 						["[d"] = "@conditional.outer",
-					}
+					},
 				},
 				lsp_interop = {
 					enable = true,
-					border = 'none',
+					border = "none",
 					floating_preview_opts = {},
 					peek_definition_code = {
 						["<leader>df"] = "@function.outer",
@@ -176,8 +192,8 @@ return {
 					},
 				},
 			},
-		}
-		local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+		})
+		local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 		parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx", "tsx" }
 
 		-- Path: treesitter-context.lua
@@ -188,26 +204,25 @@ return {
 			return
 		end
 
-		treesitter_context.setup {
-			enable = true,       -- Enable this plugin (Can be enabled/disabled later via commands)
-			max_lines = 0,       -- How many lines the window should span. Values <= 0 mean no limit.
+		treesitter_context.setup({
+			enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+			max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
 			min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
 			line_numbers = true,
 			multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
-			trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-			mode = 'cursor',     -- Line used to calculate context. Choices: 'cursor', 'topline'
+			trim_scope = "outer", -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+			mode = "cursor", -- Line used to calculate context. Choices: 'cursor', 'topline'
 			-- Separator between context and content. Should be a single character string, like '-'.
 			-- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
 			separator = nil,
 			zindex = 20, -- The Z-index of the context window
-		}
+		})
 
-
-		require('ts_context_commentstring').setup({
+		require("ts_context_commentstring").setup({
 			context_commentstring = {
 				enable = true,
-				enable_autocnd = true
+				enable_autocnd = true,
 			},
 		})
-	end
+	end,
 }

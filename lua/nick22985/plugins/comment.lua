@@ -1,6 +1,7 @@
 return {
 	{
-		'numToStr/Comment.nvim',
+		"numToStr/Comment.nvim",
+		event = "VeryLazy",
 		config = function()
 			local cStatus, comment = pcall(require, "Comment")
 
@@ -12,13 +13,10 @@ return {
 			local commentstring_utils = require("ts_context_commentstring.utils")
 			local commentstring_internal = require("ts_context_commentstring.internal")
 
-
-
 			comment.setup({
-				pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+				pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
 				--[[ pre_hook = function(ctx)  ]]
 				--[[ 	local U = comment_utils ]]
-				--[[]]
 				--[[ 	local location = nil ]]
 				--[[ 	if ctx.ctype == U.ctype.block then ]]
 				--[[ 		location = commentstring_utils.get_cursor_location() ]]
@@ -32,6 +30,6 @@ return {
 				--[[ 	}) ]]
 				--[[ end ]]
 			})
-		end
-	}
+		end,
+	},
 }

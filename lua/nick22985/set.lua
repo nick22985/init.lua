@@ -21,8 +21,7 @@ vim.opt.smartcase = true
 vim.opt.breakindent = true
 -- vim.opt.list = true
 -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-vim.opt.inccommand = 'split'
-
+vim.opt.inccommand = "split"
 
 vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -39,25 +38,26 @@ vim.opt.isfname:append("@-@")
 -- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 vim.opt.updatetime = 50
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 1000
 
 vim.g.mapleader = " "
 
-vim.g.aw_hostname = vim.uv.os_gethostname();
+vim.g.aw_hostname = vim.uv.os_gethostname()
 -- netrw
 vim.g.netrw_banner = 0
 
 -- Fonts
-vim.opt.guifont = { "DroidSansMono Nerd Font", "MesloLGS Nerd Font", "Monaco", "Noto Color Emoji", "Consolas", "monospace" }
+vim.opt.guifont =
+	{ "DroidSansMono Nerd Font", "MesloLGS Nerd Font", "Monaco", "Noto Color Emoji", "Consolas", "monospace" }
 
 -- spelling
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
-vim.cmd[[au TextYankPost * silent! lua vim.highlight.on_yank()]]
+vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
 
 -- FIXME: this is not working
--- TODO: todo 
+-- TODO: todo
 -- HACK: hack
 -- WARN: warn
 -- PERF: perf

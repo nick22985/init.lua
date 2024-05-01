@@ -2,16 +2,18 @@ return {
 	-- 'tpope/vim-fugitive',
 	{
 		"NeogitOrg/neogit",
+		branch = "nightly",
+		event = "VeryLazy",
 		dependencies = {
-			"nvim-lua/plenary.nvim",      -- required
+			"nvim-lua/plenary.nvim", -- required
 			"nvim-telescope/telescope.nvim", -- optional
-			"sindrets/diffview.nvim",     -- optional
-			"ibhagwan/fzf-lua",           -- optional
+			"sindrets/diffview.nvim", -- optional
+			"ibhagwan/fzf-lua", -- optional
 		},
 		config = function()
 			local neogit = require("neogit")
 
-			neogit.setup {
+			neogit.setup({
 				-- Hides the hints at the top of the status buffer
 				disable_hint = false,
 				-- Disables changing the buffer highlights based on where the cursor is.
@@ -253,9 +255,9 @@ return {
 						["}"] = "GoToNextHunkHeader",
 					},
 				},
-			}
+			})
 			vim.keymap.set("n", "<leader>gs", neogit.open)
-		end
+		end,
 	},
 	{
 		"ThePrimeagen/git-worktree.nvim",
@@ -263,10 +265,10 @@ return {
 			local Worktree = require("git-worktree")
 			Worktree.setup({
 				change_directory_command = "cd", -- default: "cd",
-				update_on_change = true,      -- default: true,
+				update_on_change = true, -- default: true,
 				update_on_change_command = "e .", -- default: "e .",
-				clearjumps_on_change = true,  -- default: true,
-				autopush = false,             -- default: false,
+				clearjumps_on_change = true, -- default: true,
+				autopush = false, -- default: false,
 			})
 
 			local HOME = os.getenv("HOME")
@@ -314,8 +316,8 @@ return {
 					local current_path = path.path
 					local prev_path = path.prev_path
 
-					local matched_pattern = path_matches_any_pattern(current_path, project_paths) or
-					path_matches_any_pattern(prev_path, project_paths)
+					local matched_pattern = path_matches_any_pattern(current_path, project_paths)
+						or path_matches_any_pattern(prev_path, project_paths)
 					if not current_path:find("/") then
 						current_path = matched_pattern .. "/" .. current_path
 					end
@@ -333,50 +335,50 @@ return {
 	},
 	"sindrets/diffview.nvim",
 	{
-		'lewis6991/gitsigns.nvim',
+		"lewis6991/gitsigns.nvim",
 		config = function()
-			require('gitsigns').setup({
-				signs                        = {
-					add          = { text = '│' },
-					change       = { text = '│' },
-					delete       = { text = '_' },
-					topdelete    = { text = '‾' },
-					changedelete = { text = '~' },
-					untracked    = { text = '┆' },
+			require("gitsigns").setup({
+				signs = {
+					add = { text = "│" },
+					change = { text = "│" },
+					delete = { text = "_" },
+					topdelete = { text = "‾" },
+					changedelete = { text = "~" },
+					untracked = { text = "┆" },
 				},
-				signcolumn                   = true, -- Toggle with `:Gitsigns toggle_signs`
-				numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
-				linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
-				word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
-				watch_gitdir                 = {
+				signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+				numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
+				linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+				word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+				watch_gitdir = {
 					interval = 1000,
-					follow_files = true
+					follow_files = true,
 				},
-				attach_to_untracked          = true,
-				current_line_blame           = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
-				current_line_blame_opts      = {
+				attach_to_untracked = true,
+				current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+				current_line_blame_opts = {
 					virt_text = true,
-					virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+					virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
 					delay = 1000,
 					ignore_whitespace = false,
 				},
-				current_line_blame_formatter = ' <author>, <author_time:%Y-%m-%d> - <summary>',
-				sign_priority                = 6,
-				update_debounce              = 100,
-				status_formatter             = nil, -- Use default
-				max_file_length              = 40000, -- Disable if file is longer than this (in lines)
-				preview_config               = {
+				current_line_blame_formatter = " <author>, <author_time:%Y-%m-%d> - <summary>",
+				sign_priority = 6,
+				update_debounce = 100,
+				status_formatter = nil, -- Use default
+				max_file_length = 40000, -- Disable if file is longer than this (in lines)
+				preview_config = {
 					-- Options passed to nvim_open_win
-					border = 'single',
-					style = 'minimal',
-					relative = 'cursor',
+					border = "single",
+					style = "minimal",
+					relative = "cursor",
 					row = 0,
-					col = 1
+					col = 1,
 				},
-				yadm                         = {
-					enable = false
+				yadm = {
+					enable = false,
 				},
 			})
-		end
+		end,
 	},
 }

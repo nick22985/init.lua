@@ -1,6 +1,7 @@
 return {
 	{
 		"laytan/cloak.nvim",
+		event = "VeryLazy",
 		config = function()
 			local status, cloak = pcall(require, "cloak")
 			if not status then
@@ -24,10 +25,10 @@ return {
 						-- Match an equals sign and any character after it.
 						-- This can also be a table of patterns to cloak,
 						-- example: cloak_pattern = { ":.+", "-.+" } for yaml files.
-						cloak_pattern = "=.+"
+						cloak_pattern = "=.+",
 					},
 				},
 			})
-		end
-	}
+		end,
+	},
 }

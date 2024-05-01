@@ -1,6 +1,7 @@
 return { -- LSP Configuration & Plugins
 	{
 		"neovim/nvim-lspconfig",
+		event = "VeryLazy",
 		dependencies = {
 			-- Automatically install LSPs and related tools to stdpath for Neovim
 			"williamboman/mason.nvim",
@@ -82,7 +83,7 @@ return { -- LSP Configuration & Plugins
 								callSnippet = "Replace",
 							},
 							-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-							-- diagnostics = { disable = { 'missing-fields' } },
+							diagnostics = { disable = { "missing-fields" } },
 						},
 					},
 				},
@@ -161,7 +162,7 @@ return { -- LSP Configuration & Plugins
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
-				-- javascript = { { "prettierd", "prettier" } },
+				javascript = { { "prettierd", "prettier" } },
 			},
 		},
 	},
