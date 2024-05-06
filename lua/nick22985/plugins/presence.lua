@@ -17,9 +17,7 @@ return {
 				log_level = nil, -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
 				debounce_timeout = 10, -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
 				enable_line_number = true, -- Displays the current line number instead of the current project
-				blacklist = {
-					"test",
-				}, -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
+				blacklist = {}, -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
 				-- buttons             = true,                         -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table (`{{ label = "<label>", url = "<url>" }, ...}`, or a function(buffer: string, repo_url: string|nil): table)
 				-- buttons							= {{ label = "GitHub", url = "https://test.com"}, { label = "Discord", url = "https://discord.gg"}},
 				buttons = function(buffer, repo_url)

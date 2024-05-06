@@ -23,13 +23,13 @@ return {
 
 		telescope.setup({
 			defaults = {
-				path_display = { "smart" },
+				path_display = { "truncate" },
 			},
 			pickers = {
 				find_files = {
-					hidden = true,
+					-- hidden = true,
 					-- Search for files using rg (searches for sys link files etc)
-					-- find_command = { "rg", "--ignore", "--no-ignore", "-L", "--files", "--hidden", "--ignore-case" },
+					find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
 					file_ignore_patterns = {
 						"node_modules/",
 						"dist/",

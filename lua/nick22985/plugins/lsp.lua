@@ -10,7 +10,27 @@ return { -- LSP Configuration & Plugins
 
 			-- Useful status updates for LSP.
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			{ "j-hui/fidget.nvim", opts = {} },
+			{
+				"j-hui/fidget.nvim",
+				config = function()
+					require("fidget").setup({
+						notification = {
+							redirect = function(msg, level, opts)
+								-- P(msg)
+								-- notify here
+								-- P(opts)
+								-- P(level)
+								if opts and opts.on_open then
+									return require("fidget.integration.nvim-notify").delegate(msg, level, opts)
+								end
+							end,
+							window = {
+								winblend = 0,
+							},
+						},
+					})
+				end,
+			},
 
 			-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
 			-- used for completion, annotations and signatures of Neovim apis
@@ -87,6 +107,9 @@ return { -- LSP Configuration & Plugins
 						},
 					},
 				},
+				tailwindcss = {
+					filetypes = { "css", "javascriptreact", "typescriptreact" },
+				},
 			}
 
 			require("mason").setup()
@@ -100,7 +123,7 @@ return { -- LSP Configuration & Plugins
 			require("mason-lspconfig").setup({
 				handlers = {
 					function(server_name)
-						local server = servers[server_name] or {}
+						local server = servers or {}
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 						require("lspconfig")[server_name].setup(server)
 					end,
@@ -132,7 +155,7 @@ return { -- LSP Configuration & Plugins
 	},
 	{
 		"stevearc/conform.nvim",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		keys = {
 			{
 				"<leader>f",
@@ -162,7 +185,7 @@ return { -- LSP Configuration & Plugins
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
-				javascript = { { "prettierd", "prettier" } },
+				-- javascript = { { "prettier", "prettierd" } },
 			},
 		},
 	},
