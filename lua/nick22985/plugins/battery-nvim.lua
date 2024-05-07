@@ -1,7 +1,6 @@
 return {
 	"justinhj/battery.nvim",
 	config = function()
-		print("Loading battery.nvim")
 		require("battery").setup({
 			update_rate_seconds = 30, -- Number of seconds between checking battery status
 			show_status_when_no_battery = true, -- Don't show any icon or text when no battery found (desktop for example)

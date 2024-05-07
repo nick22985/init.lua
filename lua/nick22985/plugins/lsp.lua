@@ -1,15 +1,11 @@
 return { -- LSP Configuration & Plugins
 	{
 		"neovim/nvim-lspconfig",
-		event = "VeryLazy",
+		event = { "BufReadPost", "BufWritePost", "BufNewFile" },
 		dependencies = {
-			-- Automatically install LSPs and related tools to stdpath for Neovim
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
-			"WhoIsSethDaniel/mason-tool-installer.nvim",
-
-			-- Useful status updates for LSP.
-			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+			{ "williamboman/mason.nvim" },
+			{ "williamboman/mason-lspconfig.nvim" },
+			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 			{
 				"j-hui/fidget.nvim",
 				config = function()
@@ -17,7 +13,7 @@ return { -- LSP Configuration & Plugins
 						notification = {
 							redirect = function(msg, level, opts)
 								-- P(msg)
-								-- notify here
+								--
 								-- P(opts)
 								-- P(level)
 								if opts and opts.on_open then
@@ -34,7 +30,10 @@ return { -- LSP Configuration & Plugins
 
 			-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
 			-- used for completion, annotations and signatures of Neovim apis
-			{ "folke/neodev.nvim", opts = {} },
+			{
+				"folke/neodev.nvim",
+				opts = {},
+			},
 		},
 		config = function()
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -45,15 +44,10 @@ return { -- LSP Configuration & Plugins
 					end
 
 					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-
 					map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-
 					map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-
 					map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-
 					map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-
 					map(
 						"<leader>ws",
 						require("telescope.builtin").lsp_dynamic_workspace_symbols,
@@ -89,8 +83,13 @@ return { -- LSP Configuration & Plugins
 				end,
 			})
 
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+			local cmp_lsp = require("cmp_nvim_lsp")
+			local capabilities = vim.tbl_deep_extend(
+				"force",
+				{},
+				vim.lsp.protocol.make_client_capabilities(),
+				cmp_lsp.default_capabilities()
+			)
 
 			local servers = {
 				lua_ls = {
@@ -102,8 +101,9 @@ return { -- LSP Configuration & Plugins
 							completion = {
 								callSnippet = "Replace",
 							},
-							-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-							diagnostics = { disable = { "missing-fields" } },
+							diagnostics = {
+								globals = { "vim", "it", "describe", "before_each", "after_each" },
+							},
 						},
 					},
 				},
@@ -123,7 +123,7 @@ return { -- LSP Configuration & Plugins
 			require("mason-lspconfig").setup({
 				handlers = {
 					function(server_name)
-						local server = servers or {}
+						local server = servers[server_name] or {}
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 						require("lspconfig")[server_name].setup(server)
 					end,
@@ -155,7 +155,7 @@ return { -- LSP Configuration & Plugins
 	},
 	{
 		"stevearc/conform.nvim",
-		event = { "BufReadPre", "BufNewFile" },
+		event = { "BufReadPost", "BufWritePost", "BufNewFile" },
 		keys = {
 			{
 				"<leader>f",
@@ -172,7 +172,7 @@ return { -- LSP Configuration & Plugins
 				-- Disable "format_on_save lsp_fallback" for languages that don't
 				-- have a well standardized coding style. You can add additional
 				-- languages here or re-enable it for the disabled ones.
-				local disable_filetypes = { c = true, cpp = true }
+				local disable_filetypes = { c = false, cpp = false }
 				return {
 					timeout_ms = 500,
 					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -185,13 +185,12 @@ return { -- LSP Configuration & Plugins
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
-				-- javascript = { { "prettier", "prettierd" } },
+				javascript = { { "prettier" } },
 			},
 		},
 	},
 	{ -- Autocompletion
 		"hrsh7th/nvim-cmp",
-		event = "InsertEnter",
 		dependencies = {
 			-- Snippet Engine & its associated nvim-cmp source
 			{
@@ -215,7 +214,6 @@ return { -- LSP Configuration & Plugins
 				},
 			},
 			"saadparwaiz1/cmp_luasnip",
-
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-path",
 			"hrsh7th/nvim-cmp",
@@ -228,22 +226,7 @@ return { -- LSP Configuration & Plugins
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
-			luasnip.config.setup({})
-			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = {
-					{ name = "buffer" },
-				},
-			})
 
-			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = "path" },
-				}, {
-					{ name = "cmdline" },
-				}),
-			})
 			cmp.setup({
 				snippet = {
 					expand = function(args)
@@ -261,7 +244,8 @@ return { -- LSP Configuration & Plugins
 
 					["<C-y>"] = cmp.mapping.confirm({ select = true }),
 
-					["<C-Space>"] = cmp.mapping.complete({}),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-e>"] = cmp.mapping.close(),
 
 					["<C-l>"] = cmp.mapping(function()
 						if luasnip.expand_or_locally_jumpable() then
@@ -282,6 +266,31 @@ return { -- LSP Configuration & Plugins
 					{ name = "luasnip" },
 					{ name = "path" },
 				},
+			})
+			luasnip.config.setup({})
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = {
+					{ name = "buffer" },
+				},
+			})
+
+			cmp.setup.cmdline(":", {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
+					{ name = "path" },
+				}, {
+					{ name = "cmdline" },
+				}),
+			})
+
+			-- Set configuration for specific filetype.
+			cmp.setup.filetype("gitcommit", {
+				sources = cmp.config.sources({
+					{ name = "git" }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
+				}, {
+					{ name = "buffer" },
+				}),
 			})
 		end,
 	},
