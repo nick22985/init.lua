@@ -239,11 +239,12 @@ return {
 
 			ins_right({
 				function()
+					-- does not display just for battery notification when below 35%
 					local battery = require("battery").get_status_line()
 					--  if battery is below 10% change color to red
 					if battery:find("%%") then
 						local level = tonumber(battery:match("%d+"))
-						if level and level < 50 then
+						if level and level < 35 then
 							if batteryNotify == false then
 								batteryNotify = true
 								local batteryString = "Battery Low: " .. battery
@@ -252,12 +253,12 @@ return {
 									timeout = 10000,
 								})
 							end
-							return battery
+							return ""
 						end
 					else
 						batteryNotify = false
 					end
-					return battery
+					return ""
 				end,
 				color = { fg = colors.violet, bg = colors.bg },
 			})

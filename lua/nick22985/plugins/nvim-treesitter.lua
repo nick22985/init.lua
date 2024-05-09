@@ -32,7 +32,7 @@ return {
 				"scss",
 				"json",
 				"regex",
-				"vue",
+				"markdown_inline",
 			},
 			-- Install parsers synchronously (only applied to `ensure_installed`)
 			ingore_install = {},
@@ -49,6 +49,9 @@ return {
 
 			highlight = {
 				enable = true,
+				injections = {
+					enable = true,
+				},
 				-- Disable vue until there is custom block support or all projects move to vue3
 				-- disable = {"vue"},
 				-- disable = function(lang, buf)
@@ -63,7 +66,8 @@ return {
 				-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
 				-- Using this option may slow down your editor, and you may see some duplicate highlights.
 				-- Instead of true it can also be a list of languages
-				additional_vim_regex_highlighting = true,
+				-- disable = { "vue" },
+				additional_vim_regex_highlighting = false,
 				custom_captures = {
 					["attr.value"] = "TSKeyword",
 				},
@@ -196,9 +200,28 @@ return {
 		local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 		parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx", "tsx" }
 
-		-- Path: treesitter-context.lua
-		-- Treesitter context
+		parser_config.vue = {
+			install_info = {
+				-- use custom parser
+				-- has to be local putting a url does not work
+				url = "~/.config/treesitterCustom/tree-sitter-vue",
+				-- files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
+				-- -- generate_requires_npm = true, -- if stand-alone parser without npm dependencies
+				-- -- requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
+				filetype = "vue",
+				-- generate_requires_npm = true,
+				-- requires_generate_from_grammar = true,
 
+				-- url = "https://github.com/nick22985/tree-sitter-vue.git",
+				branch = "main",
+				files = { "src/parser.c", "src/scanner.c" },
+			},
+			maintainer = {
+				"@nick22985",
+			},
+		}
+
+		vim.treesitter.language.register("vue", "vue")
 		local present, treesitter_context = pcall(require, "treesitter-context")
 		if not present then
 			return

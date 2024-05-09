@@ -8,16 +8,21 @@ function ColorMyPencils(color)
 	vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
 	vim.api.nvim_set_hl(0, "TroubleCount", { bg = "none" })
 	vim.api.nvim_set_hl(0, "ToubleText", { bg = "none" })
+	local pmenuSel_highlight = vim.api.nvim_get_hl(0, {
+		name = "PmenuSel",
+	})
+	-- tailwind highlights
+	vim.api.nvim_set_hl(0, "PmenuSel", { fg = "NONE", bg = pmenuSel_highlight.bg })
 end
 
 return {
 	{
-		'rose-pine/neovim',
-		name = 'rose-pine',
+		"rose-pine/neovim",
+		name = "rose-pine",
 		priority = 1000, -- Make sure to load this before all the other start plugins.
 		config = function()
 			require("rose-pine").setup({
-				variant = "auto",  -- auto, main, moon, or dawn
+				variant = "auto", -- auto, main, moon, or dawn
 				dark_variant = "main", -- main, moon, or dawn
 				dim_inactive_windows = false,
 				extend_background_behind_borders = true,
@@ -25,7 +30,7 @@ return {
 				enable = {
 					terminal = false,
 					legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
-					migrations = true,      -- Handle deprecated options automatically
+					migrations = true, -- Handle deprecated options automatically
 				},
 
 				styles = {
@@ -72,8 +77,10 @@ return {
 					-- NormalFloat = { fg = "base", bg = "none" },
 				},
 
-
 				before_highlight = function(group, highlight, palette)
+					-- P(group)
+					-- P(highlight)
+					-- P(palette)
 					-- Disable all undercurls
 					-- if highlight.undercurl then
 					--     highlight.undercurl = false
@@ -90,7 +97,7 @@ return {
 			-- vim.cmd("colorscheme rose-pine-main")
 			-- vim.cmd("colorscheme rose-pine-moon")
 			-- vim.cmd("colorscheme rose-pine-dawn")
-		end
+		end,
 	},
 	{
 		"olimorris/onedarkpro.nvim",
@@ -99,14 +106,14 @@ return {
 			require("onedarkpro").setup({
 				options = {
 					transparency = true,
-					terminal_colors = false
-				}
+					terminal_colors = false,
+				},
 			})
 			-- ColorMyPencils('onedark')
-		end
+		end,
 	},
 	{
-		'folke/tokyonight.nvim',
+		"folke/tokyonight.nvim",
 		priority = 1000, -- Make sure to load this before all the other start plugins.
 		config = function()
 			require("tokyonight").setup({
@@ -114,11 +121,10 @@ return {
 				styles = {
 					sidebars = "transparent",
 					floats = "transparent",
-				}
+				},
 			})
 
 			-- ColorMyPencils('tokyonight')
-		end
-
-	}
+		end,
+	},
 }

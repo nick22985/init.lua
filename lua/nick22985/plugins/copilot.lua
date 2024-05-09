@@ -5,7 +5,7 @@ return {
 		config = function()
 			require("copilot").setup({
 				panel = {
-					enabled = true,
+					enabled = false,
 					auto_refresh = true,
 					keymap = {
 						jump_prev = "[[",
@@ -20,7 +20,7 @@ return {
 					},
 				},
 				suggestion = {
-					enabled = true,
+					enabled = false,
 					auto_trigger = true,
 					debounce = 75,
 					keymap = {
@@ -33,15 +33,15 @@ return {
 					},
 				},
 				filetypes = {
-					yaml = false,
-					markdown = false,
-					help = false,
-					gitcommit = false,
-					gitrebase = false,
-					hgcommit = false,
-					svn = false,
-					cvs = false,
-					["."] = false,
+					-- yaml = false,
+					-- markdown = false,
+					-- help = false,
+					-- gitcommit = false,
+					-- gitrebase = false,
+					-- hgcommit = false,
+					-- svn = false,
+					-- cvs = false,
+					-- ["."] = false,
 				},
 				copilot_node_command = "node", -- Node.js version must be > 18.x
 				server_opts_overrides = {},
