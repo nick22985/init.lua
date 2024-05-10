@@ -147,6 +147,12 @@ return { -- LSP Configuration & Plugins
 						},
 					},
 				},
+				angularls = {
+					filestypes = {
+						"ng",
+						"html",
+					},
+				},
 			}
 
 			require("mason").setup()

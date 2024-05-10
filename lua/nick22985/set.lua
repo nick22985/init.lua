@@ -54,8 +54,6 @@ vim.opt.guifont =
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
-vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
-
 -- FIXME: this is not working
 -- TODO: todo
 -- HACK: hack
