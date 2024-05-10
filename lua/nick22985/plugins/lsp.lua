@@ -12,10 +12,6 @@ return { -- LSP Configuration & Plugins
 					require("fidget").setup({
 						notification = {
 							redirect = function(msg, level, opts)
-								-- P(msg)
-								--
-								-- P(opts)
-								-- P(level)
 								if opts and opts.on_open then
 									return require("fidget.integration.nvim-notify").delegate(msg, level, opts)
 								end

@@ -75,9 +75,6 @@ return {
 				},
 
 				before_highlight = function(group, highlight, palette)
-					-- P(group)
-					-- P(highlight)
-					-- P(palette)
 					-- Disable all undercurls
 					-- if highlight.undercurl then
 					--     highlight.undercurl = false
@@ -192,7 +189,6 @@ return {
 			local pmenuSel_highlight = vim.api.nvim_get_hl(0, {
 				name = "TreesitterContextBottom",
 			})
-			P(pmenuSel_highlight)
 			-- setup must be called before loading
 			-- vim.cmd.colorscheme("catppuccin")
 			ColorMyPencils("catppuccin")
