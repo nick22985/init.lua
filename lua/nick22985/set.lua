@@ -34,10 +34,7 @@ vim.opt.sidescrolloff = 5
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
--- vim.opt.foldmethod = "expr"
--- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-
-vim.opt.updatetime = 50
+-- vim.opt.updatetime = 50
 vim.opt.timeoutlen = 1000
 
 vim.g.mapleader = " "
