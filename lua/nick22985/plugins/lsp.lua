@@ -170,26 +170,28 @@ return { -- LSP Configuration & Plugins
 				},
 			})
 
-			local signs = {
-				Error = "",
-				Warn = "",
-				Hint = "",
-				Info = "",
-			}
-
-			for type, icon in pairs(signs) do
-				local hl = "DiagnosticSign" .. type
-				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-			end
-
 			vim.diagnostic.config({
-				virtual_text = {
-					-- prefix = '●',
-				},
-				signs = true,
 				underline = true,
-				update_in_insert = false,
+				update_in_insert = true,
+				virtual_text = {
+					spacing = 4,
+					source = "if_many",
+					prefix = "●",
+				},
 				severity_sort = true,
+				signs = {
+					text = {
+						[vim.diagnostic.severity.ERROR] = " ",
+						[vim.diagnostic.severity.WARN] = " ",
+						[vim.diagnostic.severity.INFO] = " ",
+					},
+				},
+				inlay_hints = {
+					enabled = true,
+				},
+				codelens = {
+					enabled = true,
+				},
 			})
 		end,
 	},

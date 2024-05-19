@@ -103,7 +103,7 @@ return {
 					kind = "auto",
 				},
 				preview_buffer = {
-					kind = "split",
+					kind = "floating",
 				},
 				popup = {
 					kind = "split",
@@ -244,7 +244,6 @@ return {
 						["u"] = "Unstage",
 						["U"] = "UnstageStaged",
 						["$"] = "CommandHistory",
-						["#"] = "Console",
 						["Y"] = "YankSelected",
 						["<c-r>"] = "RefreshBuffer",
 						["<enter>"] = "GoToFile",
@@ -260,7 +259,7 @@ return {
 		end,
 	},
 	{
-		"ThePrimeagen/git-worktree.nvim",
+		"polarmutex/git-worktree.nvim",
 		config = function()
 			local Worktree = require("git-worktree")
 			Worktree.setup({
@@ -312,7 +311,8 @@ return {
 
 			local function on_tree_change(op, path, upstream)
 				if op == "switch" then
-					local project_paths = read_project_paths("~/install/configs/private/.tmux-commands.txt")
+					local project_paths =
+						read_project_paths("~/.config/.nickInstall//install/configs/private/.tmux-commands.txt")
 					local current_path = path.path
 					local prev_path = path.prev_path
 
