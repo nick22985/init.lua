@@ -13,16 +13,14 @@ local function remember(mode)
 		"qf",
 		"",
 	}
-	P({ "remember", vim.bo.filetype, vim.bo.buftype, vim.bo.modifiable })
+	-- P({ "remember", vim.bo.filetype, vim.bo.buftype, vim.bo.modifiable })
 	if vim.tbl_contains(ignoredFts, vim.bo.filetype) or vim.bo.buftype ~= "" or not vim.bo.modifiable then
 		return
 	end
 
 	if mode == "save" then
-		P("save")
 		vim.cmd.mkview(1)
 	else
-		P("Load")
 		pcall(function()
 			vim.cmd.loadview(1)
 		end) -- pcall, since new files have no view yet
@@ -31,7 +29,6 @@ end
 vim.api.nvim_create_autocmd("BufWinLeave", {
 	pattern = "?*",
 	callback = function()
-		P("save")
 		remember("save")
 	end,
 })
@@ -39,7 +36,6 @@ vim.api.nvim_create_autocmd("BufWinLeave", {
 vim.api.nvim_create_autocmd("BufWinEnter", {
 	pattern = "?*",
 	callback = function()
-		P("Load")
 		remember("load")
 	end,
 })

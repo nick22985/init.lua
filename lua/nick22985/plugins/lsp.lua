@@ -233,6 +233,7 @@ return { -- LSP Configuration & Plugins
 	},
 	{ -- Autocompletion
 		"hrsh7th/nvim-cmp",
+		branch = "main",
 		dependencies = {
 			-- Snippet Engine & its associated nvim-cmp source
 			{

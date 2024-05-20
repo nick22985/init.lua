@@ -77,13 +77,33 @@ return {
 			}
 
 			-- Inserts a component in lualine_c at left section
-			local function ins_left(component)
-				table.insert(config.sections.lualine_c, component)
+			local function ins_left(component, isActive, isInactive)
+				if isActive == nil then
+					isActive = true
+				end
+				if isActive == true then
+					table.insert(config.sections.lualine_c, component)
+				end
+				if isInactive == true then
+					table.insert(config.inactive_sections.lualine_c, component)
+				end
 			end
 
 			-- Inserts a component in lualine_x at right section
-			local function ins_right(component)
-				table.insert(config.sections.lualine_x, component)
+			-- add isActive, isInactive both enum
+			-- isActive is default true if no value
+			--
+
+			local function ins_right(component, isActive, isInactive)
+				if isActive == nil then
+					isActive = true
+				end
+				if isActive == true then
+					table.insert(config.sections.lualine_x, component)
+				end
+				if isInactive == true then
+					table.insert(config.inactive_sections.lualine_x, component)
+				end
 			end
 
 			ins_left({
@@ -92,7 +112,7 @@ return {
 				end,
 				color = { fg = colors.blue }, -- Sets highlighting of component
 				padding = { left = 0, right = 1 }, -- We don't need space before this
-			})
+			}, true, true)
 
 			ins_left({
 				-- mode component
@@ -126,24 +146,24 @@ return {
 					return { fg = mode_color[vim.fn.mode()] }
 				end,
 				padding = { right = 1 },
-			})
+			}, true, true)
 
 			ins_left({
 				-- filesize component
 				"filesize",
 				cond = conditions.buffer_not_empty,
-			})
+			}, true, true)
 
 			ins_left({
 				"filename",
 				path = 1,
 				cond = conditions.buffer_not_empty,
 				color = { fg = colors.magenta, gui = "bold" },
-			})
+			}, true, true)
 
-			ins_left({ "location" })
+			ins_left({ "location" }, true, true)
 
-			ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
+			ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } }, true, true)
 
 			ins_left({
 				"diagnostics",
@@ -154,7 +174,16 @@ return {
 					color_warn = { fg = colors.yellow },
 					color_info = { fg = colors.cyan },
 				},
-			})
+			}, true, true)
+
+			ins_left({
+				function()
+					return require("noice").api.status.mode.get()
+				end,
+				cond = function()
+					return package.loaded["noice"] and require("noice").api.status.mode.has()
+				end,
+			}, true, false)
 
 			-- Insert mid section. You can make any number of sections in neovim :)
 			-- for lualine it's any number greater then 2
@@ -162,7 +191,7 @@ return {
 				function()
 					return "%="
 				end,
-			})
+			}, true, true)
 
 			ins_left({
 				-- Lsp server name .
@@ -189,7 +218,7 @@ return {
 				end,
 				icon = " LSP:",
 				color = { fg = colors.cyan, gui = "bold" },
-			})
+			}, true, true)
 
 			-- Add components to right sections
 			ins_right({
@@ -205,27 +234,27 @@ return {
 				end,
 				color = { fg = colors.blue }, -- Sets highlighting of component
 				padding = { left = 0, right = 1 }, -- We don't need space before this
-			})
+			}, true, false)
 
 			ins_right({
 				"o:encoding", -- option component same as &encoding in viml
 				fmt = string.upper, -- I'm not sure why it's upper case either ;)
 				cond = conditions.hide_in_width,
 				color = { fg = colors.green, gui = "bold" },
-			})
+			}, true, true)
 
 			ins_right({
 				"fileformat",
 				fmt = string.upper,
 				icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
 				color = { fg = colors.green, gui = "bold" },
-			})
+			}, true, true)
 
 			ins_right({
 				"branch",
 				icon = "",
 				color = { fg = colors.violet, gui = "bold" },
-			})
+			}, true, true)
 
 			ins_right({
 				"diff",
@@ -237,7 +266,7 @@ return {
 					removed = { fg = colors.red },
 				},
 				cond = conditions.hide_in_width,
-			})
+			}, true, true)
 
 			ins_right({
 				function()
@@ -263,15 +292,14 @@ return {
 					return ""
 				end,
 				color = { fg = colors.violet, bg = colors.bg },
-			})
+			}, true, true)
 			ins_right({
 				function()
 					return "▊"
 				end,
 				color = { fg = colors.blue },
 				padding = { left = 1 },
-			})
-			config.inactive_sections = config.sections
+			}, true, true)
 			-- Now don't forget to initialize lualine
 			lualine.setup(config)
 			require("lualine").hide({ place = { "tabline" } })
