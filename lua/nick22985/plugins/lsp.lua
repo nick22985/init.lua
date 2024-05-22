@@ -78,6 +78,21 @@ return { -- LSP Configuration & Plugins
 					end
 				end,
 			})
+			local function eslint_config_exists()
+				local eslintrc = vim.fn.glob(".eslintrc*", 0, 1)
+
+				if not vim.tbl_isempty(eslintrc) then
+					return true
+				end
+
+				if vim.fn.filereadable("package.json") then
+					if vim.fn.json_decode(vim.fn.readfile("package.json"))["eslintConfig"] then
+						return true
+					end
+				end
+
+				return false
+			end
 
 			local cmp_lsp = require("cmp_nvim_lsp")
 			local capabilities = vim.tbl_deep_extend(
@@ -149,6 +164,11 @@ return { -- LSP Configuration & Plugins
 						"html",
 					},
 				},
+				eslint = {
+					root_dir = function()
+						return false
+					end,
+				},
 			}
 
 			require("mason").setup()
@@ -208,28 +228,93 @@ return { -- LSP Configuration & Plugins
 				desc = "[F]ormat buffer",
 			},
 		},
-		opts = {
-			notify_on_error = false,
-			format_on_save = function(bufnr)
-				-- Disable "format_on_save lsp_fallback" for languages that don't
-				-- have a well standardized coding style. You can add additional
-				-- languages here or re-enable it for the disabled ones.
-				local disable_filetypes = { c = false, cpp = false }
-				return {
-					timeout_ms = 500,
-					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+		opts = {},
+		config = function(opts)
+			local function get_prettier_config()
+				local config_files = {
+					"package.json",
+					".prettierrc",
+					".prettierrc.json",
+					".prettierrc.yml",
+					".prettierrc.yaml",
+					".prettierrc.json5",
+					".prettierrc.js",
+					"prettier.config.js",
+					".prettierrc.mjs",
+					"prettier.config.mjs",
+					".prettierrc.cjs",
+					"prettier.config.cjs",
+					".prettierrc.toml",
 				}
-			end,
-			formatters_by_ft = {
-				lua = { "stylua" },
-				-- Conform can also run multiple formatters sequentially
-				-- python = { "isort", "black" },
-				--
-				-- You can use a sub-list to tell conform to run *until* a formatter
-				-- is found.
-				javascript = { { "prettier" } },
-			},
-		},
+
+				local function file_exists_in_directory(directory, file)
+					return vim.fn.filereadable(vim.fn.expand(directory .. "/" .. file)) == 1
+				end
+
+				local function find_config_file(starting_directory)
+					local current_directory = starting_directory
+					local root_directory = vim.fn.getcwd()
+
+					while current_directory ~= "/" do
+						for _, file in ipairs(config_files) do
+							local file_path = current_directory .. "/" .. file
+							if file_exists_in_directory(current_directory, file) then
+								if file == "package.json" then
+									local package_json = vim.fn.json_decode(vim.fn.readfile(file_path))
+									if package_json["prettier"] then
+										return file_path
+									end
+								else
+									return file_path
+								end
+							end
+						end
+						if current_directory == root_directory then
+							break
+						end
+						current_directory = vim.fn.fnamemodify(current_directory, ":h")
+					end
+
+					-- Return the fallback config if no config files are found
+					return os.getenv("HOME") .. "/.config/nvim/utils/linter-config/.prettierrc.json"
+				end
+
+				return find_config_file(vim.fn.expand("%:p:h"))
+			end
+			require("conform").setup({
+				notify_on_error = false,
+				format_on_save = function(bufnr)
+					-- Disable "format_on_save lsp_fallback" for languages that don't
+					-- have a well standardized coding style. You can add additional
+					-- languages here or re-enable it for the disabled ones.
+					local disable_filetypes = { c = false, cpp = false, vue = false }
+					return {
+						timeout_ms = 500,
+						lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+					}
+				end,
+				formatters_by_ft = {
+					lua = { "stylua" },
+					-- Conform can also run multiple formatters sequentially
+					-- python = { "isort", "black" },
+					--
+					-- You can use a sub-list to tell conform to run *until* a formatter
+					-- is found.
+					javascript = { { "prettier" } },
+					vue = { "prettier" },
+				},
+				formatters = {
+					prettier = {
+						command = "prettier",
+						args = function()
+							local config = get_prettier_config()
+							return { "--config", config, "--stdin-filepath", vim.fn.expand("%:p") }
+						end,
+						stdin = true,
+					},
+				},
+			})
+		end,
 	},
 	{ -- Autocompletion
 		"hrsh7th/nvim-cmp",

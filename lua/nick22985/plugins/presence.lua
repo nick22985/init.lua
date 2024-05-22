@@ -8,7 +8,8 @@ return {
 				return
 			end
 
-			local file = io.open(os.getenv("HOME") .. "/install/configs/private/excludednames", "r")
+			local file =
+				io.open(os.getenv("HOME") .. "/.config/.nickInstall/install/configs/private/excludednames", "r")
 			if file == nil then
 				return
 			end
@@ -16,8 +17,6 @@ return {
 			for line in file:lines() do
 				table.insert(blacklist, line)
 			end
-
-			-- blacklist = vim.tbl_extend("force", blacklist, blaclist_extended)
 
 			local blacklistText = "[REDACTED]"
 			function FilterText(fileName)

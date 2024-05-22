@@ -131,11 +131,11 @@ return {
 					light = "latte",
 					dark = "mocha",
 				},
-				transparent_background = true, -- disables setting the background color.
+				transparent_background = false, -- disables setting the background color.
 				show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
 				term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
 				dim_inactive = {
-					enabled = true, -- dims the background color of inactive window
+					enabled = false, -- dims the background color of inactive window
 					shade = "dark",
 					percentage = 0.15, -- percentage of the shade to apply to the inactive window
 				},
@@ -171,6 +171,9 @@ return {
 					diffview = true,
 					fidget = true,
 					harpoon = true,
+					telescope = {
+						enabled = true,
+					},
 					indent_blankline = {
 						enabled = true,
 						colored_indent_levels = true,
@@ -186,9 +189,9 @@ return {
 				},
 			})
 
-			local pmenuSel_highlight = vim.api.nvim_get_hl(0, {
-				name = "TreesitterContextBottom",
-			})
+			-- local pmenuSel_highlight = vim.api.nvim_get_hl(0, {
+			-- 	name = "TreesitterContextBottom",
+			-- })
 			-- setup must be called before loading
 			-- vim.cmd.colorscheme("catppuccin")
 			ColorMyPencils("catppuccin")

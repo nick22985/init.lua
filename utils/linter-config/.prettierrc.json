@@ -2,4 +2,5 @@
 	"tabWidth": 1,
 	"useTabs": true,
 	"print-width": 800,
+	"singleQuote": true
 }
