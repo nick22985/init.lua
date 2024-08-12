@@ -70,6 +70,8 @@ return {
 				additional_vim_regex_highlighting = false,
 				custom_captures = {
 					["attr.value"] = "TSKeyword",
+					-- ["non_standard"] = "NonStandardASCII",
+					-- ["invisible"] = "InvisibleCharacters",
 				},
 			},
 			-- Plugins
@@ -197,6 +199,10 @@ return {
 				},
 			},
 		})
+		-- highlight for characters
+		-- vim.cmd("highlight NonStandardASCII ctermbg=red guibg=red")
+		-- vim.cmd("highlight InvisibleCharacters ctermbg=blue guibg=blue")
+
 		local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 		parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx", "tsx" }
 

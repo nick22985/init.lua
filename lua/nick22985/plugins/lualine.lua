@@ -178,7 +178,12 @@ return {
 
 			ins_left({
 				function()
-					return require("noice").api.status.mode.get()
+					-- return require("noice").api.status.mode.get()
+					local mode = require("noice").api.statusline.mode.get()
+					if mode then
+						return string.match(mode, "^recording @.*") or ""
+					end
+					return ""
 				end,
 				cond = function()
 					return package.loaded["noice"] and require("noice").api.status.mode.has()

@@ -91,7 +91,7 @@ return { -- LSP Configuration & Plugins
 					end
 				end
 
-				return false
+				return true
 			end
 
 			local cmp_lsp = require("cmp_nvim_lsp")
@@ -203,6 +203,7 @@ return { -- LSP Configuration & Plugins
 					text = {
 						[vim.diagnostic.severity.ERROR] = " ",
 						[vim.diagnostic.severity.WARN] = " ",
+						[vim.diagnostic.severity.HINT] = "",
 						[vim.diagnostic.severity.INFO] = " ",
 					},
 				},

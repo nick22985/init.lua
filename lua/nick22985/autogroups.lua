@@ -70,4 +70,5 @@ vim.on_key(function(char)
 	end
 end, vim.api.nvim_create_namespace("auto_pause_folds"))
 
+-- Yank highlight
 vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])

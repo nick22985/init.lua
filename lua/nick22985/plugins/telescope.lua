@@ -10,6 +10,7 @@ return {
 		"nvim-telescope/telescope-file-browser.nvim",
 		"nvim-telescope/telescope-hop.nvim", -- NEEDS SETUP
 		"nvim-telescope/telescope-ui-select.nvim",
+		"polarmutex/git-worktree.nvim",
 		{ "danielvolchek/tailiscope.nvim" },
 		{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
 		"nvim-lua/plenary.nvim",
@@ -77,6 +78,14 @@ return {
 		{ mode = "n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "[G]it [C]ommits" } },
 		{ mode = "n", "<leader>gbc", "<cmd>Telescope git_bcommits_range<CR>", { desc = "[G]it [B]uffer [C]ommits" } },
 		{ mode = "n", "<leader>gb", "<cmd>Telescope git_branches<CR>", { desc = "[G]it [B]ranches" } },
+		{
+			mode = "n",
+			"<leader>gw",
+			function()
+				require("telescope").extensions.git_worktree.git_worktree()
+			end,
+			{ desc = "[S]earch [N]eovim files" },
+		},
 		-- { mode = "n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "[G]it [S]tatus" } },
 		-- { mode = "n", "<leader>gs", "<cmd>Telescope git_stash<CR>", { desc = "[G]it [ST]ash" } },
 	},
@@ -133,8 +142,8 @@ return {
 		pcall(require("telescope").load_extension, "ui-select")
 		telescope.load_extension("file_browser")
 		telescope.load_extension("harpoon")
-		-- require("telescope").load_extension("tailiscope")
+		require('telescope').load_extension('git_worktree')
 
-		-- telescope.load_extension("git_wortree")
+
 	end,
 }
