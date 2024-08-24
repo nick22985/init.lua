@@ -84,7 +84,15 @@ return {
 			function()
 				require("telescope").extensions.git_worktree.git_worktree()
 			end,
-			{ desc = "[S]earch [N]eovim files" },
+			{ desc = "[g]it [w]orktree" },
+		},
+		{
+			mode = "n",
+			"<leader>cgw",
+			function()
+				require("telescope").extensions.git_worktree.create_git_worktree()
+			end,
+			{ desc = "[g]it [w]orktree" },
 		},
 		-- { mode = "n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "[G]it [S]tatus" } },
 		-- { mode = "n", "<leader>gs", "<cmd>Telescope git_stash<CR>", { desc = "[G]it [ST]ash" } },
@@ -142,8 +150,6 @@ return {
 		pcall(require("telescope").load_extension, "ui-select")
 		telescope.load_extension("file_browser")
 		telescope.load_extension("harpoon")
-		require('telescope').load_extension('git_worktree')
-
-
+		require("telescope").load_extension("git_worktree")
 	end,
 }

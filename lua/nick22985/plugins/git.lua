@@ -1,11 +1,5 @@
 return {
-	-- {
-	-- "tpope/vim-fugitive",
-	-- config = function()
-	-- 	local fugitive = require("fugitive")
-	-- 	fugitive.setup(
-	-- end
-	-- },
+	{ "akinsho/git-conflict.nvim", version = "*", config = true },
 	{
 		"ruifm/gitlinker.nvim",
 		requires = "nvim-lua/plenary.nvim",
@@ -310,7 +304,7 @@ return {
 			}
 			local Hooks = require("git-worktree.hooks")
 			local function on_tree_switch(op, path)
-				vim.cmd("%bd|e#")
+				-- vim.cmd("%bd|e#")
 			end
 
 			Hooks.register(Hooks.type.SWITCH, Hooks.builtins.update_current_buffer_on_switch)
