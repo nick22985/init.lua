@@ -21,13 +21,10 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { silent = true })
 
--- This is going to get me cancelled
-vim.keymap.set("i", "<C-c>", "<Esc>")
-
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+
 -- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
---
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz", { silent = true })
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { silent = true })
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { silent = true })
@@ -49,5 +46,7 @@ for _, mode in pairs({ "n", "i", "v", "x" }) do
 		vim.keymap.set(mode, key, "<nop>")
 	end
 end
+
+vim.keymap.set("i", "<C-p>", "<nop>")
 
 vim.opt.mouse = ""

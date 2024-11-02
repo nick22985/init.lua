@@ -1,5 +1,6 @@
 -- https://github.com/sharkdp/fd
 -- https://github.com/BurntSushi/ripgrep
+local opts = {}
 return {
 	"nvim-telescope/telescope.nvim",
 	build = "make",
@@ -34,7 +35,15 @@ return {
 			"<cmd>Telescope oldfiles<CR>",
 			{ desc = '[S]earch Recent Files ("." for repeat)' },
 		},
-		{ mode = "n", "<leader>sb", "<cmd>Telescope buffers<CR>", { desc = "[S]earch existing [B]uffers" } },
+		{
+			mode = "n",
+			"<leader>sb",
+			function()
+				require("telescope.builtin").buffers(require("telescope.themes").get_dropdown(opts))
+			end,
+
+			{ desc = "[S]earch existing [B]uffers" },
+		},
 		{ mode = "n", "<leader>sc", "<cmd>Telescope neoclip<CR>", { desc = "[S]earch [C]lipboard" } },
 		-- Slightly advanced example of overriding default behavior and theme
 		{
@@ -103,15 +112,28 @@ return {
 			return
 		end
 
+		local action_state = require("telescope.actions.state")
+		local actions = require("telescope.actions")
+		opts.attach_mappings = function(prompt_bufnr, map)
+			local delete_buf = function()
+				local selection = action_state.get_selected_entry()
+				actions.close(prompt_bufnr)
+				vim.api.nvim_buf_delete(selection.bufnr, { force = true })
+			end
+			map("n", "d", delete_buf)
+			return true
+		end
+		-- opts.previewer = false
+
 		telescope.setup({
 			defaults = {
 				path_display = { "truncate" },
 			},
 			pickers = {
 				find_files = {
-					-- hidden = true,
+					hidden = true,
 					-- Search for files using rg (searches for sys link files etc)
-					find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+					find_command = { "rg", "--files", "--no-ignore", "--hidden", "--glob", "!**/.git/*" },
 					file_ignore_patterns = {
 						"node_modules/",
 						"dist/",
@@ -119,6 +141,19 @@ return {
 						".git/",
 						".next/",
 					},
+				},
+				live_grep = {
+					additional_args = function(opts)
+						return { "--hidden", "--glob", "!**/.git/*" }
+					end,
+					-- file_ignore_patterns = {
+					-- 	"node_modules/",
+					-- 	"dist/",
+					-- 	"build/",
+					-- 	".git/",
+					-- 	".next/",
+					-- 	"%.chunk.js",
+					-- },
 				},
 			},
 			extensions = {

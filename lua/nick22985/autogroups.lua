@@ -11,6 +11,7 @@ local function remember(mode)
 		"harpoon",
 		"help",
 		"qf",
+		"NeogitStatus",
 		"",
 	}
 	-- P({ "remember", vim.bo.filetype, vim.bo.buftype, vim.bo.modifiable })

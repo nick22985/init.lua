@@ -164,6 +164,17 @@ return { -- LSP Configuration & Plugins
 						"html",
 					},
 				},
+				gopls = {
+					settings = {
+						gopls = {
+							completeUnimported = true,
+							-- usePlaceholders = true,
+							analyses = {
+								unusedparams = true,
+							},
+						},
+					},
+				},
 				eslint = {
 					root_dir = function()
 						return false
@@ -177,6 +188,7 @@ return { -- LSP Configuration & Plugins
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
 				"tailwindcss",
+				"gopls",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -288,6 +300,9 @@ return { -- LSP Configuration & Plugins
 					-- Disable "format_on_save lsp_fallback" for languages that don't
 					-- have a well standardized coding style. You can add additional
 					-- languages here or re-enable it for the disabled ones.
+					if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+						return
+					end
 					local disable_filetypes = { c = false, cpp = false, vue = false }
 					return {
 						timeout_ms = 500,
@@ -314,6 +329,24 @@ return { -- LSP Configuration & Plugins
 						stdin = true,
 					},
 				},
+			})
+
+			vim.api.nvim_create_user_command("FormatDisable", function(args)
+				if args.bang then
+					-- FormatDisable! will disable formatting just for this buffer
+					vim.b.disable_autoformat = true
+				else
+					vim.g.disable_autoformat = true
+				end
+			end, {
+				desc = "Disable autoformat-on-save",
+				bang = true,
+			})
+			vim.api.nvim_create_user_command("FormatEnable", function()
+				vim.b.disable_autoformat = false
+				vim.g.disable_autoformat = false
+			end, {
+				desc = "Re-enable autoformat-on-save",
 			})
 		end,
 	},
@@ -359,8 +392,8 @@ return { -- LSP Configuration & Plugins
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
-			local copilot_cmp = require("copilot_cmp")
-			copilot_cmp.setup()
+			-- local copilot_cmp = require("copilot_cmp")
+			-- copilot_cmp.setup()
 
 			lspkind.init({
 				-- defines how annotations are shown
@@ -414,7 +447,11 @@ return { -- LSP Configuration & Plugins
 						luasnip.lsp_expand(args.body)
 					end,
 				},
+				preselect = cmp.PreselectMode.None,
 				completion = { completeopt = "menu,menuone,noinsert" },
+				perfomance = {
+					max_view_entries = 7,
+				},
 				formatting = {
 					format = function(entry, vim_item)
 						if vim.tbl_contains({ "path" }, entry.source.name) then
@@ -487,7 +524,13 @@ return { -- LSP Configuration & Plugins
 				},
 			})
 
-			luasnip.config.setup({})
+			luasnip.config.setup({
+				history = true,
+				-- updateevents = "TextChanged,TextChangedI",
+			})
+			for _, ft_path in ipairs(vim.api.nvim_get_runtime_file("lua/nick22985/snippets/*.lua", true)) do
+				loadfile(ft_path)()
+			end
 			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = {
