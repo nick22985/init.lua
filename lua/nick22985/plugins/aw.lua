@@ -1,5 +1,5 @@
 return {
-	'ActivityWatch/aw-watcher-vim',
-	config = function()
-	end,
+	-- 'ActivityWatch/aw-watcher-vim',
+	-- config = function()
+	-- end,
 }

@@ -126,153 +126,153 @@ return {
 	-- 		})
 	-- 	end,
 	-- },
-	{
-		"jiriks74/presence.nvim",
-		dev = true,
-		config = function()
-			local status, presence = pcall(require, "presence")
-			if not status then
-				return
-			end
-
-			local file =
-				io.open(os.getenv("HOME") .. "/.config/.nickInstall/install/configs/private/excludednames", "r")
-			if file == nil then
-				return
-			end
-			local blacklist = {}
-			for line in file:lines() do
-				table.insert(blacklist, line)
-			end
-
-			local blacklistText = "[REDACTED]"
-			function FilterText(fileName)
-				if fileName == nil then
-					return ""
-				end
-				for _, v in ipairs(blacklist) do
-					local pattern = v:gsub("%a", function(c)
-						return string.format("[%s%s]", string.lower(c), string.upper(c))
-					end)
-					fileName = string.gsub(fileName, pattern, blacklistText)
-				end
-				return fileName
-			end
-
-			function HandleEditing(config)
-				-- P(config)
-				local project = config.project_name
-				if config.project_branch then
-					project = project .. " - " .. config.project_branch
-				end
-
-				return string.format("In %s", FilterText(project))
-			end
-
-			function HandleFileExplorer(config)
-				return string.format("Browsing %s, %s", FilterText(config.filetype), FilterText(config.filename))
-			end
-
-			function HandleGitCommit(config)
-				return string.format("Committing changes to %s", FilterText(config.filename))
-			end
-
-			function HandlePluginManager(config)
-				return string.format("Managing %s", FilterText(config.plugin_manager_name))
-			end
-
-			function HandleReading(config)
-				return string.format("Reading %s", FilterText(config.filename))
-			end
-
-			function HandleLineNumbers(config)
-				-- Working on {file}:{line_number}:{col_number}
-				return string.format(
-					"Working on %s:%s:%s",
-					FilterText(config.filename),
-					FilterText(config.line_number),
-					FilterText(config.line_col)
-				)
-			end
-
-			function HandleWorkspace(config)
-				return string.format(
-					"Working on %s:%s:%s",
-					FilterText(config.filename),
-					FilterText(config.line_number),
-					FilterText(config.line_col)
-				)
-			end
-
-			presence.setup({
-				-- General options
-				auto_update = true, -- Update activity based on autocmd events
-				neovim_image_text = "nvim", -- Text displayed when hovered over the Neovim image
-				main_image = "file", -- Main image display (either "neovim" or "file")
-				client_id = "793271441293967371", -- Use your own Discord application client id
-				log_level = nil, -- Log messages at or above this level
-				debounce_timeout = 10, -- Number of seconds to debounce events
-				enable_line_number = false, -- Displays the current line number instead of the current project
-				buttons = function(buffer, repo_url)
-					local github = { label = "GitHub", url = "https://github.com/nick22985" }
-					local website = { label = "Website", url = "https://nick22985.com" }
-					if repo_url then
-						for _, v in ipairs(blacklist) do
-							if string.find(string.lower(repo_url), string.lower(v)) then
-								return {
-									github,
-								}
-							end
-						end
-						local repo = { label = "View Repository", url = nil }
-						-- Check if repo url uses short ssh syntax
-						local domain, project = repo_url:match("^git@(.+):(.+)$")
-						if domain and project then
-							repo_url = string.format("https://%s/%s", domain, project)
-						end
-
-						-- Check if repo url uses a valid protocol
-						local protocols = {
-							"ftp",
-							"git",
-							"http",
-							"https",
-							"ssh",
-						}
-						local protocol, relative = repo_url:match("^(.+)://(.+)$")
-						if not vim.tbl_contains(protocols, protocol) or not relative then
-							return nil
-						end
-
-						-- Check if repo url has the user specified
-						local user, path = relative:match("^(.+)@(.+)$")
-						if user and path then
-							repo.url = string.format("https://%s", path)
-						else
-							repo.url = string.format("https://%s", relative)
-						end
-
-						return {
-							repo,
-							github,
-						}
-					end
-					return {
-						github,
-					}
-				end,
-				file_assets = {}, -- Custom file asset definitions keyed by file names and extensions
-				show_time = true, -- Show the timer
-
-				-- Rich Presence text options
-				editing_text = HandleEditing, -- Function to format the editing text
-				file_explorer_text = HandleFileExplorer, -- Function to format the file explorer text
-				git_commit_text = HandleGitCommit, -- Function to format the git commit text
-				plugin_manager_text = HandlePluginManager, -- Function to format the plugin manager text
-				reading_text = HandleReading, -- Function to format the reading text
-				line_number_text = HandleLineNumbers, -- Function to format the line number text
-				workspace_text = HandleWorkspace, -- Function to format the workspace text
-			})
-		end,
-	},
+	-- {
+	-- 	"jiriks74/presence.nvim",
+	-- 	dev = true,
+	-- 	config = function()
+	-- 		local status, presence = pcall(require, "presence")
+	-- 		if not status then
+	-- 			return
+	-- 		end
+	--
+	-- 		local file =
+	-- 			io.open(os.getenv("HOME") .. "/.config/.nickInstall/install/configs/private/excludednames", "r")
+	-- 		if file == nil then
+	-- 			return
+	-- 		end
+	-- 		local blacklist = {}
+	-- 		for line in file:lines() do
+	-- 			table.insert(blacklist, line)
+	-- 		end
+	--
+	-- 		local blacklistText = "[REDACTED]"
+	-- 		function FilterText(fileName)
+	-- 			if fileName == nil then
+	-- 				return ""
+	-- 			end
+	-- 			for _, v in ipairs(blacklist) do
+	-- 				local pattern = v:gsub("%a", function(c)
+	-- 					return string.format("[%s%s]", string.lower(c), string.upper(c))
+	-- 				end)
+	-- 				fileName = string.gsub(fileName, pattern, blacklistText)
+	-- 			end
+	-- 			return fileName
+	-- 		end
+	--
+	-- 		function HandleEditing(config)
+	-- 			-- P(config)
+	-- 			local project = config.project_name
+	-- 			if config.project_branch then
+	-- 				project = project .. " - " .. config.project_branch
+	-- 			end
+	--
+	-- 			return string.format("In %s", FilterText(project))
+	-- 		end
+	--
+	-- 		function HandleFileExplorer(config)
+	-- 			return string.format("Browsing %s, %s", FilterText(config.filetype), FilterText(config.filename))
+	-- 		end
+	--
+	-- 		function HandleGitCommit(config)
+	-- 			return string.format("Committing changes to %s", FilterText(config.filename))
+	-- 		end
+	--
+	-- 		function HandlePluginManager(config)
+	-- 			return string.format("Managing %s", FilterText(config.plugin_manager_name))
+	-- 		end
+	--
+	-- 		function HandleReading(config)
+	-- 			return string.format("Reading %s", FilterText(config.filename))
+	-- 		end
+	--
+	-- 		function HandleLineNumbers(config)
+	-- 			-- Working on {file}:{line_number}:{col_number}
+	-- 			return string.format(
+	-- 				"Working on %s:%s:%s",
+	-- 				FilterText(config.filename),
+	-- 				FilterText(config.line_number),
+	-- 				FilterText(config.line_col)
+	-- 			)
+	-- 		end
+	--
+	-- 		function HandleWorkspace(config)
+	-- 			return string.format(
+	-- 				"Working on %s:%s:%s",
+	-- 				FilterText(config.filename),
+	-- 				FilterText(config.line_number),
+	-- 				FilterText(config.line_col)
+	-- 			)
+	-- 		end
+	--
+	-- 		presence.setup({
+	-- 			-- General options
+	-- 			auto_update = true, -- Update activity based on autocmd events
+	-- 			neovim_image_text = "nvim", -- Text displayed when hovered over the Neovim image
+	-- 			main_image = "file", -- Main image display (either "neovim" or "file")
+	-- 			client_id = "793271441293967371", -- Use your own Discord application client id
+	-- 			log_level = nil, -- Log messages at or above this level
+	-- 			debounce_timeout = 10, -- Number of seconds to debounce events
+	-- 			enable_line_number = false, -- Displays the current line number instead of the current project
+	-- 			buttons = function(buffer, repo_url)
+	-- 				local github = { label = "GitHub", url = "https://github.com/nick22985" }
+	-- 				local website = { label = "Website", url = "https://nick22985.com" }
+	-- 				if repo_url then
+	-- 					for _, v in ipairs(blacklist) do
+	-- 						if string.find(string.lower(repo_url), string.lower(v)) then
+	-- 							return {
+	-- 								github,
+	-- 							}
+	-- 						end
+	-- 					end
+	-- 					local repo = { label = "View Repository", url = nil }
+	-- 					-- Check if repo url uses short ssh syntax
+	-- 					local domain, project = repo_url:match("^git@(.+):(.+)$")
+	-- 					if domain and project then
+	-- 						repo_url = string.format("https://%s/%s", domain, project)
+	-- 					end
+	--
+	-- 					-- Check if repo url uses a valid protocol
+	-- 					local protocols = {
+	-- 						"ftp",
+	-- 						"git",
+	-- 						"http",
+	-- 						"https",
+	-- 						"ssh",
+	-- 					}
+	-- 					local protocol, relative = repo_url:match("^(.+)://(.+)$")
+	-- 					if not vim.tbl_contains(protocols, protocol) or not relative then
+	-- 						return nil
+	-- 					end
+	--
+	-- 					-- Check if repo url has the user specified
+	-- 					local user, path = relative:match("^(.+)@(.+)$")
+	-- 					if user and path then
+	-- 						repo.url = string.format("https://%s", path)
+	-- 					else
+	-- 						repo.url = string.format("https://%s", relative)
+	-- 					end
+	--
+	-- 					return {
+	-- 						repo,
+	-- 						github,
+	-- 					}
+	-- 				end
+	-- 				return {
+	-- 					github,
+	-- 				}
+	-- 			end,
+	-- 			file_assets = {}, -- Custom file asset definitions keyed by file names and extensions
+	-- 			show_time = true, -- Show the timer
+	--
+	-- 			-- Rich Presence text options
+	-- 			editing_text = HandleEditing, -- Function to format the editing text
+	-- 			file_explorer_text = HandleFileExplorer, -- Function to format the file explorer text
+	-- 			git_commit_text = HandleGitCommit, -- Function to format the git commit text
+	-- 			plugin_manager_text = HandlePluginManager, -- Function to format the plugin manager text
+	-- 			reading_text = HandleReading, -- Function to format the reading text
+	-- 			line_number_text = HandleLineNumbers, -- Function to format the line number text
+	-- 			workspace_text = HandleWorkspace, -- Function to format the workspace text
+	-- 		})
+	-- 	end,
+	-- },
 }

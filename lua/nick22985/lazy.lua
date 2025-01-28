@@ -15,6 +15,20 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+if vim.env.PROF then
+	-- example for lazy.nvim
+	-- change this to the correct path for your plugin manager
+	local snacks = vim.fn.stdpath("data") .. "/lazy/snacks.nvim"
+	vim.opt.rtp:append(snacks)
+	require("snacks.profiler").startup({
+		startup = {
+			event = "VimEnter", -- stop profiler on this event. Defaults to `VimEnter`
+			-- event = "UIEnter",
+			-- event = "VeryLazy",
+		},
+	})
+end
+
 require("lazy").setup("nick22985.plugins", {
 	dev = {
 		-- directory where you store your local plugin projects

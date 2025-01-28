@@ -43,6 +43,7 @@ return {
 			-- Config
 			local config = {
 				options = {
+					disabled_filetypes = { "AvanteInput", "Avante" },
 					-- Disable sections and component separators
 					component_separators = "",
 					section_separators = "",

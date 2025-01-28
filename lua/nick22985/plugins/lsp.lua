@@ -121,17 +121,17 @@ return { -- LSP Configuration & Plugins
 				tailwindcss = {
 					filetypes = { "css", "javascriptreact", "typescriptreact" },
 				},
-				tsserver = {
-					init_options = {
-						plugins = {
-							-- {
-							-- 	name = "@vue/typescript-plugin",
-							-- 	location = "/path/to/@vue/language-server",
-							-- 	languages = { "vue" },
-							-- },
-						},
-					},
-				},
+				-- tsserver = {
+				-- 	init_options = {
+				-- 		plugins = {
+				-- 			-- {
+				-- 			-- 	name = "@vue/typescript-plugin",
+				-- 			-- 	location = "/path/to/@vue/language-server",
+				-- 			-- 	languages = { "vue" },
+				-- 			-- },
+				-- 		},
+				-- 	},
+				-- },
 				volar = {
 					init_options = {
 						languageFeatures = {
@@ -189,6 +189,7 @@ return { -- LSP Configuration & Plugins
 				"stylua", -- Used to format Lua code
 				"tailwindcss",
 				"gopls",
+				"ts_ls",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -316,7 +317,7 @@ return { -- LSP Configuration & Plugins
 					--
 					-- You can use a sub-list to tell conform to run *until* a formatter
 					-- is found.
-					javascript = { { "prettier" } },
+					javascript = { "prettier", stop_after_first = true },
 					vue = { "prettier" },
 				},
 				formatters = {

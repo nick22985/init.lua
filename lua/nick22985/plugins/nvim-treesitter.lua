@@ -75,6 +75,32 @@ return {
 					-- ["invisible"] = "InvisibleCharacters",
 				},
 			},
+			-- Plug 'pangloss/vim-javascript'
+			-- let g:javascript_conceal = 1
+			-- let g:javascript_conceal_function = "λ"
+			-- let g:javascript_conceal_null = "ø"
+			-- let g:javascript_conceal_this = "◉"
+			-- let g:javascript_conceal_ctrl = "◈"
+			-- let g:javascript_conceal_return = "∴"
+			-- let g:javascript_conceal_undefined = "¿"
+			-- let g:javascript_conceal_NaN = "ℕ"
+			-- let g:javascript_conceal_prototype = "¶"
+			-- let g:javascript_conceal_static = "•"
+			-- let g:javascript_conceal_super = "Ω"
+			-- let g:javascript_conceal_question = "¿"
+			-- let g:javascript_conceal_arrow_function = "🡆"
+			-- let g:javascript_conceal_noarg_arrow_function = "🞅"
+			-- let g:javascript_conceal_underscore_arrow_function = "🞅"
+			-- set conceallevel=1
+
+			-- conceal = {
+			-- 	enable = true,
+			-- 	disalbe = {},
+			-- 	custom_captures = {
+			-- 		["return"] = "∴",
+			-- 		["arrow_function"] = "🡆",
+			-- 	},
+			-- },
 			-- Plugins
 			autotag = {
 				enable = true,
@@ -236,6 +262,7 @@ return {
 				enable_autocnd = true,
 			},
 		})
+
 		-- local present, treesitter_context = pcall(require, "treesitter-context")
 		-- if not present then
 		-- 	return
