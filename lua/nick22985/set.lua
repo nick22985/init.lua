@@ -10,6 +10,7 @@ vim.opt.expandtab = false
 -- vim.opt.conceallevel = 2
 
 vim.opt.smartindent = true
+vim.opt.autoindent = true
 
 vim.opt.wrap = false
 
