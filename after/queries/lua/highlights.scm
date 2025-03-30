@@ -1,5 +1,6 @@
 ;; extends 
 
+(("and" @keyword.function) (#set! conceal "&"))
 (("return" @keyword.function) (#set! conceal "R"))
 (("do" @repeat) (#set! conceal "d"))
 (("else" @conditional) (#set! conceal "e"))
@@ -9,6 +10,5 @@
 (("function" @keyword.function) (#set! conceal "f"))
 (("if" @conditional) (#set! conceal "?"))
 (("in" @keyword) (#set! conceal "i"))
-(("then" @conditional) (#set! conceal "t"))
 ((function_call name: (identifier) @function.builtin (#eq? @function.builtin "require")) (#set! conceal "r"))
-(("and" @keyword.function) (#set! conceal "&"))
+(("then" @conditional) (#set! conceal "t"))
