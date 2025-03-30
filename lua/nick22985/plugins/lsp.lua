@@ -6,6 +6,7 @@ return { -- LSP Configuration & Plugins
 			{ "williamboman/mason.nvim" },
 			{ "williamboman/mason-lspconfig.nvim" },
 			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
+			{ "artemave/workspace-diagnostics.nvim" },
 			{
 				"j-hui/fidget.nvim",
 				config = function()
@@ -277,13 +278,13 @@ return { -- LSP Configuration & Plugins
 						grammar = {
 							customBlocks = {
 								component = "md",
-								directive = "javascript",
-								endpoint = "javascript",
-								filter = "javascript",
-								macgyver = "javascript",
-								schema = "javascript",
-								server = "javascript",
-								service = "javascript",
+								directive = "js",
+								endpoint = "js",
+								filter = "js",
+								macgyver = "js",
+								schema = "js",
+								server = "js",
+								service = "js",
 							},
 						},
 					},
@@ -313,10 +314,14 @@ return { -- LSP Configuration & Plugins
 				bashls = {
 					filetypes = { "sh", "zsh" },
 				},
+				copilot = {
+					filetypes = "*",
+				},
 			},
 		},
 		config = function(_, opts)
 			local lspconfig = require("lspconfig")
+			require("workspace-diagnostics").setup()
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -344,7 +349,15 @@ return { -- LSP Configuration & Plugins
 
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
+					-- project level diagnostics
+
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
+					if client then
+						-- NOTE: disabled for copilot
+						if client.name ~= "copilot" then
+							require("workspace-diagnostics").populate_workspace_diagnostics(client, event.buf)
+						end
+					end
 					if client and client.server_capabilities.documentHighlightProvider then
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
@@ -359,7 +372,7 @@ return { -- LSP Configuration & Plugins
 
 					if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
 						map("<leader>th", function()
-							vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 						end, "[T]oggle Inlay [H]ints")
 					end
 				end,
@@ -402,8 +415,6 @@ return { -- LSP Configuration & Plugins
 			capabilities =
 				vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities({}, false))
 
-			local masonServers = require("mason").setup()
-
 			local ensure_installed = vim.tbl_keys(masonServers or {})
 
 			vim.list_extend(ensure_installed, {
@@ -412,8 +423,10 @@ return { -- LSP Configuration & Plugins
 				"gopls",
 				"ts_ls",
 			})
+
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+			require("mason").setup()
 			require("mason-lspconfig").setup({
 				handlers = {
 					function(server_name)
@@ -433,6 +446,10 @@ return { -- LSP Configuration & Plugins
 					spacing = 4,
 					source = "if_many",
 					prefix = "●",
+					current_line = false,
+				},
+				virtual_lines = {
+					current_line = true,
 				},
 				severity_sort = true,
 				signs = {
@@ -585,211 +602,4 @@ return { -- LSP Configuration & Plugins
 			})
 		end,
 	},
-	-- { -- Autocompletion
-	-- 	"hrsh7th/nvim-cmp",
-	-- 	branch = "main",
-	-- 	dependencies = {
-	-- 		-- Snippet Engine & its associated nvim-cmp source
-	-- 		{
-	-- 			"L3MON4D3/LuaSnip",
-	-- 			build = (function()
-	-- 				if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
-	-- 					return
-	-- 				end
-	-- 				return "make install_jsregexp"
-	-- 			end)(),
-	-- 			dependencies = {
-	-- 				"rafamadriz/friendly-snippets",
-	-- 				config = function()
-	-- 					require("luasnip.loaders.from_vscode").lazy_load()
-	-- 				end,
-	-- 			},
-	-- 		},
-	-- 		"saadparwaiz1/cmp_luasnip",
-	-- 		"hrsh7th/cmp-nvim-lsp",
-	-- 		"hrsh7th/cmp-buffer",
-	-- 		"hrsh7th/cmp-path",
-	-- 		"hrsh7th/cmp-cmdline",
-	-- 		"hrsh7th/cmp-nvim-lua",
-	-- 		"SergioRibera/cmp-dotenv",
-	-- 		"onsails/lspkind.nvim",
-	-- 		"hrsh7th/nvim-cmp",
-	-- 		"jcha0713/cmp-tw2css",
-	-- 		{
-	-- 			"zbirenbaum/copilot-cmp",
-	-- 			dependencies = {
-	-- 				"zbirenbaum/copilot.lua",
-	-- 			},
-	-- 		},
-	-- 	},
-	-- 	config = function()
-	-- 		local cmp = require("cmp")
-	-- 		local luasnip = require("luasnip")
-	-- 		local lspkind = require("lspkind")
-	-- 		local copilot_cmp = require("copilot_cmp")
-	-- 		copilot_cmp.setup()
-	--
-	-- 		lspkind.init({
-	-- 			-- defines how annotations are shown
-	-- 			-- default: symbol
-	-- 			-- options: 'text', 'text_symbol', 'symbol_text', 'symbol'
-	-- 			mode = "symbol_text",
-	--
-	-- 			-- default symbol map
-	-- 			-- can be either 'default' (requires nerd-fonts font) or
-	-- 			-- 'codicons' for codicon preset (requires vscode-codicons font)
-	-- 			--
-	-- 			-- default: 'default'
-	-- 			preset = "codicons",
-	--
-	-- 			-- override preset symbols
-	-- 			--
-	-- 			-- default: {}
-	-- 			symbol_map = {
-	-- 				Text = "󰉿",
-	-- 				Method = "󰆧",
-	-- 				Function = "󰊕",
-	-- 				Constructor = "",
-	-- 				Field = "󰜢",
-	-- 				Variable = "󰀫",
-	-- 				Class = "󰠱",
-	-- 				Interface = "",
-	-- 				Module = "",
-	-- 				Property = "󰜢",
-	-- 				Unit = "󰑭",
-	-- 				Value = "󰎠",
-	-- 				Enum = "",
-	-- 				Keyword = "󰌋",
-	-- 				Snippet = "",
-	-- 				Color = "󰏘",
-	-- 				File = "󰈙",
-	-- 				Reference = "󰈇",
-	-- 				Folder = "󰉋",
-	-- 				EnumMember = "",
-	-- 				Constant = "󰏿",
-	-- 				Struct = "󰙅",
-	-- 				Event = "",
-	-- 				Operator = "󰆕",
-	-- 				TypeParameter = "",
-	-- 				Copilot = "",
-	-- 			},
-	-- 		})
-	--
-	-- 		cmp.setup({
-	-- 			snippet = {
-	-- 				expand = function(args)
-	-- 					luasnip.lsp_expand(args.body)
-	-- 				end,
-	-- 			},
-	-- 			preselect = cmp.PreselectMode.None,
-	-- 			completion = { completeopt = "menu,menuone,noinsert" },
-	-- 			perfomance = {
-	-- 				max_view_entries = 7,
-	-- 			},
-	-- 			formatting = {
-	-- 				format = function(entry, vim_item)
-	-- 					if vim.tbl_contains({ "path" }, entry.source.name) then
-	-- 						local icon, hl_group =
-	-- 							require("nvim-web-devicons").get_icon(entry:get_completion_item().label)
-	-- 						if icon then
-	-- 							vim_item.kind = icon
-	-- 							vim_item.kind_hl_group = hl_group
-	-- 							return vim_item
-	-- 						end
-	-- 					end
-	-- 					return lspkind.cmp_format({
-	-- 						-- mode = "symbol", -- show only symbol annotations
-	-- 						maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-	-- 						-- can also be a function to dynamically calculate max width such as
-	-- 						-- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-	-- 						ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-	-- 						show_labelDetails = true, -- show labelDetails in menu. Disabled by default
-	-- 						menu = {
-	-- 							buffer = "[Buffer]",
-	-- 							nvim_lsp = "[LSP]",
-	-- 							luasnip = "[LuaSnip]",
-	-- 							nvim_lua = "[Lua]",
-	-- 							latex_symbols = "[Latex]",
-	-- 						},
-	-- 						-- The function below will be called before any actual modifications from lspkind
-	-- 						-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-	-- 						before = function(entry, vim_item)
-	-- 							return vim_item
-	-- 						end,
-	-- 					})(entry, vim_item)
-	-- 				end,
-	-- 				-- format =
-	-- 				-- expandable_indicator = true,
-	-- 				-- fields = {},
-	-- 			},
-	--
-	-- 			mapping = cmp.mapping.preset.insert({
-	-- 				["<C-n>"] = cmp.mapping.select_next_item(),
-	-- 				["<C-p>"] = cmp.mapping.select_prev_item(),
-	--
-	-- 				["<C-b>"] = cmp.mapping.scroll_docs(-4),
-	-- 				["<C-f>"] = cmp.mapping.scroll_docs(4),
-	--
-	-- 				["<C-y>"] = cmp.mapping.confirm({ select = true }),
-	--
-	-- 				["<C-Space>"] = cmp.mapping.complete(),
-	-- 				["<C-e>"] = cmp.mapping.close(),
-	--
-	-- 				["<C-l>"] = cmp.mapping(function()
-	-- 					if luasnip.expand_or_locally_jumpable() then
-	-- 						luasnip.expand_or_jump()
-	-- 					end
-	-- 				end, { "i", "s" }),
-	-- 				["<C-h>"] = cmp.mapping(function()
-	-- 					if luasnip.locally_jumpable(-1) then
-	-- 						luasnip.jump(-1)
-	-- 					end
-	-- 				end, { "i", "s" }),
-	--
-	-- 				-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-	-- 				--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
-	-- 			}),
-	-- 			sources = {
-	-- 				{ name = "nvim_lsp" },
-	-- 				{ name = "luasnip" },
-	-- 				{ name = "path" },
-	-- 				{ name = "copilot" },
-	-- 				{ name = "cmp-tw2css" },
-	-- 				{ name = "dotenv" },
-	-- 			},
-	-- 		})
-	--
-	-- 		luasnip.config.setup({
-	-- 			history = true,
-	-- 			-- updateevents = "TextChanged,TextChangedI",
-	-- 		})
-	-- 		for _, ft_path in ipairs(vim.api.nvim_get_runtime_file("lua/nick22985/snippets/*.lua", true)) do
-	-- 			loadfile(ft_path)()
-	-- 		end
-	-- 		cmp.setup.cmdline({ "/", "?" }, {
-	-- 			mapping = cmp.mapping.preset.cmdline(),
-	-- 			sources = {
-	-- 				{ name = "buffer" },
-	-- 			},
-	-- 		})
-	--
-	-- 		cmp.setup.cmdline(":", {
-	-- 			mapping = cmp.mapping.preset.cmdline(),
-	-- 			sources = cmp.config.sources({
-	-- 				{ name = "path" },
-	-- 			}, {
-	-- 				{ name = "cmdline" },
-	-- 			}),
-	-- 		})
-	--
-	-- 		-- Set configuration for specific filetype.
-	-- 		cmp.setup.filetype("gitcommit", {
-	-- 			sources = cmp.config.sources({
-	-- 				{ name = "git" }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
-	-- 			}, {
-	-- 				{ name = "buffer" },
-	-- 			}),
-	-- 		})
-	-- 	end,
-	-- },
 }

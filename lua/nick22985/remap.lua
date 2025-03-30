@@ -31,7 +31,7 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { silent = true })
 
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { silent = true })
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 local search_term = ""
 

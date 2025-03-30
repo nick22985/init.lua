@@ -258,7 +258,7 @@ return {
 					-- files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
 					-- -- generate_requires_npm = true, -- if stand-alone parser without npm dependencies
 					-- -- requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
-					filetype = "vue",
+					filetype = { "vue", "doop" },
 					-- generate_requires_npm = true,
 					-- requires_generate_from_grammar = true,
 

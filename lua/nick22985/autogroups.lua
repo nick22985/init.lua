@@ -61,8 +61,8 @@ vim.on_key(function(char)
 	end
 	local searchKeyUsed = searchConfirmed or (vim.tbl_contains(searchKeys, key))
 
-	local pauseFold = vim.opt.foldenable:get() and searchKeyUsed
-	local unpauseFold = not (vim.opt.foldenable:get()) and not searchKeyUsed
+	local pauseFold = vim.opt.foldenable and searchKeyUsed
+	local unpauseFold = not vim.opt.foldenable and not searchKeyUsed
 	if pauseFold then
 		vim.opt.foldenable = false
 	elseif unpauseFold then

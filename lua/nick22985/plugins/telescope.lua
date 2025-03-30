@@ -29,6 +29,7 @@ return {
 		{ mode = "n", "<leader>sg", "<cmd>Telescope live_grep<CR>", { desc = "[S]earch by [G]rep" } },
 		{ mode = "n", "<leader>sd", "<cmd>Telescope diagnostics<CR>", { desc = "[S]earch [D]iagnostics" } },
 		{ mode = "n", "<leader>sr", "<cmd>Telescope resume<CR>", { desc = "[S]earch [R]esume" } },
+		{ mode = "n", "<leader>st", "<cmd>TodoTelescope<CR>", { desc = "[S]earch [R]esume" } },
 		{
 			mode = "n",
 			"<leader>s.",
