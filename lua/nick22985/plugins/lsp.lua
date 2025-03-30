@@ -47,6 +47,17 @@ return { -- LSP Configuration & Plugins
 							impersonate_nvim_cmp = true,
 						},
 					},
+					{
+						"Kaiser-Yang/blink-cmp-git",
+						dependencies = { "nvim-lua/plenary.nvim" },
+					},
+					{ "bydlw98/blink-cmp-env" },
+					{
+						"Kaiser-Yang/blink-cmp-dictionary",
+						dependencies = { "nvim-lua/plenary.nvim" },
+					},
+					{ "disrupted/blink-cmp-conventional-commits" },
+
 					-- nvim-cmp sources
 					{ "dmitmel/cmp-digraphs" },
 					{
@@ -167,7 +178,18 @@ return { -- LSP Configuration & Plugins
 					-- Default list of enabled providers defined so that you can extend it
 					-- elsewhere in your config, without redefining it, due to `opts_extend`
 					sources = {
-						default = { "lsp", "path", "snippets", "buffer", "digraphs", "copilot" },
+						default = {
+							"lsp",
+							"path",
+							"snippets",
+							"buffer",
+							"digraphs",
+							"copilot",
+							"git",
+							-- "env",
+							"dictionary",
+							"conventional_commits",
+						},
 						providers = {
 							buffer = {
 								opts = {
@@ -219,6 +241,43 @@ return { -- LSP Configuration & Plugins
 									return items
 								end,
 							},
+							git = {
+								module = "blink-cmp-git",
+								name = "Git",
+								opts = {
+									-- options for the blink-cmp-git
+								},
+							},
+							dictionary = {
+								module = "blink-cmp-dictionary",
+								name = "Dict",
+								-- Make sure this is at least 2.
+								-- 3 is recommended
+								min_keyword_length = 3,
+								opts = {
+									-- options for blink-cmp-dictionary
+								},
+							},
+							conventional_commits = {
+								name = "Conventional Commits",
+								module = "blink-cmp-conventional-commits",
+								enabled = function()
+									return vim.bo.filetype == "gitcommit"
+								end,
+								---@module 'blink-cmp-conventional-commits'
+								---@type blink-cmp-conventional-commits.Options
+								opts = {}, -- none so far
+							},
+							-- env = {
+							-- 	name = "Env",
+							-- 	module = "blink-cmp-env",
+							-- 	--- @type blink-cmp-env.Options
+							-- 	opts = {
+							-- 		item_kind = require("blink.cmp.types").CompletionItemKind,
+							-- 		show_braces = false,
+							-- 		show_documentation_window = true,
+							-- 	},
+							-- },
 						},
 						min_keyword_length = 2,
 					},
@@ -321,7 +380,7 @@ return { -- LSP Configuration & Plugins
 		},
 		config = function(_, opts)
 			local lspconfig = require("lspconfig")
-			require("workspace-diagnostics").setup()
+			require("workspace-diagnostics").setup({})
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -349,12 +408,11 @@ return { -- LSP Configuration & Plugins
 
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
-					-- project level diagnostics
-
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client then
 						-- NOTE: disabled for copilot
 						if client.name ~= "copilot" then
+							-- project level diagnostics
 							require("workspace-diagnostics").populate_workspace_diagnostics(client, event.buf)
 						end
 					end

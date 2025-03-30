@@ -2,6 +2,7 @@ local batteryNotify = false
 return {
 	{
 		"nvim-lualine/lualine.nvim",
+		event = "UIEnter",
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 		},
@@ -176,6 +177,10 @@ return {
 					color_info = { fg = colors.cyan },
 				},
 			}, true, true)
+			-- ins_left({
+			-- 	symbols.get,
+			-- 	cond = symbols.has,
+			-- })
 
 			ins_left({
 				function()

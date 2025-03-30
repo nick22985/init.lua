@@ -1,7 +1,7 @@
 return {
 	{
 		"mbbill/undotree",
-		event = "VeryLazy",
+		event = "BufReadPre",
 		keys = {
 			{ mode = "n", "<leader>u", vim.cmd.UndotreeToggle },
 		},

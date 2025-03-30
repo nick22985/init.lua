@@ -1,6 +1,7 @@
 return {
 	{
 		"nvim-tree/nvim-web-devicons",
+		event = "VeryLazy",
 		config = function()
 			local status, nvim_web_devicons = pcall(require, "nvim-web-devicons")
 			if not status then

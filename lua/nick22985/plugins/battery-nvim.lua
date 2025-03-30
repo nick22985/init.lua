@@ -1,5 +1,7 @@
 return {
 	"justinhj/battery.nvim",
+	lazy = true,
+	event = "UIEnter",
 	config = function()
 		require("battery").setup({
 			update_rate_seconds = 30, -- Number of seconds between checking battery status

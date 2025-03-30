@@ -1,5 +1,6 @@
 return {
 	"ggandor/leap.nvim",
+	event = "BufReadPre",
 	dependencies = {
 		"tpope/vim-repeat",
 	},

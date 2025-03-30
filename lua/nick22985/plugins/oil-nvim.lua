@@ -1,5 +1,6 @@
 return {
 	"stevearc/oil.nvim",
+	evetn = "VeryLazy",
 	-- Optional dependencies
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()

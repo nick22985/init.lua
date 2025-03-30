@@ -30,6 +30,9 @@ if vim.env.PROF then
 end
 
 require("lazy").setup("nick22985.plugins", {
+	-- defaults = {
+	-- 	lazy = true,
+	-- },
 	dev = {
 		-- directory where you store your local plugin projects
 		path = "~/plugins",

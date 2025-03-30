@@ -41,6 +41,7 @@ return {
 	},
 	{
 		"3rd/image.nvim",
+		event = "BufReadPre",
 		dependencies = { "luarocks.nvim" },
 		config = function()
 			local image = require("image")

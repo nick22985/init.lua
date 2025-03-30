@@ -1,7 +1,7 @@
 return {
 	{
 		"numToStr/Comment.nvim",
-		event = "VeryLazy",
+		event = "BufReadPre",
 		config = function()
 			local cStatus, comment = pcall(require, "Comment")
 

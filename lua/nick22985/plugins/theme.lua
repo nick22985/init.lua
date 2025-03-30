@@ -17,6 +17,7 @@ return {
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
+		lazy = false,
 		priority = 1000, -- Make sure to load this before all the other start plugins.
 		config = function()
 			require("rose-pine").setup({
@@ -97,6 +98,7 @@ return {
 	{
 		"olimorris/onedarkpro.nvim",
 		priority = 1000, -- Make sure to load this before all the other start plugins.
+		lazy = false,
 		config = function()
 			require("onedarkpro").setup({
 				options = {
@@ -125,6 +127,8 @@ return {
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
+		priority = 1000, -- Make sure to load this before all the other start plugins.
+		lazy = false,
 		config = function()
 			require("catppuccin").setup({
 				flavour = "auto", -- latte, frappe, macchiato, mocha

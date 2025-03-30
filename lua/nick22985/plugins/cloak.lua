@@ -1,7 +1,7 @@
 return {
 	{
 		"laytan/cloak.nvim",
-		event = "VeryLazy",
+		event = "BufReadPre",
 		config = function()
 			local status, cloak = pcall(require, "cloak")
 			if not status then

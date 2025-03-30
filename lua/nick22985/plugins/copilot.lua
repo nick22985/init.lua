@@ -1,7 +1,7 @@
 return {
 	{
 		"zbirenbaum/copilot.lua",
-		event = "VeryLazy",
+		event = "BufReadPre",
 		config = function()
 			require("copilot").setup({
 				panel = {

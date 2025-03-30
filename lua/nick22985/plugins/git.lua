@@ -1,8 +1,14 @@
 return {
-	{ "akinsho/git-conflict.nvim", version = "*", config = true },
+	{
+		"akinsho/git-conflict.nvim",
+		event = "BufReadPre",
+		version = "*",
+		config = true,
+	},
 	{
 		"ruifm/gitlinker.nvim",
 		requires = "nvim-lua/plenary.nvim",
+		event = "BufReadPre",
 		config = function()
 			require("gitlinker").setup({
 				opts = {
@@ -36,6 +42,7 @@ return {
 		"NeogitOrg/neogit",
 		branch = "master",
 		event = "VeryLazy",
+		event = "BufReadPre",
 		dependencies = {
 			"nvim-lua/plenary.nvim", -- required
 			"nvim-telescope/telescope.nvim", -- optional
@@ -293,6 +300,7 @@ return {
 	{
 		"polarmutex/git-worktree.nvim",
 		version = "^2",
+		event = "BufReadPre",
 		config = function()
 			vim.g.git_worktree = {
 				change_directory_command = "cd",
@@ -376,6 +384,7 @@ return {
 	},
 	{
 		"lewis6991/gitsigns.nvim",
+		event = "BufReadPre",
 		config = function()
 			require("gitsigns").setup({
 				signs = {

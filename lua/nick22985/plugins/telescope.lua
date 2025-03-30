@@ -3,6 +3,7 @@
 local opts = {}
 return {
 	"nvim-telescope/telescope.nvim",
+	event = "UIEnter",
 	build = "make",
 	cond = function()
 		return vim.fn.executable("make") == 1
