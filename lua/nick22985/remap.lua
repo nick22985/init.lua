@@ -32,6 +32,44 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { silent = true })
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { silent = true })
 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+local search_term = ""
+
+vim.keymap.set("n", "<leader>rg", function()
+	-- Get word under cursor
+	local default_word = vim.fn.expand("<cword>")
+	-- Prompt the user, pre-fill with the word under the cursor
+	search_term = vim.fn.input("Ripgrep for: ", default_word)
+	if search_term ~= "" then
+		vim.cmd('silent! grep! "' .. search_term .. '" .')
+		vim.cmd("copen")
+		vim.cmd("wincmd p")
+	end
+end, { desc = "Ripgrep with editable word" })
+
+vim.keymap.set("n", "<leader>rn", function()
+	-- Get the word under the cursor
+	-- local old_word = vim.fn.expand("<cword>")
+	local old_word = search_term
+	if old_word == "" then
+		old_word = vim.fn.expand("<cword>")
+	end
+
+	local new_word = vim.fn.input('Rename "' .. old_word .. '" to: ')
+
+	if new_word ~= "" then
+		if #vim.fn.getqflist() == 0 then
+			vim.cmd('silent! grep! "' .. old_word .. '" .')
+			vim.cmd("copen")
+		end
+
+		vim.cmd("cdo s/" .. old_word .. "/" .. new_word .. "/gc | update")
+
+		-- vim.cmd('silent! grep! "' .. new_word .. '" .')
+		search_term = ""
+	end
+end, { desc = "Rename word with preview and confirmation" })
+
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>")

@@ -3,11 +3,18 @@ vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.g.have_nerd_font = true
 
+-- tabstop to define the number of spaces a tab character is displayed as
 vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
+-- will make tab = spaces if true
 vim.opt.expandtab = false
--- vim.opt.conceallevel = 2
+-- set softtabstop to control how many spaces are inserted when pressing the Tab key if expandtab true
+vim.opt.softtabstop = 8
+-- shiftwidth to control the number of spaces used for indentation:
+vim.opt.shiftwidth = 2
+
+vim.keymap.set("v", ">", ">gv")
+
+vim.opt.conceallevel = 0
 
 vim.opt.smartindent = true
 vim.opt.autoindent = true
@@ -21,8 +28,8 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.breakindent = true
--- vim.opt.list = true
--- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.list = true
+vim.opt.listchars = { tab = "→ ", space = "·", trail = "·", nbsp = "␣" }
 vim.opt.inccommand = "split"
 
 vim.opt.hlsearch = true
@@ -52,6 +59,9 @@ vim.opt.guifont =
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
+vim.o.grepprg = "rg --vimgrep --smart-case"
+vim.o.grepformat = "%f:%l:%c:%m"
+
 -- FIXME: this is not working
 -- TODO: todo
 -- HACK: hack
@@ -60,3 +70,4 @@ vim.opt.spell = true
 -- NOTE: note
 -- TEST: test
 -- XXX: BROKE
+-- SEC: security

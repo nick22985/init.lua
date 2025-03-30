@@ -10,6 +10,7 @@ function ColorMyPencils(color)
 	vim.api.nvim_set_hl(0, "TroubleCount", { bg = "none" })
 	vim.api.nvim_set_hl(0, "ToubleText", { bg = "none" })
 	vim.api.nvim_set_hl(0, "TreesitterContextBottom", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "Substitute", { bg = "red", foreground = "blue" })
 end
 
 return {
