@@ -1,3 +1,31 @@
+local function is_vue3_project(root)
+	if not root then
+		return false
+	end
+
+	local package_json_path = root .. "/package.json"
+	local ok, package_json = pcall(vim.fn.readfile, package_json_path)
+
+	if not ok then
+		return false
+	end
+
+	local ok2, parsed = pcall(vim.json.decode, table.concat(package_json, "\n"))
+
+	if not ok2 then
+		return false
+	end
+
+	local vue_version = nil
+	if parsed.dependencies and parsed.dependencies.vue then
+		vue_version = parsed.dependencies.vue
+	elseif parsed.devDependencies and parsed.devDependencies.vue then
+		vue_version = parsed.devDependencies.vue
+	end
+
+	return vue_version and (vue_version:match("^3") or vue_version:match("^%^3"))
+end
+
 return { -- LSP Configuration & Plugins
 	{
 		"neovim/nvim-lspconfig",
@@ -344,32 +372,7 @@ return { -- LSP Configuration & Plugins
 					root_dir = function(fname)
 						local util = require("lspconfig.util")
 						local root = util.root_pattern("package.json", "vue.config.js")(fname)
-
-						if root then
-							local package_json_path = root .. "/package.json"
-							local ok, package_json = pcall(vim.fn.readfile, package_json_path)
-
-							if ok then
-								local ok2, parsed = pcall(vim.json.decode, table.concat(package_json, "\n"))
-
-								if ok2 then
-									local vue_version = nil
-
-									if parsed.dependencies and parsed.dependencies.vue then
-										vue_version = parsed.dependencies.vue
-									elseif parsed.devDependencies and parsed.devDependencies.vue then
-										vue_version = parsed.devDependencies.vue
-									end
-
-									if vue_version and (vue_version:match("^3") or vue_version:match("^%^3")) then
-										return root
-									end
-								end
-							end
-						end
-
-						-- Don't start Volar for non-Vue 3 projects
-						return nil
+						return root and is_vue3_project(root) and root or nil
 					end,
 				},
 				vuels = {
@@ -389,29 +392,8 @@ return { -- LSP Configuration & Plugins
 					},
 					root_dir = function(fname)
 						local util = require("lspconfig.util")
-						local root = util.root_pattern("package.json")(fname)
-
-						if root then
-							local package_json_path = root .. "/package.json"
-							local ok, package_json = pcall(vim.fn.readfile, package_json_path)
-							if ok then
-								local ok2, parsed = pcall(vim.json.decode, table.concat(package_json, "\n"))
-
-								if ok2 then
-									local vue_version = nil
-									if parsed.dependencies and parsed.dependencies.vue then
-										vue_version = parsed.dependencies.vue
-									elseif parsed.devDependencies and parsed.devDependencies.vue then
-										vue_version = parsed.devDependencies.vue
-									end
-									if vue_version and (vue_version:match("^3") or vue_version:match("^%^3")) then
-										return nil
-									end
-								end
-							end
-						end
-
-						return root
+						local root = util.root_pattern("package.json", "vue.config.js")(fname)
+						return root and not is_vue3_project(root) and root or nil
 					end,
 				},
 				angularls = {
