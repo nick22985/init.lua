@@ -35,7 +35,7 @@ require("lazy").setup("nick22985.plugins", {
 	-- },
 	dev = {
 		-- directory where you store your local plugin projects
-		path = "~/plugins",
+		path = "~/projects/personal/neovim/plugins",
 		fallback = false,
 	},
 	ui = {

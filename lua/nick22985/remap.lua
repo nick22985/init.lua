@@ -78,6 +78,8 @@ vim.keymap.set("n", "<leader><leader>s", function()
 	vim.cmd("so")
 end)
 
+vim.keymap.set("n", "<leader>t", "<Plug>PlenaryTestFile", { noremap = false, silent = false })
+
 -- disable
 for _, mode in pairs({ "n", "i", "v", "x" }) do
 	for _, key in pairs({ "<Up>", "<Down>", "<Left>", "<Right>" }) do

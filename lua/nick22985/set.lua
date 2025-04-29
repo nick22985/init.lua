@@ -1,5 +1,6 @@
 vim.loader.enable()
 vim.opt.nu = true
+vim.opt.number = true
 vim.opt.relativenumber = true
 vim.g.have_nerd_font = true
 
@@ -61,6 +62,10 @@ vim.opt.spell = true
 
 vim.o.grepprg = "rg --vimgrep --smart-case"
 vim.o.grepformat = "%f:%l:%c:%m"
+
+-- Don't have `o` add a comment
+-- vim.opt.formatoptions:remove("r")
+vim.opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
 
 -- FIXME: this is not working
 -- TODO: todo

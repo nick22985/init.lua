@@ -33,6 +33,7 @@ return {
 					"json",
 					"regex",
 					"markdown_inline",
+					"markdown",
 					"go",
 				},
 				-- Install parsers synchronously (only applied to `ensure_installed`)

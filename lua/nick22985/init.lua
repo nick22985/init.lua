@@ -1,3 +1,4 @@
+require("nick22985.commands")
 require("nick22985.autogroups")
 require("nick22985.set")
 require("nick22985.filetypes")

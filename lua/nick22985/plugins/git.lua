@@ -16,12 +16,20 @@ return {
 					-- adds current line nr in the url for normal mode
 					add_current_line_on_normal_mode = true,
 					-- callback for what to do with the url
-					action_callback = require("gitlinker.actions").copy_to_clipboard,
-					-- print the url after performing the action
+					-- action_callback = function(url)
+					-- 	P(url)
+					-- 	-- local copyToClipBoard = j
+					-- 	return require("gitlinker.actions").copy_to_clipboard(url)
+					-- end,
+					action_callback = require("gitlinker.actions").copy_to_clipboard, -- print the url after performing the action
 					print_url = false,
 				},
 				callbacks = {
-					["github.com"] = require("gitlinker.hosts").get_github_type_url,
+					-- ["github.com"] = require("gitlinker.hosts").get_github_type_url,
+					-- ["github.com"] = function(test)
+					-- 	P(test)
+					-- 	return require("gitlinker.hosts").get_github_type_url(test)
+					-- end,
 					["gitlab.com"] = require("gitlinker.hosts").get_gitlab_type_url,
 					["try.gitea.io"] = require("gitlinker.hosts").get_gitea_type_url,
 					["codeberg.org"] = require("gitlinker.hosts").get_gitea_type_url,
@@ -41,7 +49,6 @@ return {
 	{
 		"NeogitOrg/neogit",
 		branch = "master",
-		event = "VeryLazy",
 		event = "BufReadPre",
 		dependencies = {
 			"nvim-lua/plenary.nvim", -- required
