@@ -31,8 +31,11 @@ return { -- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPost", "BufWritePost", "BufNewFile" },
 		dependencies = {
-			{ "williamboman/mason.nvim" },
-			{ "williamboman/mason-lspconfig.nvim" },
+			-- FIXME: https://github.com/LazyVim/LazyVim/issues/6039
+			{ "williamboman/mason.nvim", version = "1.11.0" },
+			{ "williamboman/mason-lspconfig.nvim", version = "1.32.0" },
+			-- { "williamboman/mason.nvim" },
+			-- { "williamboman/mason-lspconfig.nvim" },lsp
 			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 			{ "artemave/workspace-diagnostics.nvim" },
 			{
@@ -183,7 +186,7 @@ return { -- LSP Configuration & Plugins
 							treesitter_highlighting = true,
 						},
 						ghost_text = {
-							enabled = true,
+							enabled = false,
 							show_with_menu = true,
 						},
 						list = {
@@ -424,6 +427,23 @@ return { -- LSP Configuration & Plugins
 				copilot = {
 					filetypes = "*",
 				},
+				jdtls = {
+					init_options = {
+						extendedClientCapabilities = {
+							-- Switching to standard LSP progress events (as soon as it lands, see link)
+							-- https://github.com/eclipse/eclipse.jdt.ls/pull/2030#issuecomment-1210815017
+							progressReportProvider = false,
+						},
+					},
+					-- handlers = {
+					-- 	["language/status"] = function(_, result)
+					-- 		-- vim.print(result)
+					-- 	end,
+					-- 	["$/progress"] = function(_, result, ctx)
+					-- 		-- vim.print(result)
+					-- 	end,
+					-- },
+				},
 			},
 		},
 		config = function(_, opts)
@@ -541,16 +561,30 @@ return { -- LSP Configuration & Plugins
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 						lspconfig[server_name].setup(server)
 						-- if server_name == "ts_ls" then
-						-- 	require("notify")(vim.inspect(server.capabilities.workspace), "error", {
-						-- 		title = server_name,
-						-- 		timeout = 10000,
-						-- 	})
+						-- require("notify")(vim.inspect(server.capabilities.workspace), "error", {
+						-- 	title = server_name,
+						-- 	timeout = 10000,
+						-- })
 						-- end
 					end,
 				},
 				ensure_installed = ensure_installed,
 				automatic_installation = {},
+				automatic_enable = true,
 			})
+			local function setup(server_name)
+				local server = opts.servers[server_name] or {}
+				server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+				lspconfig[server_name].setup(server)
+				-- if server_name == "ts_ls" then
+				-- require("notify")(vim.inspect(server.capabilities.workspace), "error", {
+				-- 	title = server_name,
+				-- 	timeout = 10000,
+				-- })
+				-- end
+			end
+
+			-- require("mason-lspconfig").setup_handlers({ setup })
 
 			vim.diagnostic.config({
 				underline = true,
@@ -682,13 +716,15 @@ return { -- LSP Configuration & Plugins
 					typescript = { "prettier" },
 					typescriptreact = { "prettier" },
 					json = { "prettier" },
-
 					vue = { "prettier" },
+					java = { "google-java-format" },
 					-- Use the "*" filetype to run formatters on all filetypes.
-					["*"] = { "codespell" },
+					-- NOTE: auto codespells very annoying
+					-- ["*"] = { "codespell" },
+					--
 					-- Use the "_" filetype to run formatters on filetypes that don't
 					-- have other formatters configured.
-					["_"] = { "trim_whitespace" },
+					["_"] = { "trim_whitespace", "prettier" },
 				},
 				formatters = {
 					prettier = {
