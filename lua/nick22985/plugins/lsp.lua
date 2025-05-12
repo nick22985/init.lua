@@ -29,13 +29,13 @@ end
 return { -- LSP Configuration & Plugins
 	{
 		"neovim/nvim-lspconfig",
-		event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+		-- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
 		dependencies = {
 			-- FIXME: https://github.com/LazyVim/LazyVim/issues/6039
-			{ "williamboman/mason.nvim", version = "1.11.0" },
-			{ "williamboman/mason-lspconfig.nvim", version = "1.32.0" },
-			-- { "williamboman/mason.nvim" },
-			-- { "williamboman/mason-lspconfig.nvim" },lsp
+			-- { "mason-org/mason.nvim", version = "1.11.0" },
+			-- { "mason-org/mason-lspconfig.nvim", version = "1.32.0" },
+			{ "mason-org/mason.nvim" },
+			{ "mason-org/mason-lspconfig.nvim" },
 			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 			{ "artemave/workspace-diagnostics.nvim" },
 			{
@@ -327,14 +327,31 @@ return { -- LSP Configuration & Plugins
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
-					-- capabilities = {},
+					capabilities = {
+						workspace = {
+							didChangeWatchedFiles = {
+								dynamicRegistration = true,
+							},
+						},
+					},
 					settings = {
 						Lua = {
+							runtime = {
+								version = "LuaJIT",
+								path = vim.split(package.path, ";"),
+							},
 							completion = {
 								callSnippet = "Replace",
 							},
 							diagnostics = {
-								globals = { "vim", "it", "describe", "before_each", "after_each" },
+								globals = { "it", "describe", "before_each", "after_each" },
+							},
+							workspace = {
+								library = vim.api.nvim_get_runtime_file("", true),
+								checkThirdParty = false,
+							},
+							telemetry = {
+								enable = false,
 							},
 						},
 					},
@@ -520,21 +537,21 @@ return { -- LSP Configuration & Plugins
 				end,
 			})
 
-			local function eslint_config_exists()
-				local eslintrc = vim.fn.glob(".eslintrc*", 0, 1)
-
-				if not vim.tbl_isempty(eslintrc) then
-					return true
-				end
-
-				if vim.fn.filereadable("package.json") then
-					if vim.fn.json_decode(vim.fn.readfile("package.json"))["eslintConfig"] then
-						return true
-					end
-				end
-
-				return true
-			end
+			-- local function eslint_config_exists()
+			-- 	local eslintrc = vim.fn.glob(".eslintrc*", 0, 1)
+			--
+			-- 	if not vim.tbl_isempty(eslintrc) then
+			-- 		return true
+			-- 	end
+			--
+			-- 	if vim.fn.filereadable("package.json") then
+			-- 		if vim.fn.json_decode(vim.fn.readfile("package.json"))["eslintConfig"] then
+			-- 			return true
+			-- 		end
+			-- 	end
+			--
+			-- 	return true
+			-- end
 
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 
@@ -552,39 +569,25 @@ return { -- LSP Configuration & Plugins
 				"ts_ls",
 			})
 
-			-- require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
-			require("mason-lspconfig").setup({
-				handlers = {
-					function(server_name)
-						local server = opts.servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						lspconfig[server_name].setup(server)
-						-- if server_name == "ts_ls" then
-						-- require("notify")(vim.inspect(server.capabilities.workspace), "error", {
-						-- 	title = server_name,
-						-- 	timeout = 10000,
-						-- })
-						-- end
-					end,
-				},
+			local masonLspconfig = require("mason-lspconfig")
+			masonLspconfig.setup({
 				ensure_installed = ensure_installed,
 				automatic_installation = {},
 				automatic_enable = true,
 			})
-			local function setup(server_name)
+			local allServers = masonLspconfig.get_installed_servers()
+			for _, server_name in ipairs(allServers) do
 				local server = opts.servers[server_name] or {}
 				server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-				lspconfig[server_name].setup(server)
+				vim.lsp.config(server_name, server)
+				-- lspconfig[server_name].setup(server)
 				-- if server_name == "ts_ls" then
-				-- require("notify")(vim.inspect(server.capabilities.workspace), "error", {
-				-- 	title = server_name,
-				-- 	timeout = 10000,
-				-- })
+				--   require("notify")(vim.inspect(server.capabilities.workspace), "error", {
+				--     title = server_name,
+				--     timeout = 10000,
+				--   })
 				-- end
 			end
-
-			-- require("mason-lspconfig").setup_handlers({ setup })
 
 			vim.diagnostic.config({
 				underline = true,
