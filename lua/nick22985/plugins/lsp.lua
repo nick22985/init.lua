@@ -32,9 +32,6 @@ return { -- LSP Configuration & Plugins
 		-- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
 		lazy = false,
 		dependencies = {
-			-- FIXME: https://github.com/LazyVim/LazyVim/issues/6039
-			-- { "mason-org/mason.nvim", version = "1.11.0" },
-			-- { "mason-org/mason-lspconfig.nvim", version = "1.32.0" },
 			{ "mason-org/mason.nvim" },
 			{ "mason-org/mason-lspconfig.nvim" },
 			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
@@ -336,168 +333,7 @@ return { -- LSP Configuration & Plugins
 				opts_extend = { "sources.default" },
 			},
 		},
-		opts = {
-			servers = {
-				lua_ls = {
-					-- cmd = {...},
-					-- filetypes = { ...},
-					capabilities = {
-						workspace = {
-							didChangeWatchedFiles = {
-								dynamicRegistration = true,
-							},
-						},
-					},
-					settings = {
-						Lua = {
-							runtime = {
-								version = "LuaJIT",
-								path = vim.split(package.path, ";"),
-							},
-							completion = {
-								callSnippet = "Replace",
-							},
-							diagnostics = {
-								globals = { "it", "describe", "before_each", "after_each" },
-							},
-							workspace = {
-								library = vim.api.nvim_get_runtime_file("", true),
-								checkThirdParty = false,
-							},
-							telemetry = {
-								enable = false,
-							},
-						},
-					},
-				},
-				tailwindcss = {
-					filetypes = { "css", "javascriptreact", "typescriptreact" },
-				},
-				ts_ls = {
-					capabilities = {
-						workspace = {
-							workspace = {
-								didChangeWatchedFiles = {
-									dynamicRegistration = true,
-									relativePatternSupport = true,
-								},
-							},
-						},
-					},
-					init_options = {
-						plugins = {
-							-- {
-							-- 	name = "@vue/typescript-plugin",
-							-- 	location = "/path/to/@vue/language-server",
-							-- 	languages = { "vue" },
-							-- },
-						},
-					},
-				},
-				volar = {
-					init_options = {
-						languageFeatures = {
-							typeDefinition = false,
-						},
-						vue = {
-							hybridMode = false,
-						},
-					},
-					root_dir = function(bufnr, on_dir)
-						-- on_dir(function()
-						local fname = vim.api.nvim_buf_get_name(bufnr)
-
-						local util = require("lspconfig.util")
-						local root_dir = util.root_pattern("package.json", "vue.config.js")(fname)
-						local root = root_dir and is_vue3_project(root_dir) and root_dir or nil
-
-						if root then
-							on_dir(root)
-						else
-							return nil
-						end
-					end,
-				},
-				vuels = {
-					vetur = {
-						grammar = {
-							customBlocks = {
-								component = "md",
-								directive = "js",
-								endpoint = "js",
-								filter = "js",
-								macgyver = "js",
-								schema = "js",
-								server = "js",
-								service = "js",
-							},
-						},
-					},
-					root_dir = function(bufnr, on_dir)
-						local fname = vim.api.nvim_buf_get_name(bufnr)
-
-						local util = require("lspconfig.util")
-						local root_dir = util.root_pattern("package.json", "vue.config.js")(fname)
-						local root = root_dir and not is_vue3_project(root_dir) and root_dir or nil
-						if root then
-							on_dir(root)
-						else
-							return nil
-						end
-					end,
-				},
-				angularls = {
-					filestypes = {
-						"ng",
-						"html",
-					},
-				},
-				gopls = {
-					settings = {
-						gopls = {
-							completeUnimported = true,
-							-- usePlaceholders = true,
-							analyses = {
-								unusedparams = true,
-							},
-						},
-					},
-				},
-				eslint = {
-					root_dir = function()
-						return false
-					end,
-				},
-				bashls = {
-					filetypes = { "sh", "zsh" },
-				},
-				copilot = {
-					filetypes = "*",
-				},
-				jdtls = {
-					init_options = {
-						extendedClientCapabilities = {
-							-- Switching to standard LSP progress events (as soon as it lands, see link)
-							-- https://github.com/eclipse/eclipse.jdt.ls/pull/2030#issuecomment-1210815017
-							progressReportProvider = false,
-						},
-						-- typescript = {
-						-- 	serverPath =
-						-- }
-					},
-					-- handlers = {
-					-- 	["language/status"] = function(_, result)
-					-- 		-- vim.print(result)
-					-- 	end,
-					-- 	["$/progress"] = function(_, result, ctx)
-					-- 		-- vim.print(result)
-					-- 	end,
-					-- },
-				},
-			},
-		},
 		config = function(_, opts)
-			local lspconfig = require("lspconfig")
 			require("workspace-diagnostics").setup({})
 
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -591,49 +427,18 @@ return { -- LSP Configuration & Plugins
 			capabilities =
 				vim.tbl_deep_extend("force", require("blink.cmp").get_lsp_capabilities({}, false), capabilities)
 
-			local masonServers = require("mason").setup()
-
-			local ensure_installed = vim.tbl_keys(masonServers or {})
-
-			vim.list_extend(ensure_installed, {
-				-- "stylua", -- Used to format Lua code
+			local ensure_installed = {
 				"tailwindcss",
 				"gopls",
 				"ts_ls",
+			}
+
+			vim.lsp.config("*", {
+				capabilities = capabilities,
 			})
 
-			local masonLspconfig = require("mason-lspconfig")
-			local allServers = masonLspconfig.get_installed_servers()
-			for _, server_name in ipairs(allServers) do
-				local server = opts.servers[server_name] or {}
-				server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-				vim.lsp.config(server_name, server)
-				-- vim.lsp.enable(server_name)
-				-- lspconfig[server_name].setup(server)
-				-- if server_name == "ts_ls" then
-				--   require("notify")(vim.inspect(server.capabilities.workspace), "error", {
-				--     title = server_name,
-				--     timeout = 10000,
-				--   })
-				-- end
-			end
-
-			masonLspconfig.setup({
-				-- handlers = {
-				-- 	function(server_name)
-				-- 		local server = opts.servers[server_name] or {}
-				-- 		server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-				-- 		lspconfig[server_name].setup(server)
-				--
-				-- 		-- vim.lsp.config(server_name, server)
-				-- 		-- if server_name == "ts_ls" then
-				-- 		-- require("notify")(vim.inspect(server.capabilities.workspace), "error", {
-				-- 		-- 	title = server_name,
-				-- 		-- 	timeout = 10000,
-				-- 		-- })
-				-- 		-- end
-				-- 	end,
-				-- },
+			require("mason").setup()
+			require("mason-lspconfig").setup({
 				ensure_installed = ensure_installed,
 				automatic_installation = {},
 				automatic_enable = true,
@@ -649,7 +454,6 @@ return { -- LSP Configuration & Plugins
 					current_line = false,
 				},
 				-- virtual_lines = {
-				--
 				-- 	current_line = false, -- cool however dont like how it changes the buffer so much with virt text also duplicates virt text output
 				-- },
 				severity_sort = true,

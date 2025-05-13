@@ -1,0 +1,6 @@
+return {
+	filestypes = {
+		"ng",
+		"html",
+	},
+}
