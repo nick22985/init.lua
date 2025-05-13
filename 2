@@ -404,18 +404,22 @@ return { -- LSP Configuration & Plugins
 						},
 					},
 					root_dir = function(bufnr, on_dir)
-						-- on_dir(function()
-						local fname = vim.api.nvim_buf_get_name(bufnr)
-
-						local util = require("lspconfig.util")
-						local root_dir = util.root_pattern("package.json", "vue.config.js")(fname)
-						local root = root_dir and is_vue3_project(root_dir) and root_dir or nil
-
-						if root then
-							on_dir(root)
-						else
-							return nil
-						end
+						on_dir(
+							-- function
+							-- local fname = vim.api.nvim_buf_get_name(bufnr)
+							-- P(fname)
+							--
+							-- local util = require("lspconfig.util")
+							-- local root = util.root_pattern("package.json", "vue.config.js")(fname)
+							--
+							-- local test = root and is_vue3_project(root) and root or nil
+							-- require("notify")(vim.inspect(test), "error", {
+							-- 	title = fname,
+							-- 	timeout = 10000,
+							-- })
+							-- return test
+						)
+						-- end
 					end,
 				},
 				vuels = {
@@ -437,13 +441,11 @@ return { -- LSP Configuration & Plugins
 						local fname = vim.api.nvim_buf_get_name(bufnr)
 
 						local util = require("lspconfig.util")
-						local root_dir = util.root_pattern("package.json", "vue.config.js")(fname)
-						local root = root_dir and not is_vue3_project(root_dir) and root_dir or nil
-						if root then
-							on_dir(root)
-						else
-							return nil
-						end
+						local root = util.root_pattern("package.json", "vue.config.js")(fname)
+
+						local test = root and not is_vue3_project(root) and root or nil
+						return test
+						-- end)
 					end,
 				},
 				angularls = {
@@ -481,9 +483,6 @@ return { -- LSP Configuration & Plugins
 							-- https://github.com/eclipse/eclipse.jdt.ls/pull/2030#issuecomment-1210815017
 							progressReportProvider = false,
 						},
-						-- typescript = {
-						-- 	serverPath =
-						-- }
 					},
 					-- handlers = {
 					-- 	["language/status"] = function(_, result)
@@ -608,7 +607,6 @@ return { -- LSP Configuration & Plugins
 				local server = opts.servers[server_name] or {}
 				server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 				vim.lsp.config(server_name, server)
-				-- vim.lsp.enable(server_name)
 				-- lspconfig[server_name].setup(server)
 				-- if server_name == "ts_ls" then
 				--   require("notify")(vim.inspect(server.capabilities.workspace), "error", {
