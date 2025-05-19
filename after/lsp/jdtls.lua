@@ -1,5 +1,4 @@
 return {
-
 	init_options = {
 		extendedClientCapabilities = {
 			-- Switching to standard LSP progress events (as soon as it lands, see link)
