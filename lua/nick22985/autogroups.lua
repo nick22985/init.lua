@@ -73,3 +73,12 @@ end, vim.api.nvim_create_namespace("auto_pause_folds"))
 
 -- Yank highlight
 vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
+
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+-- 	group = "bufcheck",
+-- 	pattern = "*",
+--
+-- 	callback = function()
+-- 		vim.highlight.on_yank({ timeout = 500 })
+-- 	end,
+-- })

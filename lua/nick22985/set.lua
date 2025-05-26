@@ -64,7 +64,7 @@ vim.o.grepprg = "rg --vimgrep --smart-case"
 vim.o.grepformat = "%f:%l:%c:%m"
 
 -- Don't have `o` add a comment
--- vim.opt.formatoptions:remove("r")
+vim.opt.formatoptions:remove({ "o", "r" })
 vim.opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
 
 -- FIXME: this is not working
