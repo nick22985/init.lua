@@ -14,6 +14,18 @@ return {
 	init_options = {
 		config = {
 			vetur = {
+				grammar = {
+					customBlocks = {
+						component = "md",
+						directive = "js",
+						endpoint = "js",
+						filter = "js",
+						macgyver = "js",
+						schema = "js",
+						server = "js",
+						service = "js",
+					},
+				},
 				useWorkspaceDependencies = false,
 				validation = {
 					template = true,
