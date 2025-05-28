@@ -1,21 +1,55 @@
+---@brief
+---
+--- https://github.com/vuejs/vetur/tree/master/server
+---
+--- Vue language server(vls)
+--- `vue-language-server` can be installed via `npm`:
+--- ```sh
+--- npm install -g vls
+--- ```
 return {
-	test = "test",
-	vetur = {
-		grammar = {
-			customBlocks = {
-				component = "md",
-				directive = "js",
-				endpoint = "js",
-				filter = "js",
-				macgyver = "js",
-				schema = "js",
-				server = "js",
-				service = "js",
+	cmd = { "vls" },
+	filetypes = { "vue" },
+	root_markers = { "package.json", "vue.config.js" },
+	init_options = {
+		config = {
+			vetur = {
+				useWorkspaceDependencies = false,
+				validation = {
+					template = true,
+					style = true,
+					script = true,
+				},
+				completion = {
+					autoImport = false,
+					useScaffoldSnippets = false,
+					tagCasing = "kebab",
+				},
+				format = {
+					defaultFormatter = {
+						js = "none",
+						ts = "none",
+					},
+					defaultFormatterOptions = {},
+					scriptInitialIndent = false,
+					styleInitialIndent = false,
+				},
 			},
+			css = {},
+			html = {
+				suggest = {},
+			},
+			javascript = {
+				format = {},
+			},
+			typescript = {
+				format = {},
+			},
+			emmet = {},
+			stylusSupremacy = {},
 		},
 	},
 	root_dir = function(bufnr, on_dir)
-		P("here vuels")
 		local fname = vim.api.nvim_buf_get_name(bufnr)
 
 		local lsp_utils = require("nick22985.utils.lsp-utils")
