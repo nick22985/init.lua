@@ -443,6 +443,8 @@ return { -- LSP Configuration & Plugins
 				automatic_installation = {},
 				automatic_enable = true,
 			})
+			local allServers = require("mason-lspconfig").get_installed_servers()
+			P(allServers)
 
 			vim.diagnostic.config({
 				underline = true,
