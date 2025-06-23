@@ -1,31 +1,3 @@
-local function is_vue3_project(root)
-	if not root then
-		return false
-	end
-
-	local package_json_path = root .. "/package.json"
-	local ok, package_json = pcall(vim.fn.readfile, package_json_path)
-
-	if not ok then
-		return false
-	end
-
-	local ok2, parsed = pcall(vim.json.decode, table.concat(package_json, "\n"))
-
-	if not ok2 then
-		return false
-	end
-
-	local vue_version = nil
-	if parsed.dependencies and parsed.dependencies.vue then
-		vue_version = parsed.dependencies.vue
-	elseif parsed.devDependencies and parsed.devDependencies.vue then
-		vue_version = parsed.devDependencies.vue
-	end
-
-	return vue_version and (vue_version:match("^3") or vue_version:match("^%^3"))
-end
-
 return { -- LSP Configuration & Plugins
 	{
 		"neovim/nvim-lspconfig",
@@ -453,7 +425,7 @@ return { -- LSP Configuration & Plugins
 					spacing = 4,
 					source = "if_many",
 					prefix = "●",
-					current_line = false,
+					-- current_line = true,
 				},
 				-- virtual_lines = {
 				-- 	current_line = false, -- cool however dont like how it changes the buffer so much with virt text also duplicates virt text output
@@ -491,57 +463,6 @@ return { -- LSP Configuration & Plugins
 		},
 		opts = {},
 		config = function(opts)
-			local function get_prettier_config()
-				local config_files = {
-					"package.json",
-					".prettierrc",
-					".prettierrc.json",
-					".prettierrc.yml",
-					".prettierrc.yaml",
-					".prettierrc.json5",
-					".prettierrc.js",
-					"prettier.config.js",
-					".prettierrc.mjs",
-					"prettier.config.mjs",
-					".prettierrc.cjs",
-					"prettier.config.cjs",
-					".prettierrc.toml",
-				}
-
-				local function file_exists_in_directory(directory, file)
-					return vim.fn.filereadable(vim.fn.expand(directory .. "/" .. file)) == 1
-				end
-
-				local function find_config_file(starting_directory)
-					local current_directory = starting_directory
-					local root_directory = vim.fn.getcwd()
-
-					while current_directory ~= "/" do
-						for _, file in ipairs(config_files) do
-							local file_path = current_directory .. "/" .. file
-							if file_exists_in_directory(current_directory, file) then
-								if file == "package.json" then
-									local package_json = vim.fn.json_decode(vim.fn.readfile(file_path))
-									if package_json["prettier"] then
-										return file_path
-									end
-								else
-									return file_path
-								end
-							end
-						end
-						if current_directory == root_directory then
-							break
-						end
-						current_directory = vim.fn.fnamemodify(current_directory, ":h")
-					end
-
-					-- Return the fallback config if no config files are found
-					return os.getenv("HOME") .. "/.config/nvim/utils/linter-config/.prettierrc.json"
-				end
-
-				return find_config_file(vim.fn.expand("%:p:h"))
-			end
 			require("conform").setup({
 				notify_on_error = false,
 				format_on_save = function(bufnr)
@@ -577,6 +498,7 @@ return { -- LSP Configuration & Plugins
 					json = { "prettier" },
 					vue = { "prettier" },
 					java = { "google-java-format" },
+					rust = { "rustfmt" },
 					-- Use the "*" filetype to run formatters on all filetypes.
 					-- NOTE: auto codespells very annoying
 					-- ["*"] = { "codespell" },
@@ -589,7 +511,8 @@ return { -- LSP Configuration & Plugins
 					prettier = {
 						command = "prettier",
 						args = function()
-							local config = get_prettier_config()
+							local lsp_utils = require("nick22985.utils.lsp-utils")
+							local config = lsp_utils.get_prettier_config()
 							return { "--config", config, "--stdin-filepath", vim.fn.expand("%:p") }
 						end,
 						stdin = true,

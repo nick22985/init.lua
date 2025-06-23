@@ -1,0 +1,5 @@
+return {
+	rustfmt = {
+		enableRangeFormatting = true,
+	},
+}

@@ -142,6 +142,7 @@ return {
 						"build/",
 						".git/",
 						".next/",
+						"target/",
 					},
 				},
 				live_grep = {

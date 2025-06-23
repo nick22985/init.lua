@@ -90,3 +90,13 @@ end
 vim.keymap.set("i", "<C-p>", "<nop>")
 
 vim.opt.mouse = ""
+
+-- For SSH sessions, use a different approach for opening URLs
+if os.getenv("SSH_TTY") then
+	vim.keymap.set("n", "gx", function()
+		local url = vim.fn.expand("<cWORD>")
+		-- Copy URL to system clipboard (if clipboard forwarding is set up)
+		vim.fn.setreg("+", url)
+		print("URL copied to clipboard: " .. url)
+	end, { desc = "Copy URL under cursor" })
+end

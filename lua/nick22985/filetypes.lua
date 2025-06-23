@@ -3,5 +3,6 @@ vim.filetype.add({
 		[".*doop"] = "vue",
 		[".*%.ng"] = "html",
 		[".env.*"] = "sh",
+		["Dockerfile.*"] = "dockerfile",
 	},
 })
