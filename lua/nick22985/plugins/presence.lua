@@ -41,6 +41,9 @@ return {
 		end
 
 		function HandleEditing(config)
+			-- Get the proper description from file assets or fallback to filename
+			local file_description = config.name or config.filename
+
 			return {
 				details = string.format(
 					"Working on %s in %s",
@@ -53,6 +56,7 @@ return {
 					FilterText(config.line_count),
 					config.problems_total
 				),
+				large_text = FilterText(file_description),
 			}
 		end
 
@@ -60,13 +64,17 @@ return {
 			return {
 				state = string.format("Browsing %s", FilterText(config.file_explorer)),
 				details = string.format("In %s", GetLocationText(config)),
+				large_text = FilterText(config.file_explorer),
 			}
 		end
 
 		function HandleGitCommit(config)
+			local file_description = config.name or config.filename
+
 			return {
 				state = "Committing changes",
 				details = string.format("To %s", FilterText(config.filename)),
+				large_text = FilterText(file_description),
 			}
 		end
 
@@ -74,13 +82,17 @@ return {
 			return {
 				state = string.format("Managing %s", FilterText(config.plugin_manager)),
 				details = string.format("In %s", GetLocationText(config)),
+				large_text = FilterText(config.plugin_manager),
 			}
 		end
 
 		function HandleReading(config)
+			local file_description = config.name or config.filename
+
 			return {
 				state = string.format("Reading %s", FilterText(config.filename)),
 				details = string.format("In %s", GetLocationText(config)),
+				large_text = FilterText(file_description),
 			}
 		end
 
@@ -105,6 +117,7 @@ return {
 				-- Custom idle images and text
 				small_image = "idle",
 				small_text = "Idling",
+				large_text = "Away",
 			}
 		end
 

@@ -402,7 +402,7 @@ return { -- LSP Configuration & Plugins
 			local ensure_installed = {
 				"tailwindcss",
 				"gopls",
-				"ts_ls",
+				-- "ts_ls",
 			}
 
 			vim.lsp.config("*", {
@@ -417,6 +417,8 @@ return { -- LSP Configuration & Plugins
 			})
 			-- local allServers = require("mason-lspconfig").get_installed_servers()
 			-- P(allServers)
+
+			vim.lsp.enable({ "tsgo" })
 
 			vim.diagnostic.config({
 				underline = true,

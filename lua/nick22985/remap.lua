@@ -100,3 +100,11 @@ if os.getenv("SSH_TTY") then
 		print("URL copied to clipboard: " .. url)
 	end, { desc = "Copy URL under cursor" })
 end
+vim.keymap.set("n", "<leader>srt", function()
+	for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+		if client.name == "ts_ls" then
+			client:stop()
+		end
+	end
+	vim.cmd("edit") -- this will retrigger LSP autostart
+end, { desc = "Restart ts_ls", silent = true })
