@@ -403,6 +403,14 @@ return { -- LSP Configuration & Plugins
 				"tailwindcss",
 				"gopls",
 				-- "ts_ls",
+				"vtsls",
+				"vuels",
+				"vue_ls",
+				"lua_ls",
+				-- "prettier",
+				-- "stylua",
+				"tailwindcss",
+				"bashls",
 			}
 
 			vim.lsp.config("*", {
@@ -501,6 +509,7 @@ return { -- LSP Configuration & Plugins
 					vue = { "prettier" },
 					java = { "google-java-format" },
 					rust = { "rustfmt" },
+					sh = { "shellcheck" },
 					-- Use the "*" filetype to run formatters on all filetypes.
 					-- NOTE: auto codespells very annoying
 					-- ["*"] = { "codespell" },

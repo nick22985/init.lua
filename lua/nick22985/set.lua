@@ -76,3 +76,4 @@ vim.opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
 -- TEST: test
 -- XXX: BROKE
 -- SEC: security
+-- vim.lsp.set_log_level("DEBUG")
