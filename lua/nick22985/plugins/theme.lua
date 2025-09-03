@@ -1,15 +1,15 @@
 function ColorMyPencils(color)
 	color = color or "rose-pine" --"onedark"
 	vim.cmd.colorscheme(color)
-	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-	vim.api.nvim_set_hl(0, "TreeSitterContext", { bg = "none" })
-	vim.api.nvim_set_hl(0, "TreesitterContextLineNumber", { bg = "none" })
-	vim.api.nvim_set_hl(0, "TreesitterContextBottom", { bg = "none" })
-	vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
-	vim.api.nvim_set_hl(0, "TroubleCount", { bg = "none" })
-	vim.api.nvim_set_hl(0, "ToubleText", { bg = "none" })
-	vim.api.nvim_set_hl(0, "TreesitterContextBottom", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "TreeSitterContext", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "TreesitterContextLineNumber", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "TreesitterContextBottom", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "TroubleCount", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "ToubleText", { bg = "none" })
+	-- vim.api.nvim_set_hl(0, "TreesitterContextBottom", { bg = "none" })
 	-- vim.api.nvim_set_hl(0, "Substitute", { bg = "red", foreground = "blue" })
 end
 
@@ -128,15 +128,21 @@ return {
 		"catppuccin/nvim",
 		name = "catppuccin",
 		priority = 1000, -- Make sure to load this before all the other start plugins.
+		-- commit = "931a129463ca09c8805d564a28b3d0090e536e1d", -- last working one
 		lazy = false,
 		config = function()
+			vim.cmd.colorscheme("catppuccin")
 			require("catppuccin").setup({
-				flavour = "auto", -- latte, frappe, macchiato, mocha
+				flavour = "mocha", -- latte, frappe, macchiato, mocha
 				background = { -- :h background
 					light = "latte",
 					dark = "mocha",
 				},
-				transparent_background = true, -- disables setting the background color.
+				transparent_background = false, -- disables setting the background color.
+				float = {
+					transparent = false, -- enable transparent floating windows
+					solid = false, -- use solid styling for floating windows, see |winborder|
+				},
 				show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
 				term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
 				dim_inactive = {
@@ -163,8 +169,46 @@ return {
 					-- miscs = {}, -- Uncomment to turn off hard-coded styles
 				},
 				color_overrides = {},
-				custom_highlights = {},
+				custom_highlights = function(C)
+					local O = require("catppuccin").options
+					return {
+						["@variable.member"] = { fg = C.lavender }, -- For fields.
+						["@module"] = { fg = C.lavender, style = O.styles.miscs or { "italic" } }, -- For identifiers referring to modules and namespaces.
+						["@string.special.url"] = { fg = C.rosewater, style = { "italic", "underline" } }, -- urls, links and emails
+						["@type.builtin"] = { fg = C.yellow, style = O.styles.properties or { "italic" } }, -- For builtin types.
+						["@property"] = { fg = C.lavender, style = O.styles.properties or {} }, -- Same as TSField.
+						["@constructor"] = { fg = C.sapphire }, -- For constructor calls and definitions: = { } in Lua, and Java constructors.
+						["@keyword.operator"] = { link = "Operator" }, -- For new keyword operator
+						["@keyword.export"] = { fg = C.sky, style = O.styles.keywords },
+						["@markup.strong"] = { fg = C.maroon, style = { "bold" } }, -- bold
+						["@markup.italic"] = { fg = C.maroon, style = { "italic" } }, -- italic
+						["@markup.heading"] = { fg = C.blue, style = { "bold" } }, -- titles like: # Example
+						["@markup.quote"] = { fg = C.maroon, style = { "bold" } }, -- block quotes
+						["@markup.link"] = { link = "Tag" }, -- text references, footnotes, citations, etc.
+						["@markup.link.label"] = { link = "Label" }, -- link, reference descriptions
+						["@markup.link.url"] = { fg = C.rosewater, style = { "italic", "underline" } }, -- urls, links and emails
+						["@markup.raw"] = { fg = C.teal }, -- used for inline code in markdown and for doc in python (""")
+						["@markup.list"] = { link = "Special" },
+						["@tag"] = { fg = C.mauve }, -- Tags like html tag names.
+						["@tag.attribute"] = { fg = C.teal, style = O.styles.miscs or { "italic" } }, -- Tags like html tag names.
+						["@tag.delimiter"] = { fg = C.sky }, -- Tag delimiter like < > /
+						["@property.css"] = { fg = C.lavender },
+						["@property.id.css"] = { fg = C.blue },
+						["@type.tag.css"] = { fg = C.mauve },
+						["@string.plain.css"] = { fg = C.peach },
+						["@constructor.lua"] = { fg = C.flamingo }, -- For constructor calls and definitions: = { } in Lua.
+						-- typescript
+						["@property.typescript"] = { fg = C.lavender, style = O.styles.properties or {} },
+						["@constructor.typescript"] = { fg = C.lavender },
+						-- TSX (Typescript React)
+						["@constructor.tsx"] = { fg = C.lavender },
+						["@tag.attribute.tsx"] = { fg = C.teal, style = O.styles.miscs or { "italic" } },
+						["@type.builtin.c"] = { fg = C.yellow, style = {} },
+						["@type.builtin.cpp"] = { fg = C.yellow, style = {} },
+					}
+				end,
 				default_integrations = true,
+				auto_integrations = false,
 				integrations = {
 					cmp = true,
 					gitsigns = true,
@@ -198,7 +242,6 @@ return {
 			-- 	name = "TreesitterContextBottom",
 			-- })
 			-- setup must be called before loading
-			-- vim.cmd.colorscheme("catppuccin")
 			ColorMyPencils("catppuccin")
 		end,
 	},

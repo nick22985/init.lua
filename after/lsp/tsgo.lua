@@ -13,6 +13,11 @@ return {
 		"typescript.tsx",
 	},
 	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+	root_dir = function(bufnr, on_dir)
+		-- disable using tsgo atm
+		-- also use vtsls because vue 3 needs it
+		return nil
+	end,
 	handlers = {
 		-- handle rename request for certain code actions like extracting functions / types
 		["_typescript.rename"] = function(_, result, ctx)
