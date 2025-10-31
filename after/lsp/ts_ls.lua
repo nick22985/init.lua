@@ -9,11 +9,11 @@ return {
 			},
 		},
 	},
-	root_dir = function(bufnr, on_dir)
-		-- disable using tsgo atm
-		-- also use vtsls because vue 3 needs it
-		return nil
-	end,
+	-- root_dir = function(bufnr, on_dir)
+	-- 	-- disable using tsgo atm
+	-- 	-- also use vtsls because vue 3 needs it
+	-- 	return nil
+	-- end,
 	init_options = {
 		plugins = {
 			-- {
