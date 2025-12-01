@@ -79,6 +79,13 @@ return {
 			local Hooks = require("git-worktree.hooks")
 			local function on_tree_switch(op, path)
 				-- vim.cmd("%bd|e#")
+				local branch = vim.fn.system("git branch --show-current"):gsub("\n", "")
+				if branch ~= "" then
+					local upstream = vim.fn.system("git rev-parse --abbrev-ref @{u} 2>/dev/null"):gsub("\n", "")
+					if upstream == "" then
+						vim.fn.system("git branch --set-upstream-to=origin/" .. branch .. " " .. branch)
+					end
+				end
 			end
 
 			Hooks.register(Hooks.type.SWITCH, Hooks.builtins.update_current_buffer_on_switch)
