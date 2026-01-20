@@ -1,6 +1,4 @@
--- Save current folds on vim leave and load on vim enter
 local function remember(mode)
-	-- avoid complications with some special filetypes
 	local ignoredFts = {
 		"TelescopePrompt",
 		"DressingSelect",
@@ -14,7 +12,6 @@ local function remember(mode)
 		"NeogitStatus",
 		"",
 	}
-	-- P({ "remember", vim.bo.filetype, vim.bo.buftype, vim.bo.modifiable })
 	if vim.tbl_contains(ignoredFts, vim.bo.filetype) or vim.bo.buftype ~= "" or not vim.bo.modifiable then
 		return
 	end
@@ -23,8 +20,10 @@ local function remember(mode)
 		vim.cmd.mkview(1)
 	else
 		pcall(function()
+			-- print("loading view")
+			-- FIXME: randomly switches cwd
 			vim.cmd.loadview(1)
-		end) -- pcall, since new files have no view yet
+		end)
 	end
 end
 vim.api.nvim_create_autocmd("BufWinLeave", {
@@ -40,14 +39,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 		remember("load")
 	end,
 })
-
--- vim.api.nvim_create_autocmd("BufWritePre", {
--- 	pattern = "?*",
--- 	callback = function()
--- 		P("save on write")
--- 		remember("save")
--- 	end,
--- })
 
 vim.opt.foldopen:remove({ "search" }) -- no auto-open when searching, since the following snippet does that better
 
@@ -114,5 +105,19 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 
 		vim.keymap.set({ "n", "v" }, "<leader>l", js_log, { buffer = true })
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "gitcommit",
+	callback = function()
+		vim.opt_local.textwidth = 72
+		vim.opt_local.colorcolumn = "50"
+		vim.opt_local.spell = true
+
+		vim.cmd([[
+      highlight CommitTitleOverflow ctermbg=red guibg=red
+      match CommitTitleOverflow '^\([^#].\{51\}\)'
+    ]])
 	end,
 })

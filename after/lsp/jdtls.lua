@@ -9,6 +9,21 @@ return {
 		-- 	serverPath =
 		-- }
 	},
+	settings = {
+		-- java = {
+		-- 	contentProvider = { preferred = "fernflower" },
+		-- 	eclipse = { downloadSources = true },
+		-- 	maven = { downloadSources = true },
+		-- 	implementationsCodeLens = { enabled = true },
+		-- 	referencesCodeLens = { enabled = true },
+		-- 	sources = {
+		-- 		organizeImports = {
+		-- 			starThreshold = 9999,
+		-- 			staticStarThreshold = 9999,
+		-- 		},
+		-- 	},
+		-- },
+	},
 	-- handlers = {
 	-- 	["language/status"] = function(_, result)
 	-- 		-- vim.print(result)
@@ -17,4 +32,5 @@ return {
 	-- 		-- vim.print(result)
 	-- 	end,
 	-- },
+	on_attach = function(client, bufnr) end,
 }
