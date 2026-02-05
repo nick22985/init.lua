@@ -67,6 +67,8 @@ vim.o.grepformat = "%f:%l:%c:%m"
 vim.opt.formatoptions:remove({ "o", "r" })
 vim.opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
 
+vim.opt.autochdir = false
+
 -- FIXME: this is not working
 -- TODO: todo
 -- HACK: hack

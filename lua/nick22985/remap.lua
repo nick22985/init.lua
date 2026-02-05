@@ -70,16 +70,6 @@ vim.keymap.set("n", "<leader>rn", function()
 	end
 end, { desc = "Rename word with preview and confirmation" })
 
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
-
-vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>")
-
-vim.keymap.set("n", "<leader><leader>s", function()
-	vim.cmd("so")
-end)
-
-vim.keymap.set("n", "<leader>t", "<Plug>PlenaryTestFile", { noremap = false, silent = false })
-
 -- disable
 for _, mode in pairs({ "n", "i", "v", "x" }) do
 	for _, key in pairs({ "<Up>", "<Down>", "<Left>", "<Right>" }) do

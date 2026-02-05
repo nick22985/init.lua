@@ -128,6 +128,7 @@ return {
 		-- opts.previewer = false
 
 		telescope.setup({
+			cwd = nil,
 			defaults = {
 				path_display = { "truncate" },
 			},

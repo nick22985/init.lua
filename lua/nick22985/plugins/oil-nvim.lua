@@ -7,6 +7,7 @@ return {
 
 		config = function()
 			require("oil-git-status").setup({
+				restore_cwd = false,
 				show_ignored = true,
 				symbols = {
 					index = {

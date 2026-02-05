@@ -20,8 +20,7 @@ local function remember(mode)
 		vim.cmd.mkview(1)
 	else
 		pcall(function()
-			-- print("loading view")
-			-- FIXME: randomly switches cwd
+			-- this breaks shit on load (randomly switch cwd)
 			vim.cmd.loadview(1)
 		end)
 	end

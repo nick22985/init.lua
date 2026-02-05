@@ -1,38 +1,38 @@
 return {
-	-- {
-	-- 	"hiphish/rainbow-delimiters.nvim",
-	-- 	event = "VeryLazy",
-	-- 	opts = {
-	-- 		enabled = true,
-	-- 	},
-	-- 	config = function()
-	-- 		local rainbow_delimiters = require("rainbow-delimiters")
-	--
-	-- 		vim.g.rainbow_delimiters = {
-	-- 			strategy = {
-	-- 				[""] = rainbow_delimiters.strategy["global"],
-	-- 				commonlisp = rainbow_delimiters.strategy["local"],
-	-- 			},
-	-- 			query = {
-	-- 				[""] = "rainbow-delimiters",
-	-- 				latex = "rainbow-blocks",
-	-- 			},
-	-- 			priority = {
-	-- 				[""] = 110,
-	-- 			},
-	-- 			highlight = {
-	-- 				"RainbowDelimiterRed",
-	-- 				"RainbowDelimiterYellow",
-	-- 				"RainbowDelimiterBlue",
-	-- 				"RainbowDelimiterOrange",
-	-- 				"RainbowDelimiterGreen",
-	-- 				"RainbowDelimiterViolet",
-	-- 				"RainbowDelimiterCyan",
-	-- 			},
-	-- 			blacklist = {},
-	-- 		}
-	-- 	end,
-	-- },
+	{
+		"hiphish/rainbow-delimiters.nvim",
+		event = "VeryLazy",
+		opts = {
+			enabled = true,
+		},
+		config = function()
+			local rainbow_delimiters = require("rainbow-delimiters")
+
+			vim.g.rainbow_delimiters = {
+				strategy = {
+					[""] = rainbow_delimiters.strategy["global"],
+					commonlisp = rainbow_delimiters.strategy["local"],
+				},
+				query = {
+					[""] = "rainbow-delimiters",
+					latex = "rainbow-blocks",
+				},
+				priority = {
+					[""] = 110,
+				},
+				highlight = {
+					"RainbowDelimiterRed",
+					"RainbowDelimiterYellow",
+					"RainbowDelimiterBlue",
+					"RainbowDelimiterOrange",
+					"RainbowDelimiterGreen",
+					"RainbowDelimiterViolet",
+					"RainbowDelimiterCyan",
+				},
+				blacklist = {},
+			}
+		end,
+	},
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",

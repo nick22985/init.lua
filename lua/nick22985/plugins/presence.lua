@@ -128,7 +128,7 @@ return {}
 -- 			neovim_image_text = "The One True Text Editor",
 -- 			main_image = "file",
 -- 			client_id = "793271441293967371",
--- 			log_level = nil,
+-- 			log_level = "debug",
 -- 			debounce_timeout = 10,
 -- 			use_session_time = true,
 -- 			idle_timeout = 500,

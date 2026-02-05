@@ -338,6 +338,7 @@ return { -- LSP Configuration & Plugins
 					if client then
 						-- NOTE: disabled for copilot
 						if client.name ~= "copilot" then
+							-- P(client)
 							-- project level diagnostics
 							require("workspace-diagnostics").populate_workspace_diagnostics(client, event.buf)
 						end
