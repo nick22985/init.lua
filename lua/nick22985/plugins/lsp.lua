@@ -8,6 +8,8 @@ return { -- LSP Configuration & Plugins
 			{ "mason-org/mason-lspconfig.nvim" },
 			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 			{ "artemave/workspace-diagnostics.nvim" },
+			{ "mfussenegger/nvim-jdtls" }, -- Java LSP
+
 			{
 				"folke/lazydev.nvim",
 				ft = "lua",
@@ -29,6 +31,7 @@ return { -- LSP Configuration & Plugins
 							end,
 							window = {
 								winblend = 0,
+								zindex = 50,
 							},
 						},
 					})
@@ -315,6 +318,32 @@ return { -- LSP Configuration & Plugins
 						vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 					end
 
+					local client = vim.lsp.get_client_by_id(event.data.client_id)
+					if client then
+						-- NOTE: disabled for copilot
+						if client.name ~= "copilot" then
+							-- P(client)
+							-- project level diagnostics
+							require("workspace-diagnostics").populate_workspace_diagnostics(client, event.buf)
+						end
+						if client.name == "jdtls" then
+							-- Setup DAP
+							require("jdtls").setup_dap({ hotcodereplace = "auto", config_overrides = {} })
+							require("jdtls.dap").setup_dap_main_class_configs({})
+						end
+					end
+					if client and client.server_capabilities.documentHighlightProvider then
+						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+							buffer = event.buf,
+							callback = vim.lsp.buf.document_highlight,
+						})
+
+						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+							buffer = event.buf,
+							callback = vim.lsp.buf.clear_references,
+						})
+					end
+
 					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]definition")
 					map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 					map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
@@ -333,27 +362,6 @@ return { -- LSP Configuration & Plugins
 					map("K", vim.lsp.buf.hover, "Hover Documentation")
 
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-
-					local client = vim.lsp.get_client_by_id(event.data.client_id)
-					if client then
-						-- NOTE: disabled for copilot
-						if client.name ~= "copilot" then
-							-- P(client)
-							-- project level diagnostics
-							require("workspace-diagnostics").populate_workspace_diagnostics(client, event.buf)
-						end
-					end
-					if client and client.server_capabilities.documentHighlightProvider then
-						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-							buffer = event.buf,
-							callback = vim.lsp.buf.document_highlight,
-						})
-
-						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-							buffer = event.buf,
-							callback = vim.lsp.buf.clear_references,
-						})
-					end
 
 					if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
 						map("<leader>th", function()
@@ -412,18 +420,32 @@ return { -- LSP Configuration & Plugins
 				-- "stylua",
 				"tailwindcss",
 				"bashls",
+				"jdtls", -- Now using native LSP with after/lsp/jdtls.lua
 			}
 
-			vim.lsp.config("*", {
-				capabilities = capabilities,
-			})
+			-- Configure all LSP servers except jdtls (handled by nvim-jdtls plugin)
+			for _, server in ipairs(ensure_installed) do
+				vim.lsp.config(server, {
+					capabilities = capabilities,
+				})
+			end
 
 			require("mason").setup()
 			require("mason-lspconfig").setup({
 				ensure_installed = ensure_installed,
 				automatic_installation = {},
+
 				automatic_enable = true,
+				handlers = {
+					-- Default handler
+					function(server_name)
+						require("lspconfig")[server_name].setup({
+							capabilities = capabilities,
+						})
+					end,
+				},
 			})
+
 			-- local allServers = require("mason-lspconfig").get_installed_servers()
 			-- P(allServers)
 
