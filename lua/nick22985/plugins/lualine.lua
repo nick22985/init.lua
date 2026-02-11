@@ -44,7 +44,16 @@ return {
 			-- Config
 			local config = {
 				options = {
-					disabled_filetypes = { "AvanteInput", "Avante" },
+					disabled_filetypes = {
+						"AvanteInput",
+						"Avante",
+						"dapui_watches",
+						"dapui_stacks",
+						"dapui_breakpoints",
+						"dapui_scopes",
+						"dapui_console",
+						"dap-repl",
+					},
 					-- Disable sections and component separators
 					component_separators = "",
 					section_separators = "",

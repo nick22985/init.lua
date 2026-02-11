@@ -91,6 +91,15 @@ M.is_vue3_project = function(root)
 	return vue_version and (vue_version:match("^3") or vue_version:match("^%^3")) or false
 end
 
+M.is_vue2_project = function(root)
+	local pkg = get_package_json(root)
+	if not pkg then
+		return false
+	end
+	local vue_version = pkg.dependencies and pkg.dependencies.vue or pkg.devDependencies and pkg.devDependencies.vue
+	return vue_version and (vue_version:match("^2") or vue_version:match("^%^2")) or false
+end
+
 --- Check if the project is an Angular project
 --- @param root string
 --- @return boolean

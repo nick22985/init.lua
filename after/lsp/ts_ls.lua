@@ -1,4 +1,13 @@
 return {
+
+	root_dir = function(bufnr, on_dir)
+		return nil
+	end,
+	settings = {
+		analysis = {
+			diagnosticMode = "workspace",
+		},
+	},
 	capabilities = {
 		workspace = {
 			workspace = {

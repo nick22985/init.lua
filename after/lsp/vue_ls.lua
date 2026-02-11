@@ -28,15 +28,20 @@ return {
 			end)
 		end
 	end,
-	-- delete once https://github.com/neovim/nvim-lspconfig/pull/3977/files merges
-	init_options = {
-		languageFeatures = {
-			typeDefinition = false,
-		},
-		vue = {
-			hybridMode = false,
+	server_capabilities = {
+		semanticTokensProvider = {
+			full = true,
 		},
 	},
+	-- delete once https://github.com/neovim/nvim-lspconfig/pull/3977/files merges
+	-- init_options = {
+	-- 	languageFeatures = {
+	-- 		typeDefinition = false,
+	-- 	},
+	-- 	vue = {
+	-- 		hybridMode = false,
+	-- 	},
+	-- },
 	root_dir = function(bufnr, on_dir)
 		local fname = vim.api.nvim_buf_get_name(bufnr)
 

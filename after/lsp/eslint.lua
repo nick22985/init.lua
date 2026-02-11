@@ -1,5 +1,8 @@
 return {
 	root_dir = function(bufnr, on_dir)
+		if false then
+			return nil
+		end
 		local fname = vim.api.nvim_buf_get_name(bufnr)
 
 		local lsp_utils = require("nick22985.utils.lsp-utils")

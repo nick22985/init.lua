@@ -8,7 +8,6 @@ return { -- LSP Configuration & Plugins
 			{ "mason-org/mason-lspconfig.nvim" },
 			{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 			{ "artemave/workspace-diagnostics.nvim" },
-			{ "mfussenegger/nvim-jdtls" }, -- Java LSP
 
 			{
 				"folke/lazydev.nvim",
@@ -53,6 +52,22 @@ return { -- LSP Configuration & Plugins
 							impersonate_nvim_cmp = true,
 						},
 					},
+					{
+						"supermaven-inc/supermaven-nvim",
+						dependencies = {
+							"huijiro/blink-cmp-supermaven",
+						},
+						config = function()
+							require("supermaven-nvim").setup({
+								keymaps = {
+									accept_suggestion = nil,
+								},
+								disable_inline_completion = true,
+								disable_keymaps = true,
+							})
+						end,
+					},
+
 					{
 						"Kaiser-Yang/blink-cmp-git",
 						dependencies = { "nvim-lua/plenary.nvim" },
@@ -106,6 +121,10 @@ return { -- LSP Configuration & Plugins
 						},
 					},
 
+					-- windows = {
+					-- 	autocomplete = { selection = "auto_insert" },
+					-- },
+
 					appearance = {
 						-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
 						nerd_font_variant = "mono",
@@ -150,6 +169,7 @@ return { -- LSP Configuration & Plugins
 							Operator = "󰪚",
 							TypeParameter = "󰬛",
 							Copilot = "",
+							upermaven = "",
 						},
 					},
 
@@ -190,6 +210,7 @@ return { -- LSP Configuration & Plugins
 							"snippets",
 							"buffer",
 							"digraphs",
+							"supermaven",
 							"copilot",
 							"git",
 							"lazydev",
@@ -295,6 +316,11 @@ return { -- LSP Configuration & Plugins
 									show_documentation_window = true,
 								},
 							},
+							supermaven = {
+								name = "supermaven",
+								module = "blink-cmp-supermaven",
+								async = true,
+							},
 						},
 						min_keyword_length = 2,
 					},
@@ -309,6 +335,8 @@ return { -- LSP Configuration & Plugins
 			},
 		},
 		config = function(_, opts)
+			-- vim supports this by default now
+			-- NOTE: https://github.com/artemave/workspace-diagnostics.nvim/issues/20
 			require("workspace-diagnostics").setup({})
 
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -321,27 +349,21 @@ return { -- LSP Configuration & Plugins
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client then
 						-- NOTE: disabled for copilot
-						if client.name ~= "copilot" then
-							-- P(client)
-							-- project level diagnostics
+						-- NOTE: tsgo doesnt play nicely https://github.com/neovim/neovim/discussions/36935
+						if client.name ~= "copilot" and client.name ~= "tsgo" then
 							require("workspace-diagnostics").populate_workspace_diagnostics(client, event.buf)
 						end
-						if client.name == "jdtls" then
-							-- Setup DAP
-							require("jdtls").setup_dap({ hotcodereplace = "auto", config_overrides = {} })
-							require("jdtls.dap").setup_dap_main_class_configs({})
-						end
-					end
-					if client and client.server_capabilities.documentHighlightProvider then
-						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-							buffer = event.buf,
-							callback = vim.lsp.buf.document_highlight,
-						})
+						if client and client.server_capabilities.documentHighlightProvider then
+							vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+								buffer = event.buf,
+								callback = vim.lsp.buf.document_highlight,
+							})
 
-						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-							buffer = event.buf,
-							callback = vim.lsp.buf.clear_references,
-						})
+							vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+								buffer = event.buf,
+								callback = vim.lsp.buf.clear_references,
+							})
+						end
 					end
 
 					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]definition")
@@ -437,7 +459,6 @@ return { -- LSP Configuration & Plugins
 
 				automatic_enable = true,
 				handlers = {
-					-- Default handler
 					function(server_name)
 						require("lspconfig")[server_name].setup({
 							capabilities = capabilities,
@@ -451,9 +472,11 @@ return { -- LSP Configuration & Plugins
 
 			vim.lsp.enable({ "tsgo" })
 
-			vim.diagnostic.config({
+			---@type  vim.diagnostic.Opts
+			local diagConfig = {
 				underline = true,
 				update_in_insert = true,
+
 				virtual_text = {
 					spacing = 4,
 					source = "if_many",
@@ -478,7 +501,8 @@ return { -- LSP Configuration & Plugins
 				codelens = {
 					enabled = true,
 				},
-			})
+			}
+			vim.diagnostic.config(diagConfig)
 		end,
 	},
 	{
@@ -502,7 +526,7 @@ return { -- LSP Configuration & Plugins
 					-- Disable "format_on_save lsp_fallback" for languages that don't
 					-- have a well standardized coding style. You can add additional
 					-- languages here or re-enable it for the disabled ones.
-					local disable_filetypes = { c = false, cpp = false, vue = false }
+					local disable_filetypes = { c = false, cpp = false, vue = false, java = true }
 
 					if
 						vim.g.disable_autoformat
@@ -530,7 +554,7 @@ return { -- LSP Configuration & Plugins
 					typescriptreact = { "prettier" },
 					json = { "prettier" },
 					vue = { "prettier" },
-					java = { "google-java-format" },
+					java = { false },
 					rust = { "rustfmt" },
 					sh = { "shellcheck" },
 					-- Use the "*" filetype to run formatters on all filetypes.

@@ -120,3 +120,13 @@ vim.api.nvim_create_autocmd("FileType", {
     ]])
 	end,
 })
+-- Java-specific indentation settings
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "java", -- Applies to Java files
+	callback = function()
+		vim.opt.expandtab = true -- Use spaces instead of tabs
+		vim.opt.tabstop = 4 -- Set tab width to 4 spaces
+		vim.opt.shiftwidth = 4 -- Set indentation width to 4 spaces
+		vim.opt.softtabstop = 4 -- Set soft tab width (when using backspace)
+	end,
+})

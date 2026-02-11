@@ -1,7 +1,24 @@
+local vue_language_server_path = vim.fn.expand("$MASON/packages")
+	.. "/vue-language-server"
+	.. "/node_modules/@vue/language-server"
+local vue_plugin = {
+	name = "@vue/typescript-plugin",
+	location = vue_language_server_path,
+	languages = { "vue" },
+	configNamespace = "typescript",
+}
+
 return {
 	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 	settings = {
 		autoUseWorkspaceTsdk = false,
+		vtsls = {
+			tsserver = {
+				globalPlugins = {
+					vue_plugin,
+				},
+			},
+		},
 	},
 	root_dir = function(bufnr, on_dir)
 		-- using tsgo for normal ts projects for now

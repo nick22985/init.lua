@@ -3,37 +3,39 @@
 ---@type vim.lsp.Config
 return {
 	init_options = { hostInfo = "neovim" },
-	cmd = { "tsgo", "--lsp", "--stdio" },
+	cmd = function(dispatchers, config)
+		local cmd = "tsgo"
+		local local_cmd = (config or {}).root_dir and config.root_dir .. "/node_modules/.bin/tsgo"
+		if local_cmd and vim.fn.executable(local_cmd) == 1 then
+			cmd = local_cmd
+		end
+		return vim.lsp.rpc.start({ cmd, "--lsp", "--stdio" }, dispatchers)
+	end,
 	filetypes = {
 		"javascript",
 		"javascriptreact",
-		"javascript.jsx",
 		"typescript",
 		"typescriptreact",
-		"typescript.tsx",
 	},
-	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 	root_dir = function(bufnr, on_dir)
-		-- disable using tsgo atm
-		-- also use vtsls because vue 3 needs it
-		return nil
+		local fname = vim.api.nvim_buf_get_name(bufnr)
+		local lsp_utils = require("nick22985.utils.lsp-utils")
+		local util = require("lspconfig.util")
+		local root_dir = util.root_pattern("package.json", "vue.config.js")(fname)
+		local isVue3 = root_dir and lsp_utils.is_vue3_project(root_dir)
+		local isVue2 = root_dir and lsp_utils.is_vue2_project(root_dir)
+		if vim.fs.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" }) then
+			return
+		elseif isVue3 or isVue2 then
+			return
+		else
+			return on_dir(root_dir)
+		end
 	end,
-	handlers = {
-		-- handle rename request for certain code actions like extracting functions / types
-		["_typescript.rename"] = function(_, result, ctx)
-			local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-			vim.lsp.util.show_document({
-				uri = result.textDocument.uri,
-				range = {
-					start = result.position,
-					["end"] = result.position,
-				},
-			}, client.offset_encoding)
-			vim.lsp.buf.rename()
-			return vim.NIL
-		end,
-	},
 	settings = {
+		analysis = {
+			diagnosticMode = "workspace",
+		},
 		javascript = {
 			implicitProjectConfig = {
 				checkJs = true,
@@ -44,32 +46,6 @@ return {
 				allowJs = true,
 			},
 		},
-	},
-	commands = {
-		["editor.action.showReferences"] = function(command, ctx)
-			local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-			local file_uri, position, references = unpack(command.arguments)
-
-			local quickfix_items = vim.lsp.util.locations_to_items(references, client.offset_encoding)
-			vim.fn.setqflist({}, " ", {
-				title = command.title,
-				items = quickfix_items,
-				context = {
-					command = command,
-					bufnr = ctx.bufnr,
-				},
-			})
-
-			vim.lsp.util.show_document({
-				uri = file_uri,
-				range = {
-					start = position,
-					["end"] = position,
-				},
-			}, client.offset_encoding)
-
-			vim.cmd("botright copen")
-		end,
 	},
 	on_attach = function(client, bufnr)
 		-- ts_ls provides `source.*` code actions that apply to the whole file. These only appear in

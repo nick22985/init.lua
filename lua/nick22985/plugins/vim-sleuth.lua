@@ -1,6 +1,5 @@
--- return {
--- 	"tpope/vim-sleuth",
--- 	event = "VeryLazy",
--- }
---
-return {}
+-- auto change spacing and indenting based on file
+return {
+	"tpope/vim-sleuth",
+	event = "VeryLazy",
+}
