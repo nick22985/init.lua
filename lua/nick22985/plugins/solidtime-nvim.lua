@@ -4,7 +4,8 @@ return {
 	opts = {},
 	config = function(_, opts)
 		require("solidtime").setup({
-			-- api_url = "https://app.solidtime.io/api/v1",
+			idle_warn_timeout = 0, -- no warning
+			idle_stop_timeout = 0, -- never auto-stop
 		})
 	end,
 }

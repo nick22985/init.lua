@@ -6,16 +6,15 @@ vim.g.have_nerd_font = true
 
 -- tabstop to define the number of spaces a tab character is displayed as
 vim.opt.tabstop = 2
+-- shiftwidth to control the number of spaces used for indentation:
+vim.opt.shiftwidth = 2
 -- will make tab = spaces if true
 vim.opt.expandtab = false
 -- set softtabstop to control how many spaces are inserted when pressing the Tab key if expandtab true
 vim.opt.softtabstop = 8
--- shiftwidth to control the number of spaces used for indentation:
-vim.opt.shiftwidth = 2
+vim.opt.conceallevel = 0
 
 vim.keymap.set("v", ">", ">gv")
-
-vim.opt.conceallevel = 0
 
 vim.opt.smartindent = true
 vim.opt.autoindent = true
@@ -69,6 +68,8 @@ vim.opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
 
 vim.opt.autochdir = false
 
+-- vim.g.loaded_python3_provider = 1
+
 -- FIXME: this is not working
 -- TODO: todo
 -- HACK: hack
@@ -79,3 +80,4 @@ vim.opt.autochdir = false
 -- XXX: BROKE
 -- SEC: security
 -- vim.lsp.set_log_level("DEBUG")
+--

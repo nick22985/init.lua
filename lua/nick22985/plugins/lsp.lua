@@ -169,7 +169,7 @@ return { -- LSP Configuration & Plugins
 							Operator = "󰪚",
 							TypeParameter = "󰬛",
 							Copilot = "",
-							upermaven = "",
+							supermaven = "",
 						},
 					},
 
@@ -471,6 +471,7 @@ return { -- LSP Configuration & Plugins
 			-- P(allServers)
 
 			vim.lsp.enable({ "tsgo" })
+			vim.lsp.enable({ "prettier" })
 
 			---@type  vim.diagnostic.Opts
 			local diagConfig = {
@@ -521,12 +522,12 @@ return { -- LSP Configuration & Plugins
 		opts = {},
 		config = function(opts)
 			require("conform").setup({
-				notify_on_error = false,
+				notify_on_error = true,
 				format_on_save = function(bufnr)
 					-- Disable "format_on_save lsp_fallback" for languages that don't
 					-- have a well standardized coding style. You can add additional
 					-- languages here or re-enable it for the disabled ones.
-					local disable_filetypes = { c = false, cpp = false, vue = false, java = true }
+					local disable_filetypes = { c = false, cpp = false, vue = false, java = false }
 
 					if
 						vim.g.disable_autoformat
@@ -536,7 +537,7 @@ return { -- LSP Configuration & Plugins
 						return
 					end
 					return {
-						timeout_ms = 1000,
+						timeout_ms = 5000,
 						lsp_fallback = true,
 						async = false,
 					}
@@ -554,7 +555,7 @@ return { -- LSP Configuration & Plugins
 					typescriptreact = { "prettier" },
 					json = { "prettier" },
 					vue = { "prettier" },
-					java = { false },
+					java = { "checkstyle" },
 					rust = { "rustfmt" },
 					sh = { "shellcheck" },
 					-- Use the "*" filetype to run formatters on all filetypes.
@@ -575,6 +576,48 @@ return { -- LSP Configuration & Plugins
 						end,
 						stdin = true,
 					},
+					checkstyle = {
+						command = "checkstyle",
+						-- args = function(self, ctx)
+						-- 	-- return {
+						-- 	-- 	"-c",
+						-- 	-- 	"/home/nick/.config/nvim/utils/Noodles-eclipse.xml",
+						-- 	-- 	ctx.filename,
+						-- 	-- }
+						-- end,
+						stdin = false,
+					},
+					-- restricted to a project see cli maybe?
+					-- https://github.com/diffplug/spotless/pull/2419
+					-- spotless = {
+					-- 	command = vim.fn.expand("~/.config/nvim/utils/spotless/gradlew"),
+					-- 	args = function(self, ctx)
+					-- 		P(ctx)
+					-- 		P(self)
+					-- 		return { "spotlessApply", "--no-configuration-cache", "-PspotlessSingleFile", ctx.filename }
+					-- 	end,
+					-- 	cwd = function()
+					-- 		-- return vim.fn.expand("~/.config/nvim/utils/spotless")
+					-- 	end,
+					-- 	stdin = true,
+					-- },
+					-- NOTE: very slow and annoying if you have a instance of idea open this wont work
+					idea = {
+						command = "/usr/bin/idea",
+						args = function(self, ctx)
+							-- TODO: auto determine config file based of xml and settings
+							local t = {
+								"format",
+								"-allowDefaults",
+								"-s",
+								"/home/nick/.config/nvim/utils/Noodles.xml",
+								ctx.filename,
+							}
+							return t
+						end,
+						stdin = false,
+					},
+					eclipse = {},
 				},
 			})
 

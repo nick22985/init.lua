@@ -129,6 +129,17 @@ return {
 
 	-- settings = {
 	-- 	java = {
+	-- 		format = {
+	-- 			settings = {
+	-- 				-- format maybe?
+	-- 				url = "/home/nick/.config/nvim/utils/Noodles.xml",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
+
+	-- settings = {
+	-- 	java = {
 	-- 		configuration = {
 	-- 			maven = {
 	-- 				userSettings = home .. "/.m2/settings.xml",
@@ -255,3 +266,5 @@ return {
 	-- 	},
 	-- },
 }
+
+-- :e zipfile:///home/nick/.local/share/mise/installs/java/25.0.1/lib/src.zip::java.base/java/io/File.java
