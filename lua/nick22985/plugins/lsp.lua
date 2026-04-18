@@ -555,7 +555,7 @@ return { -- LSP Configuration & Plugins
 					typescriptreact = { "prettier" },
 					json = { "prettier" },
 					vue = { "prettier" },
-					java = { "checkstyle" },
+					java = { "ijfmt" },
 					rust = { "rustfmt" },
 					sh = { "shellcheck" },
 					-- Use the "*" filetype to run formatters on all filetypes.
@@ -564,7 +564,7 @@ return { -- LSP Configuration & Plugins
 					--
 					-- Use the "_" filetype to run formatters on filetypes that don't
 					-- have other formatters configured.
-					["_"] = { "trim_whitespace", "prettier" },
+					["_"] = { "trim_whitespace" },
 				},
 				formatters = {
 					prettier = {
@@ -575,6 +575,19 @@ return { -- LSP Configuration & Plugins
 							return { "--config", config, "--stdin-filepath", vim.fn.expand("%:p") }
 						end,
 						stdin = true,
+					},
+					ijfmt = {
+						command = "/home/nick/projects/personal/ijfmt/target/release/ijfmt",
+						args = function(self, ctx)
+							return {
+								"--file",
+								ctx.filename,
+								"--fallback",
+								"/home/nick/projects/personal/ijfmt/tests/fmt/private/Noodles.xml",
+								"--block-formatter",
+							}
+						end,
+						stdin = false,
 					},
 					checkstyle = {
 						command = "checkstyle",
@@ -589,18 +602,18 @@ return { -- LSP Configuration & Plugins
 					},
 					-- restricted to a project see cli maybe?
 					-- https://github.com/diffplug/spotless/pull/2419
-					-- spotless = {
-					-- 	command = vim.fn.expand("~/.config/nvim/utils/spotless/gradlew"),
-					-- 	args = function(self, ctx)
-					-- 		P(ctx)
-					-- 		P(self)
-					-- 		return { "spotlessApply", "--no-configuration-cache", "-PspotlessSingleFile", ctx.filename }
-					-- 	end,
-					-- 	cwd = function()
-					-- 		-- return vim.fn.expand("~/.config/nvim/utils/spotless")
-					-- 	end,
-					-- 	stdin = true,
-					-- },
+					spotless = {
+						command = vim.fn.expand("~/.config/nvim/utils/spotless/gradlew"),
+						args = function(self, ctx)
+							P(ctx)
+							P(self)
+							return { "spotlessApply", "--no-configuration-cache", "-PspotlessSingleFile", ctx.filename }
+						end,
+						cwd = function()
+							return vim.fn.expand("~/.config/nvim/utils/spotless")
+						end,
+						stdin = true,
+					},
 					-- NOTE: very slow and annoying if you have a instance of idea open this wont work
 					idea = {
 						command = "/usr/bin/idea",
@@ -610,7 +623,7 @@ return { -- LSP Configuration & Plugins
 								"format",
 								"-allowDefaults",
 								"-s",
-								"/home/nick/.config/nvim/utils/Noodles.xml",
+								"/home/nick/.config/nvim/utils/ManaCube.xml",
 								ctx.filename,
 							}
 							return t
