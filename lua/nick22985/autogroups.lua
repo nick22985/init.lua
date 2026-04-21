@@ -28,6 +28,9 @@ end
 vim.api.nvim_create_autocmd("BufWinLeave", {
 	pattern = "?*",
 	callback = function()
+		if vim.v.exiting ~= vim.NIL then
+			return
+		end
 		remember("save")
 	end,
 })

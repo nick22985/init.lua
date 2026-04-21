@@ -38,6 +38,7 @@ return { -- LSP Configuration & Plugins
 			},
 			{
 				"saghen/blink.cmp",
+				dev = true,
 				lazy = true,
 				dependencies = {
 					"rafamadriz/friendly-snippets",
@@ -91,9 +92,10 @@ return { -- LSP Configuration & Plugins
 				},
 
 				-- use a release tag to download pre-built binaries
-				version = "1.*",
+				-- version = "1.*",
 				-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
 				-- build = "cargo build --release",
+				build = "cargo build --release",
 				-- If you use nix, you can build from source using latest nightly rust with:
 				-- build = 'nix run .#build-plugin',
 
@@ -115,9 +117,17 @@ return { -- LSP Configuration & Plugins
 					keymap = { preset = "default" },
 					signature = {
 						enabled = true,
+						trigger = {
+							enabled = true,
+							show_on_trigger_character = true,
+							show_on_insert = true,
+							show_on_insert_on_trigger_character = true,
+						},
 						window = {
 							show_documentation = true,
 							treesitter_highlighting = true,
+							border = "rounded",
+							direction_priority = { "n", "s" },
 						},
 					},
 
@@ -219,6 +229,9 @@ return { -- LSP Configuration & Plugins
 							"conventional_commits",
 						},
 						providers = {
+							snippets = {
+								score_offset = 50,
+							},
 							buffer = {
 								opts = {
 									-- get all buffers, even ones like neo-tree
@@ -329,7 +342,11 @@ return { -- LSP Configuration & Plugins
 					-- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
 					--
 					-- See the fuzzy documentation for more information
-					fuzzy = { implementation = "prefer_rust_with_warning" },
+					fuzzy = {
+						implementation = "prefer_rust_with_warning",
+						-- remove when going back to tag
+						prebuilt_binaries = { ignore_version_mismatch = true },
+					},
 				},
 				opts_extend = { "sources.default" },
 			},
