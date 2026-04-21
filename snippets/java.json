@@ -1,0 +1,12 @@
+{
+	"Header": {
+		"prefix": "author",
+		"body": [
+			"/**",
+			" * @author nick22985 Created on ${CURRENT_MONTH}/${CURRENT_DATE}/${CURRENT_YEAR_SHORT} for ${WORKSPACE_NAME}",
+			" */"
+		],
+		"description": "Insert copyright/author header"
+	}
+}
+
