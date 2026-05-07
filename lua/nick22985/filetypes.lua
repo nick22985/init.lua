@@ -1,6 +1,6 @@
 vim.filetype.add({
 	pattern = {
-		[".*doop"] = "vue",
+		[".*doop"] = "doop",
 		[".*%.ng"] = "html",
 		[".env.*"] = "sh",
 		["Dockerfile.*"] = "dockerfile",

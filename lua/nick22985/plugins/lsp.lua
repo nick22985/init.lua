@@ -572,6 +572,7 @@ return { -- LSP Configuration & Plugins
 					typescriptreact = { "prettier" },
 					json = { "prettier" },
 					vue = { "prettier" },
+					doop = { "prettier" },
 					java = { "ijfmt" },
 					rust = { "rustfmt" },
 					sh = { "shellcheck" },

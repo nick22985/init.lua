@@ -38,9 +38,35 @@ return {
 		},
 		config = function()
 			local ts = require("nvim-treesitter")
+
+			local function register_doop_parser()
+				require("nvim-treesitter.parsers").doop = {
+					install_info = {
+						path = "~/.config/treesitterCustom/tree-sitter-vue",
+						queries = "queries",
+					},
+					maintainers = { "@nick22985" },
+				}
+			end
+
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "TSUpdate",
+				callback = register_doop_parser,
+			})
+			register_doop_parser()
+
+			local function register_doop_symbol()
+				pcall(vim.treesitter.language.add, "doop", { symbol_name = "vue" })
+			end
+			register_doop_symbol()
+
 			ts.install(ENSURE_INSTALLED)
+			ts.install("doop"):await(register_doop_symbol)
 
 			local function attach(buf)
+				if vim.bo[buf].filetype == "doop" then
+					register_doop_symbol()
+				end
 				if not pcall(vim.treesitter.start, buf) then
 					return
 				end
@@ -68,6 +94,7 @@ return {
 			})
 
 			vim.treesitter.language.register("bash", "zsh")
+			vim.treesitter.language.register("doop", "doop")
 
 			require("ts_context_commentstring").setup({
 				enable_autocmd = false,

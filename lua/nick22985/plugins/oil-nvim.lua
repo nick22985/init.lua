@@ -219,6 +219,48 @@ return {
 					border = "rounded",
 				},
 			})
+
+			-- From an oil-ssh:// buffer, open the matching local mirror dir
+			-- in a vsplit. Host->path mappings are loaded from a private
+			-- file (kept out of this dotfiles repo) that returns a
+			--   function(host) -> path|nil
+			-- If the file is missing or returns nil, falls back to ~/projects.
+			local function open_local_mirror()
+				local bufname = vim.api.nvim_buf_get_name(0)
+				local host = bufname:match("^oil%-ssh://([^/]+)/")
+				if not host then
+					vim.notify("not in an oil-ssh:// buffer", vim.log.levels.WARN)
+					return
+				end
+				host = host:gsub(".*@", "")
+				local home = vim.uv.os_homedir()
+
+				local target
+				local private_path = home .. "/.config/.nickInstall/install/configs/private/oil-mirrors.lua"
+				if vim.uv.fs_stat(private_path) then
+					local ok, resolver = pcall(dofile, private_path)
+					if ok and type(resolver) == "function" then
+						local got = resolver(host)
+						if type(got) == "string" and got ~= "" then
+							target = got
+						end
+					end
+				end
+				if not target then
+					target = home .. "/projects"
+				end
+				vim.cmd("vsplit " .. vim.fn.fnameescape(target))
+			end
+
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "oil",
+				callback = function(ev)
+					vim.keymap.set("n", "<leader>ml", open_local_mirror, {
+						buffer = ev.buf,
+						desc = "Oil: open local mirror dir for this ssh host",
+					})
+				end,
+			})
 		end,
 	},
 }

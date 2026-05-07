@@ -9,7 +9,7 @@
 --- ```
 return {
 	cmd = { "vls" },
-	filetypes = { "vue" },
+	filetypes = { "vue", "doop" },
 	root_markers = { "package.json", "vue.config.js" },
 	init_options = {
 		config = {
