@@ -13,6 +13,37 @@ function ColorMyPencils(color)
 	-- vim.api.nvim_set_hl(0, "Substitute", { bg = "red", foreground = "blue" })
 end
 
+local function fix_popup_styles()
+	for _, g in ipairs({
+		"DiagnosticVirtualTextError",
+		"DiagnosticVirtualTextWarn",
+		"DiagnosticVirtualTextInfo",
+		"DiagnosticVirtualTextHint",
+		"DiagnosticVirtualTextOk",
+	}) do
+		local hl = vim.api.nvim_get_hl(0, { name = g })
+		hl.bg = nil
+		hl.italic = nil
+		hl.cterm = nil
+		vim.api.nvim_set_hl(0, g, hl)
+	end
+
+	for _, name in ipairs(vim.fn.getcompletion("", "highlight")) do
+		local hl = vim.api.nvim_get_hl(0, { name = name })
+		if hl.italic then
+			hl.italic = nil
+			if hl.cterm then
+				hl.cterm.italic = nil
+			end
+			vim.api.nvim_set_hl(0, name, hl)
+		end
+	end
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = fix_popup_styles,
+})
+
 return {
 	{
 		"rose-pine/neovim",
@@ -150,12 +181,12 @@ return {
 					shade = "dark",
 					percentage = 0.15, -- percentage of the shade to apply to the inactive window
 				},
-				no_italic = false, -- Force no italic
+				no_italic = true, -- Force no italic
 				no_bold = false, -- Force no bold
 				no_underline = false, -- Force no underline
 				styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-					comments = { "italic" }, -- Change the style of comments
-					conditionals = { "italic" },
+					comments = {}, -- Change the style of comments
+					conditionals = {},
 					loops = {},
 					functions = {},
 					keywords = {},
@@ -166,7 +197,7 @@ return {
 					properties = {},
 					types = {},
 					operators = {},
-					-- miscs = {}, -- Uncomment to turn off hard-coded styles
+					miscs = {}, -- Uncomment to turn off hard-coded styles
 				},
 				color_overrides = {},
 				custom_highlights = function(C)

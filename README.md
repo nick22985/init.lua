@@ -4,7 +4,6 @@
 <a href="https://dotfyle.com/nick22985/initlua"><img src="https://dotfyle.com/nick22985/initlua/badges/leaderkey?style=flat" /></a>
 <a href="https://dotfyle.com/nick22985/initlua"><img src="https://dotfyle.com/nick22985/initlua/badges/plugin-manager?style=flat" /></a>
 
-
 ## Install Instructions
 
  > Install requires Neovim 0.9+. Always review the code before installing a configuration.
@@ -137,10 +136,10 @@ NVIM_APPNAME=nick22985/init.lua/ nvim
  
 WINDOWS
 
-1. set env variable for nvim config for windows XDG_CONFIG_HOME C:\Users\nicho\.config\ (in enviroment variable)
-2. set env variable for nvim config for windows HOME C:\Users\nicho\
+1. Set `XDG_CONFIG_HOME` to `%USERPROFILE%\.config`.
+2. Set `HOME` to `%USERPROFILE%`.
 3. Need to install gcc for tree sitter (https://www.digitalocean.com/community/tutorials/c-compiler-windows-gcc)
 4. Need ripgrep https://github.com/BurntSushi/ripgrep
 5. winget install fzf
 6. https://gnuwin32.sourceforge.net/packages/make.htm:w
-7. Create syslink mklink /J C:\Users\nicho\projects C:\Users\nicho\OneDrive\Documents\Projects
+7. Create any project-directory junctions under `%USERPROFILE%` as needed.

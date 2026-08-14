@@ -42,6 +42,23 @@ return { -- LSP Configuration & Plugins
 				lazy = true,
 				dependencies = {
 					"rafamadriz/friendly-snippets",
+					"saghen/blink.lib",
+					{
+						"L3MON4D3/LuaSnip",
+						version = "v2.*",
+						build = "make install_jsregexp",
+						config = function()
+							-- friendly-snippets (vscode JSON)
+							require("luasnip.loaders.from_vscode").lazy_load()
+							-- our own vscode-style snippets/ dir, if present
+							local snip_dir = vim.fn.stdpath("config") .. "/snippets"
+							if vim.fn.isdirectory(snip_dir) == 1 then
+								require("luasnip.loaders.from_vscode").lazy_load({ paths = { snip_dir } })
+							end
+							-- lua snippets (go, java, ...) under lua/nick22985/snippets/
+							require("nick22985.snippets")
+						end,
+					},
 					{
 						"Saghen/blink.compat",
 						lazy = true,
@@ -95,7 +112,10 @@ return { -- LSP Configuration & Plugins
 				-- version = "1.*",
 				-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
 				-- build = "cargo build --release",
-				build = "cargo build --release",
+				build = function()
+					require("blink.cmp").build():pwait()
+				end,
+
 				-- If you use nix, you can build from source using latest nightly rust with:
 				-- build = 'nix run .#build-plugin',
 
@@ -115,12 +135,13 @@ return { -- LSP Configuration & Plugins
 					--
 					-- See :h blink-cmp-config-keymap for defining your own keymap
 					keymap = { preset = "default" },
+					snippets = { preset = "luasnip" },
 					signature = {
 						enabled = true,
 						trigger = {
 							enabled = true,
 							show_on_trigger_character = true,
-							show_on_insert = true,
+							show_on_insert = false,
 							show_on_insert_on_trigger_character = true,
 						},
 						window = {
@@ -336,16 +357,6 @@ return { -- LSP Configuration & Plugins
 							},
 						},
 						min_keyword_length = 2,
-					},
-					-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-					-- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-					-- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-					--
-					-- See the fuzzy documentation for more information
-					fuzzy = {
-						implementation = "prefer_rust_with_warning",
-						-- remove when going back to tag
-						prebuilt_binaries = { ignore_version_mismatch = true },
 					},
 				},
 				opts_extend = { "sources.default" },
@@ -595,27 +606,22 @@ return { -- LSP Configuration & Plugins
 						stdin = true,
 					},
 					ijfmt = {
-						command = "/home/nick/projects/personal/ijfmt/target/release/ijfmt",
-						args = function(self, ctx)
-							return {
-								"--file",
-								ctx.filename,
-								"--fallback",
-								"/home/nick/projects/personal/ijfmt/tests/fmt/private/Noodles.xml",
-								"--block-formatter",
-							}
+						command = vim.env.IJFMT_BIN
+							or vim.fn.expand("~/projects/personal/ijfmt/master/target/release/ijfmt"),
+						args = function(_, ctx)
+							local args = { "--file", ctx.filename }
+							local style_file = vim.env.IJFMT_STYLE_FILE
+								or vim.fn.expand("~/projects/personal/ijfmt/master/tests/fmt/private/Noodles.xml")
+							if style_file ~= "" then
+								vim.list_extend(args, { "--fallback", style_file })
+							end
+							-- table.insert(args, "--block-formatter")
+							return args
 						end,
 						stdin = false,
 					},
 					checkstyle = {
 						command = "checkstyle",
-						-- args = function(self, ctx)
-						-- 	-- return {
-						-- 	-- 	"-c",
-						-- 	-- 	"/home/nick/.config/nvim/utils/Noodles-eclipse.xml",
-						-- 	-- 	ctx.filename,
-						-- 	-- }
-						-- end,
 						stdin = false,
 					},
 					-- restricted to a project see cli maybe?
@@ -632,19 +638,17 @@ return { -- LSP Configuration & Plugins
 						end,
 						stdin = true,
 					},
-					-- NOTE: very slow and annoying if you have a instance of idea open this wont work
+					-- NOTE: very slow and annoying if you have an instance of IDEA open
 					idea = {
 						command = "/usr/bin/idea",
-						args = function(self, ctx)
-							-- TODO: auto determine config file based of xml and settings
-							local t = {
+						args = function(_, ctx)
+							return {
 								"format",
 								"-allowDefaults",
 								"-s",
-								"/home/nick/.config/nvim/utils/ManaCube.xml",
+								vim.fn.stdpath("config") .. "/utils/ManaCube.xml",
 								ctx.filename,
 							}
-							return t
 						end,
 						stdin = false,
 					},

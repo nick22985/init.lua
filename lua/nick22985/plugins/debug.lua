@@ -100,9 +100,8 @@ return {
 					port = "${port}",
 					executable = {
 						command = "node",
-						-- 💀 Make sure to update this path to point to your installation
 						args = {
-							"/home/nick/.local/share/nvim/mason/bin/js-debug-adapter",
+							vim.fn.stdpath("data") .. "/mason/bin/js-debug-adapter",
 							"${port}",
 						},
 					},

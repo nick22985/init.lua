@@ -34,8 +34,7 @@ require("lazy").setup("nick22985.plugins", {
 	-- 	lazy = true,
 	-- },
 	dev = {
-		-- directory where you store your local plugin projects
-		path = "~/projects/personal/neovim/plugins",
+		path = vim.env.NVIM_DEV_PLUGINS or "~/projects/personal/neovim/plugins",
 		fallback = false,
 	},
 	ui = {

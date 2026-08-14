@@ -43,7 +43,7 @@ return {
 					-- cvs = false,
 					-- ["."] = false,
 				},
-				copilot_node_command = "/home/nick/.local/share/mise/installs/node/24.13.0/bin/node",
+				copilot_node_command = vim.fn.exepath("node") ~= "" and vim.fn.exepath("node") or "node",
 				server_opts_overrides = {},
 			})
 		end,

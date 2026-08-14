@@ -123,3 +123,77 @@ vim.api.nvim_create_autocmd("FileType", {
     ]])
 	end,
 })
+
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	callback = function()
+		if vim.fn.mode() == "c" or vim.fn.getcmdwintype() ~= "" then
+			return
+		end
+		if vim.bo.buftype == "" and vim.api.nvim_buf_get_name(0) ~= "" then
+			vim.cmd("checktime")
+		end
+	end,
+})
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+	callback = function()
+		vim.notify("File changed on disk — buffer reloaded", vim.log.levels.WARN)
+	end,
+})
+
+local ARG_NODES = {
+	argument_list = true,
+	arguments = true,
+	formal_parameters = true,
+	parameters = true,
+}
+
+local STOP_NODES = {
+	block = true,
+	statement_block = true,
+	class_body = true,
+	constructor_body = true,
+}
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+	callback = function()
+		vim.schedule(function()
+			if require("blink.cmp").is_signature_visible() then
+				return
+			end
+
+			local ok, node = pcall(vim.treesitter.get_node)
+			if not ok or not node then
+				return
+			end
+
+			while node do
+				if STOP_NODES[node:type()] then
+					return
+				end
+				if ARG_NODES[node:type()] then
+					require("blink.cmp.signature.trigger").show()
+					return
+				end
+				node = node:parent()
+			end
+		end)
+	end,
+})
+
+vim.keymap.set({ "n", "i" }, "<C-s>", function()
+	local signatureClient = vim.lsp.get_clients({ bufnr = 0, method = "textDocument/signatureHelp" })[1]
+	local params = vim.lsp.util.make_position_params(0, signatureClient.offset_encoding)
+	vim.lsp.buf_request(0, "textDocument/signatureHelp", params, function(err, result)
+		if err then
+			vim.notify("Error getting signature help: " .. err.message)
+			return
+		end
+		if not result then
+			vim.notify("No signature help available.")
+			return
+		end
+		local firstSig = result.signatures[1].label
+		vim.notify(firstSig)
+	end)
+end)

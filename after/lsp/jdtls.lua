@@ -91,6 +91,9 @@ local root_markers2 = {
 	"build.gradle.kts", -- Gradle
 }
 
+local decompiler_bundles =
+	vim.split(vim.fn.glob(home .. "/.local/share/jdtls-vineflower/*.jar", true), "\n", { trimempty = true })
+
 ---@type vim.lsp.Config
 return {
 	---@param dispatchers? vim.lsp.rpc.Dispatchers
@@ -127,20 +130,17 @@ return {
 	root_markers = vim.fn.has("nvim-0.11.3") == 1 and { root_markers1, root_markers2 }
 		or vim.list_extend(root_markers1, root_markers2),
 
-	-- settings = {
-	-- 	java = {
-	-- 		format = {
-	-- 			settings = {
-	-- 				-- format maybe?
-	-- 				url = "/home/nick/.config/nvim/utils/Noodles.xml",
-	-- 			},
-	-- 		},
-	-- 	},
-	-- },
+	init_options = {
+		bundles = decompiler_bundles,
+	},
 
 	settings = {
 		java = {
 			signatureHelp = { enabled = true, description = { enabled = true } },
+			contentProvider = {
+				preferred = "fernflower",
+				includeDecompiledSources = true,
+			},
 		},
 	},
 
@@ -272,5 +272,3 @@ return {
 	-- 	},
 	-- },
 }
-
--- :e zipfile:///home/nick/.local/share/mise/installs/java/25.0.1/lib/src.zip::java.base/java/io/File.java

@@ -1,5 +1,6 @@
 vim.g.mapleader = " "
 vim.g.localmapLeader = " "
+vim.g.maplocalleader = " "
 -- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("n", "<leader>pv", vim.cmd.Oil)
 
@@ -30,8 +31,6 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { silent = true })
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { silent = true })
 
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { silent = true })
-
-vim.keymap.set("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 local search_term = ""
 
@@ -100,3 +99,7 @@ if os.getenv("SSH_TTY") then
 		print("URL copied to clipboard: " .. url)
 	end, { desc = "Copy URL under cursor" })
 end
+
+vim.keymap.set("n", "<leader>ga", function()
+	vim.cmd("silent !git add %")
+end, { desc = "Stage current file" })

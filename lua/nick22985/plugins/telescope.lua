@@ -24,10 +24,31 @@ return {
 	keys = {
 		{ mode = "n", "<leader>sh", "<cmd>Telescope help_tags<CR>", { desc = "[S]earch [H]elp" } },
 		{ mode = "n", "<leader>sk", "<cmd>Telescope keymaps<CR>", { desc = "[S]earch [K]eymaps" } },
-		{ mode = "n", "<leader>sf", "<cmd>Telescope find_files<CR>", { desc = "[S]earch [F]iles" } },
+		{
+			mode = "n",
+			"<leader>sf",
+			function()
+				require("nick22985.remote-telescope").find_files()
+			end,
+			{ desc = "[S]earch [F]iles (local or remote)" },
+		},
 		{ mode = "n", "<leader>ss", "<cmd>Telescope builtin<CR>", { desc = "[S]Earch [S]elect Telescope" } },
-		{ mode = "n", "<leader>sw", "<cmd>Telescope grep_string<CR>", { desc = "[S]earch current [W]ord" } },
-		{ mode = "n", "<leader>sg", "<cmd>Telescope live_grep<CR>", { desc = "[S]earch by [G]rep" } },
+		{
+			mode = "n",
+			"<leader>sw",
+			function()
+				require("nick22985.remote-telescope").grep_string()
+			end,
+			{ desc = "[S]earch current [W]ord (local or remote)" },
+		},
+		{
+			mode = "n",
+			"<leader>sg",
+			function()
+				require("nick22985.remote-telescope").live_grep()
+			end,
+			{ desc = "[S]earch by [G]rep (local or remote)" },
+		},
 		{ mode = "n", "<leader>sd", "<cmd>Telescope diagnostics<CR>", { desc = "[S]earch [D]iagnostics" } },
 		{ mode = "n", "<leader>sr", "<cmd>Telescope resume<CR>", { desc = "[S]earch [R]esume" } },
 		{ mode = "n", "<leader>st", "<cmd>TodoTelescope<CR>", { desc = "[S]earch [R]esume" } },

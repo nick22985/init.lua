@@ -40,7 +40,7 @@ return {
 	},
 	{
 		"stevearc/oil.nvim",
-		evetn = "VeryLazy",
+		event = "VeryLazy",
 		-- Optional dependencies
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
@@ -220,6 +220,136 @@ return {
 				},
 			})
 
+			do
+				local ssh = require("oil.adapters.ssh")
+				if not ssh.__remote_read_patched then
+					ssh.__remote_read_patched = true
+					local loading = require("oil.loading")
+					local orig_read_file = ssh.read_file
+					local function shquote(s)
+						return "'" .. s:gsub("'", "'\\''") .. "'"
+					end
+					local archive_exts = { jar = true, zip = true, war = true, ear = true, apk = true }
+
+					local function ssh_cmd_for(url)
+						local host = url.user and (url.user .. "@" .. url.host) or url.host
+						local cmd = { "ssh" }
+						if url.port then
+							vim.list_extend(cmd, { "-p", tostring(url.port) })
+						end
+						table.insert(cmd, host)
+						return cmd
+					end
+
+					local function read_archive(bufnr, bufname)
+						local url = ssh.parse_url(bufname)
+						local cmd = ssh_cmd_for(url)
+						table.insert(cmd, "cat -- " .. shquote(url.path))
+
+						loading.set_loading(bufnr, true)
+						vim.system(cmd, { text = false }, function(obj)
+							vim.schedule(function()
+								if not vim.api.nvim_buf_is_valid(bufnr) then
+									return
+								end
+								loading.set_loading(bufnr, false)
+								if obj.code ~= 0 then
+									vim.bo[bufnr].modifiable = true
+									local msg = "ssh cat failed (exit " .. obj.code .. ")\n" .. (obj.stderr or "")
+									vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, vim.split(msg, "\n"))
+									vim.bo[bufnr].modified = false
+									return
+								end
+								local tmpdir = vim.fn.tempname()
+								vim.fn.mkdir(tmpdir, "p")
+								local tmpfile = tmpdir .. "/" .. vim.fs.basename(url.path)
+								local f, err = io.open(tmpfile, "wb")
+								if not f then
+									vim.notify("oil-ssh archive: " .. tostring(err), vim.log.levels.ERROR)
+									return
+								end
+								f:write(obj.stdout or "")
+								f:close()
+								local wins = vim.fn.win_findbuf(bufnr)
+								if #wins == 0 then
+									return
+								end
+								vim.api.nvim_win_call(wins[1], function()
+									vim.cmd("keepalt edit " .. vim.fn.fnameescape(tmpfile))
+								end)
+								pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
+							end)
+						end)
+					end
+
+					ssh.read_file = function(bufnr)
+						local bufname = vim.api.nvim_buf_get_name(bufnr)
+						local ext = bufname:match("%.(%w+)$")
+						if ext and archive_exts[ext:lower()] then
+							return read_archive(bufnr, bufname)
+						end
+						if not bufname:match("%.gz$") then
+							return orig_read_file(bufnr)
+						end
+						local url = ssh.parse_url(bufname)
+						local read_name = (bufname:gsub("%.gz$", ""))
+						local cmd = ssh_cmd_for(url)
+						table.insert(cmd, "gzip -dc -- " .. shquote(url.path))
+
+						loading.set_loading(bufnr, true)
+						vim.bo[bufnr].modifiable = true
+						vim.cmd.doautocmd({ args = { "BufReadPre", read_name }, mods = { silent = true } })
+
+						vim.system(cmd, { text = false }, function(obj)
+							vim.schedule(function()
+								if not vim.api.nvim_buf_is_valid(bufnr) then
+									return
+								end
+								loading.set_loading(bufnr, false)
+								vim.bo[bufnr].modifiable = true
+								if obj.code ~= 0 then
+									local msg = "gzip -dc failed (exit " .. obj.code .. ")\n" .. (obj.stderr or "")
+									vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, vim.split(msg, "\n"))
+									vim.bo[bufnr].modified = false
+									return
+								end
+								local data = obj.stdout or ""
+								local lines = vim.split(data:gsub("\r\n", "\n"), "\n", { plain = true })
+								if lines[#lines] == "" then
+									table.remove(lines)
+								end
+								vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, lines)
+								local ft = vim.filetype.match({ filename = vim.fs.basename(read_name), buf = bufnr })
+								if ft then
+									vim.bo[bufnr].filetype = ft
+								end
+								vim.bo[bufnr].modified = false
+								vim.bo[bufnr].modifiable = false
+								vim.bo[bufnr].readonly = true
+								vim.cmd.doautocmd({ args = { "BufReadPost", read_name }, mods = { silent = true } })
+							end)
+						end)
+					end
+
+					local ok, zip_aus = pcall(vim.api.nvim_get_autocmds, { group = "zip", event = "BufReadCmd" })
+					if ok then
+						for _, au in ipairs(zip_aus) do
+							if not au.pattern:match("^zipfile:") then
+								vim.api.nvim_del_autocmd(au.id)
+								vim.api.nvim_create_autocmd("BufReadCmd", {
+									pattern = au.pattern,
+									callback = function(ev)
+										if not ev.match:match("^oil%-ssh://") then
+											vim.fn["zip#Browse"](ev.match)
+										end
+									end,
+								})
+							end
+						end
+					end
+				end
+			end
+
 			-- From an oil-ssh:// buffer, open the matching local mirror dir
 			-- in a vsplit. Host->path mappings are loaded from a private
 			-- file (kept out of this dotfiles repo) that returns a
@@ -236,7 +366,8 @@ return {
 				local home = vim.uv.os_homedir()
 
 				local target
-				local private_path = home .. "/.config/.nickInstall/install/configs/private/oil-mirrors.lua"
+				local private_path = vim.env.NVIM_OIL_MIRRORS_FILE
+					or (home .. "/.config/.nickInstall/install/configs/private/oil-mirrors.lua")
 				if vim.uv.fs_stat(private_path) then
 					local ok, resolver = pcall(dofile, private_path)
 					if ok and type(resolver) == "function" then

@@ -55,11 +55,19 @@ return {
 			"nvim-telescope/telescope.nvim", -- optional
 			"sindrets/diffview.nvim", -- optional
 			"ibhagwan/fzf-lua", -- optional
+			{
+				"m00qek/baleia.nvim",
+				config = function()
+					vim.g.baleia = require("baleia").setup({})
+				end,
+			},
 		},
 		config = function()
 			local neogit = require("neogit")
 
-			neogit.setup({})
+			local opts = {}
+
+			neogit.setup(opts)
 			vim.keymap.set("n", "<leader>gs", neogit.open)
 		end,
 	},
@@ -76,6 +84,25 @@ return {
 				confirm_telescope_deletions = true,
 				autopush = false,
 			}
+			local git_worktree = require("git-worktree")
+			local create_worktree = git_worktree.create_worktree
+			git_worktree.create_worktree = function(path, branch, upstream)
+				if path and not vim.startswith(path, "/") then
+					local common_dir = vim.fn.systemlist({
+						"git",
+						"rev-parse",
+						"--path-format=absolute",
+						"--git-common-dir",
+					})[1]
+
+					if vim.v.shell_error == 0 and common_dir and vim.fs.basename(common_dir) ~= ".git" then
+						path = vim.fs.joinpath(common_dir, vim.fs.basename(path))
+					end
+				end
+
+				return create_worktree(path, branch, upstream)
+			end
+
 			local Hooks = require("git-worktree.hooks")
 			local function on_tree_switch(op, path)
 				-- vim.cmd("%bd|e#")
