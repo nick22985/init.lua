@@ -165,6 +165,35 @@ return {
 		end,
 	},
 	{
+		"pwntester/octo.nvim",
+		cmd = "Octo",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		init = function()
+			local pr_review = require("nick22985.utils.pr-review")
+			vim.api.nvim_create_user_command("PRReview", function(args)
+				if args.args == "" then
+					pr_review.pick()
+				elseif tonumber(args.args) then
+					pr_review.open(tonumber(args.args))
+				else
+					vim.notify("Usage: :PRReview [number]", vim.log.levels.ERROR)
+				end
+			end, { nargs = "?" })
+			vim.api.nvim_create_user_command("PRReviewRemove", function(args)
+				pr_review.remove(tonumber(args.args))
+			end, { nargs = 1 })
+		end,
+		opts = {
+			picker = "telescope",
+			enable_builtin = true,
+			use_local_fs = true,
+		},
+	},
+	{
 		"ldelossa/gh.nvim",
 		dependencies = {
 			{
