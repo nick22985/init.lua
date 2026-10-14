@@ -285,6 +285,8 @@ local function remote_live_grep(ctx, opts)
 		:find()
 end
 
+M.context = remote_context
+
 function M.find_files(opts)
 	local ctx = remote_context()
 	if ctx then

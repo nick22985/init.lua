@@ -50,6 +50,20 @@ return {
 		"NeogitOrg/neogit",
 		branch = "master",
 		event = "BufReadPre",
+		keys = {
+			{
+				"<leader>gs",
+				function()
+					-- Neogit only sees local repos; in oil-ssh buffers use a git UI on the remote
+					local ctx = require("nick22985.remote-telescope").context()
+					if ctx then
+						return require("nick22985.remote-git").open(ctx)
+					end
+					require("neogit").open()
+				end,
+				desc = "[G]it [S]tatus (local or remote)",
+			},
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim", -- required
 			"nvim-telescope/telescope.nvim", -- optional
@@ -68,7 +82,6 @@ return {
 			local opts = {}
 
 			neogit.setup(opts)
-			vim.keymap.set("n", "<leader>gs", neogit.open)
 		end,
 	},
 	{
