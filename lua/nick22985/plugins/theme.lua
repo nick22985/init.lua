@@ -238,7 +238,6 @@ return {
 						["@type.builtin.cpp"] = { fg = C.yellow, style = {} },
 					}
 				end,
-				default_integrations = true,
 				auto_integrations = false,
 				integrations = {
 					cmp = true,

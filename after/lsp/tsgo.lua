@@ -3,6 +3,7 @@
 ---@type vim.lsp.Config
 return {
 	init_options = { hostInfo = "neovim" },
+	on_init = function() end,
 	cmd = function(dispatchers, config)
 		local cmd = "tsgo"
 		local local_cmd = (config or {}).root_dir and config.root_dir .. "/node_modules/.bin/tsgo"

@@ -18,7 +18,7 @@ function M.open(ctx)
 	if connect == "" then
 		connect = vim.uv.os_homedir() .. "/.local/bin/tmux-ssh-connect"
 	end
-	local args = { connect, "-d", ctx.root, "-c", remote_ui, ctx.target }
+	local args = { connect, "-d", ctx.root, "-c", remote_ui, "--", ctx.target }
 	if ctx.url.port then
 		vim.list_extend(args, { "-p", tostring(ctx.url.port) })
 	end

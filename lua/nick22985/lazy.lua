@@ -33,6 +33,7 @@ require("lazy").setup("nick22985.plugins", {
 	-- defaults = {
 	-- 	lazy = true,
 	-- },
+	rocks = { enabled = false },
 	dev = {
 		path = vim.env.NVIM_DEV_PLUGINS or "~/projects/personal/neovim/plugins",
 		fallback = false,

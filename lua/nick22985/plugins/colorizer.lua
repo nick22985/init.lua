@@ -1,6 +1,6 @@
 return {
 	{
-		"NvChad/nvim-colorizer.lua",
+		"catgoose/nvim-colorizer.lua",
 		event = "BufReadPre",
 		config = function()
 			require("colorizer").setup({
@@ -20,7 +20,8 @@ return {
 					-- True is same as normal
 					tailwind = true, -- Enable tailwind colors
 					-- parsers can contain values used in |user_default_options|
-					sass = { enable = true, parsers = { "css" } }, -- Enable sass colors
+					-- sass off: its variable resolver recurses forever on cyclic @imports (stack overflow)
+					sass = { enable = false, parsers = { "css" } },
 					virtualtext = "■",
 					-- update color values even if buffer is not focused
 					-- example use: cmp_menu, cmp_docs
