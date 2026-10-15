@@ -35,7 +35,20 @@ require("lazy").setup("nick22985.plugins", {
 	-- },
 	rocks = { enabled = false },
 	dev = {
-		path = vim.env.NVIM_DEV_PLUGINS or "~/projects/personal/neovim/plugins",
+		path = function(plugin)
+			local dir = vim.fn.expand(vim.env.NVIM_DEV_PLUGINS or "~/projects/personal/neovim/plugins")
+				.. "/"
+				.. plugin.name
+			local head = io.open(dir .. "/HEAD")
+			if head then
+				local branch = (head:read("*l") or ""):match("^ref: refs/heads/(.+)$")
+				head:close()
+				if branch and vim.uv.fs_stat(dir .. "/" .. branch) then
+					return dir .. "/" .. branch
+				end
+			end
+			return dir
+		end,
 		fallback = false,
 	},
 	ui = {
