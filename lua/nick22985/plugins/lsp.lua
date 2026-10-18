@@ -112,8 +112,17 @@ return { -- LSP Configuration & Plugins
 				-- version = "1.*",
 				-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
 				-- build = "cargo build --release",
-				build = function()
-					require("blink.cmp").build():pwait()
+				-- blink.lib can't find the repo root of a git worktree (`.git` is a file there), so
+				-- require("blink.cmp").build() fails on the dev checkout. Build manually and install
+				-- the unhashed lib/libblink_cmp_fuzzy.so, which blink falls back to.
+				build = function(plugin)
+					local out = vim.system({ "cargo", "build", "--release" }, { cwd = plugin.dir }):wait()
+					assert(out.code == 0, "cargo build failed: " .. (out.stderr or ""))
+					local ext = jit.os == "OSX" and ".dylib" or jit.os == "Windows" and ".dll" or ".so"
+					local target = vim.env.CARGO_TARGET_DIR or plugin.dir .. "/target"
+					local artifact = target .. "/release/" .. (jit.os == "Windows" and "" or "lib") .. "blink_cmp_fuzzy" .. ext
+					vim.fn.mkdir(plugin.dir .. "/lib", "p")
+					assert(vim.uv.fs_copyfile(artifact, plugin.dir .. "/lib/libblink_cmp_fuzzy" .. ext))
 				end,
 
 				-- If you use nix, you can build from source using latest nightly rust with:
