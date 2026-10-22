@@ -108,7 +108,9 @@ return {
 						"--git-common-dir",
 					})[1]
 
-					if vim.v.shell_error == 0 and common_dir and vim.fs.basename(common_dir) ~= ".git" then
+					if vim.v.shell_error == 0 and common_dir and vim.fs.basename(common_dir) == ".bare" then
+						path = vim.fs.joinpath(vim.fs.dirname(common_dir), vim.fs.basename(path))
+					elseif vim.v.shell_error == 0 and common_dir and vim.fs.basename(common_dir) ~= ".git" then
 						path = vim.fs.joinpath(common_dir, vim.fs.basename(path))
 					end
 				end

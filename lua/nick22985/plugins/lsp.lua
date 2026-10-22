@@ -120,7 +120,11 @@ return { -- LSP Configuration & Plugins
 					assert(out.code == 0, "cargo build failed: " .. (out.stderr or ""))
 					local ext = jit.os == "OSX" and ".dylib" or jit.os == "Windows" and ".dll" or ".so"
 					local target = vim.env.CARGO_TARGET_DIR or plugin.dir .. "/target"
-					local artifact = target .. "/release/" .. (jit.os == "Windows" and "" or "lib") .. "blink_cmp_fuzzy" .. ext
+					local artifact = target
+						.. "/release/"
+						.. (jit.os == "Windows" and "" or "lib")
+						.. "blink_cmp_fuzzy"
+						.. ext
 					vim.fn.mkdir(plugin.dir .. "/lib", "p")
 					assert(vim.uv.fs_copyfile(artifact, plugin.dir .. "/lib/libblink_cmp_fuzzy" .. ext))
 				end,
@@ -315,6 +319,10 @@ return { -- LSP Configuration & Plugins
 							git = {
 								module = "blink-cmp-git",
 								name = "Git",
+								-- Every other buffer would fetch issues, PRs and contributors from GitHub's shared rate limit
+								enabled = function()
+									return vim.tbl_contains({ "gitcommit", "octo", "markdown" }, vim.bo.filetype)
+								end,
 								opts = {
 									-- options for the blink-cmp-git
 								},

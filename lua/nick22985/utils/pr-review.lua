@@ -13,6 +13,9 @@ local function worktree_path(number)
 	if not common_dir then
 		return nil
 	end
+	if vim.fs.basename(common_dir) == ".bare" then
+		return vim.fs.joinpath(vim.fs.dirname(common_dir), "pr-" .. number)
+	end
 	if vim.fs.basename(common_dir) ~= ".git" then
 		return vim.fs.joinpath(common_dir, "pr-" .. number)
 	end

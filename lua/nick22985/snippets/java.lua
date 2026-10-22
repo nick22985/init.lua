@@ -52,7 +52,7 @@ local function project_name()
 	local common = git(dir, { "rev-parse", "--path-format=absolute", "--git-common-dir" })
 	if top_level then
 		if git_dir and common and git_dir ~= common then
-			if vim.fs.basename(common) == ".git" then
+			if vim.fs.basename(common) == ".git" or vim.fs.basename(common) == ".bare" then
 				return vim.fs.basename(vim.fs.dirname(common))
 			end
 			return vim.fs.basename(common)

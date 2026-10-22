@@ -39,7 +39,7 @@ require("lazy").setup("nick22985.plugins", {
 			local dir = vim.fn.expand(vim.env.NVIM_DEV_PLUGINS or "~/projects/personal/neovim/plugins")
 				.. "/"
 				.. plugin.name
-			local head = io.open(dir .. "/HEAD")
+			local head = io.open(dir .. "/.bare/HEAD") or io.open(dir .. "/HEAD")
 			if head then
 				local branch = (head:read("*l") or ""):match("^ref: refs/heads/(.+)$")
 				head:close()
