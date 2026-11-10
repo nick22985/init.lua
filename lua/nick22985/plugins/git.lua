@@ -79,7 +79,10 @@ return {
 		config = function()
 			local neogit = require("neogit")
 
-			local opts = {}
+			local opts = {
+				disable_line_numbers = false,
+				disable_relative_line_numbers = false,
+			}
 
 			neogit.setup(opts)
 		end,
@@ -118,9 +121,29 @@ return {
 				return create_worktree(path, branch, upstream)
 			end
 
+			local function reattach(args)
+				if vim.fn.executable("git-reattach") == 0 then
+					return
+				end
+				local result = vim.system(vim.list_extend({ "git-reattach" }, args), { text = true }):wait()
+				local output = vim.trim(result.stdout .. result.stderr)
+				if output ~= "" then
+					vim.notify(output, result.code == 0 and vim.log.levels.INFO or vim.log.levels.WARN)
+				end
+			end
+
+			vim.api.nvim_create_user_command("GitReattach", function()
+				reattach({})
+			end, { desc = "Put a detached HEAD back on its branch" })
+
 			local Hooks = require("git-worktree.hooks")
 			local function on_tree_switch(op, path)
 				-- vim.cmd("%bd|e#")
+				reattach({ "--auto" })
+				vim.fn.system("git symbolic-ref -q HEAD")
+				if vim.v.shell_error == 1 then
+					vim.notify("HEAD is detached; :GitReattach puts it back on a branch", vim.log.levels.WARN)
+				end
 				local branch = vim.fn.system("git branch --show-current"):gsub("\n", "")
 				if branch ~= "" then
 					local upstream = vim.fn.system("git rev-parse --abbrev-ref @{u} 2>/dev/null"):gsub("\n", "")

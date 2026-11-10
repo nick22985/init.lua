@@ -49,7 +49,7 @@ require("lazy").setup("nick22985.plugins", {
 			end
 			return dir
 		end,
-		fallback = false,
+		fallback = true,
 	},
 	ui = {
 		icons = {

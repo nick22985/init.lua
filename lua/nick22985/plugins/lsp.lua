@@ -37,7 +37,7 @@ return { -- LSP Configuration & Plugins
 				end,
 			},
 			{
-				"saghen/blink.cmp",
+				"nick22985/blink.cmp",
 				dev = true,
 				lazy = true,
 				dependencies = {

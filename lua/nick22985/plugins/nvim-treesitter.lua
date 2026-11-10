@@ -26,6 +26,8 @@ local ENSURE_INSTALLED = {
 	"gitignore",
 }
 
+local DOOP_PATH = "~/.config/treesitterCustom/tree-sitter-vue"
+
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -42,7 +44,7 @@ return {
 			local function register_doop_parser()
 				require("nvim-treesitter.parsers").doop = {
 					install_info = {
-						path = "~/.config/treesitterCustom/tree-sitter-vue",
+						path = DOOP_PATH,
 						queries = "queries",
 					},
 					maintainers = { "@nick22985" },
@@ -60,8 +62,14 @@ return {
 			end
 			register_doop_symbol()
 
-			ts.install(ENSURE_INSTALLED)
-			ts.install("doop"):await(register_doop_symbol)
+			if vim.fn.executable("tree-sitter") == 1 then
+				ts.install(ENSURE_INSTALLED)
+				if vim.uv.fs_stat(vim.fn.expand(DOOP_PATH) .. "/src/parser.c") then
+					ts.install("doop"):await(register_doop_symbol)
+				end
+			else
+				vim.notify("tree-sitter CLI not found; skipping parser installs", vim.log.levels.WARN)
+			end
 
 			local function attach(buf)
 				if vim.bo[buf].filetype == "doop" then

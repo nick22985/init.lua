@@ -11,6 +11,10 @@ return {
 		event = "BufReadPre",
 		dependencies = { "luarocks.nvim" },
 		config = function()
+			-- Sandboxes inherit $TMUX without the tmux binary; image.nvim would call it anyway
+			if vim.env.TMUX and vim.fn.executable("tmux") == 0 then
+				vim.env.TMUX = nil
+			end
 			local image = require("image")
 			image.setup({
 				backend = "kitty",
